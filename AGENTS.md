@@ -5,6 +5,7 @@
 - Package manager: **pnpm** (not npm/yarn).
 - TypeScript 6.x (unusual for NestJS, which typically uses 5.x).
 - `pnpm run test:e2e` is broken: references missing `./test/vitest-e2e.config.ts` (no `test/` directory exists).
+- **Interfaces cannot be used as injection tokens** - NestJS DI relies on runtime tokens. Use concrete classes or `@Inject()` with string tokens for interfaces/repositories.
 
 ## Commands
 - Install: `pnpm install`
