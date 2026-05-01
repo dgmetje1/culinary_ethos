@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ContentModule } from './content/content.module';
 import { SocialModule } from './social/social.module';
 import { CommonModule } from './common/common.module';
 
@@ -21,10 +22,11 @@ import { CommonModule } from './common/common.module';
         password: configService.get<string>('POSTGRES_PASSWORD'),
         database: configService.get<string>('POSTGRES_DB'),
         entities: [__dirname + '/**/*.entity{.ts,.js}'],
-        synchronize: true, // Only for development! Use migrations in production.
+        synchronize: true, // Only for development! Use migrations for production.
       }),
     }),
     CommonModule,
+    ContentModule,
     SocialModule,
   ],
 })
