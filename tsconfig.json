@@ -1,32 +1,23 @@
 {
   "compilerOptions": {
     "target": "ES2022",
-    "module": "commonjs",
+    "module": "ESNext",
     "moduleResolution": "bundler",
     "strict": true,
+    "strictPropertyInitialization": false,
+    "strictNullChecks": true,
+    "noImplicitAny": true,
+    "noFallthroughCasesInSwitch": true,
 
-    "rootDir": "./src",
-    "outDir": "./dist",
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "isolatedModules": true,
 
     "declaration": true,
     "removeComments": true,
     "sourceMap": true,
-    "incremental": true,
-    "skipLibCheck": true,
-    "types": ["node"],
-
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-
-    "allowSyntheticDefaultImports": true,
-    "importHelpers": true,
-    "forceConsistentCasingInFileNames": true,
-
-    "strictNullChecks": false,
-    "noImplicitAny": false,
-    "strictBindCallApply": false,
-    "noFallthroughCasesInSwitch": false
+    "incremental": true
   },
-  "include": ["src"],
-  "exclude": ["node_modules", "dist",]
+  "exclude": ["node_modules", "dist"]
 }
