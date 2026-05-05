@@ -1,0 +1,158 @@
+{
+  "api": {
+    "default_error": "There has been an error while accessing API"
+  },
+  "languages": {
+    "en": "English",
+    "es": "Spanish",
+    "ca": "Catalan",
+    "fr": "French"
+  },
+  "common": {
+    "of": "of",
+    "buttons": {
+      "save": "Save",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "delete": "Delete",
+      "merge": "Merge"
+    }
+  },
+  "menu": {
+    "sidebar": {
+      "tabs": {
+        "application": "Application",
+        "management": "Management"
+      },
+      "home": "Home",
+      "plans": "Plans",
+      "purchase_list": "Purchase list",
+      "management_title": "Gestión",
+      "management": "Home",
+      "units": "Units",
+      "ingredients": "Ingredients",
+      "kitchenware": "Kitchenware"
+    }
+  },
+  "pages": {
+    "home": {
+      "searcher": {
+        "placeholder": "Search for recipes, categories or users"
+      },
+      "recipe_preview": {
+        "title": "Recipe of the day",
+        "ingredients_title": "Ingredients"
+      }
+    },
+    "management": {
+      "index": {
+        "title": "Management",
+        "sections": {
+          "units": "Units",
+          "ingredients": "Ingredients",
+          "kitchenware": "Kitchenware",
+          "users": "Users"
+        }
+      },
+      "ingredients": {
+        "modals": {
+          "confirm_delete": {
+            "title": "Do you want to delete this ingredient?",
+            "description": "Deleting this ingredient may lead some recipes to be incomplete. <br/>Do you want to proceed?",
+            "button_text": "Confirm"
+          },
+          "merge": {
+            "title": "Merge ingredients"
+          }
+        },
+        "form": {
+          "button": "Create new ingredient",
+          "fields": {
+            "name": "Name",
+            "singular_name": "Singular name"
+          }
+        },
+        "table": {
+          "id": "ID",
+          "name": "Name",
+          "singular_name": "Singular name",
+          "translated": "Translated"
+        }
+      },
+      "kitchenware": {
+        "modals": {
+          "confirm_delete": {
+            "title": "Do you want to delete this tool?",
+            "description": "Deleting this tool may lead some recipes to be incomplete. <br/>Do you want to proceed?",
+            "button_text": "Confirm"
+          },
+          "merge": {
+            "title": "Merge kitchenware"
+          }
+        },
+        "form": {
+          "button": "Create new tool",
+          "fields": {
+            "name": "Name",
+            "singular_name": "Singular name"
+          }
+        },
+        "table": {
+          "id": "ID",
+          "name": "Name",
+          "singular_name": "Singular name",
+          "translated": "Translated"
+        }
+      },
+      "units": {
+        "modals": {
+          "confirm_delete": {
+            "title": "Do you want to delete this unit?",
+            "description": "Deleting this unit may lead some recipes to be incomplete. <br/>Do you want to proceed?",
+            "button_text": "Confirm"
+          }
+        },
+        "form": {
+          "button": "Create new unit",
+          "fields": {
+            "name": "Name",
+            "singular_name": "Singular name",
+            "short_name": "Short name",
+            "is_visible": "Visibility"
+          }
+        },
+        "table": {
+          "id": "ID",
+          "name": "Name",
+          "singular_name": "Singular name",
+          "short_name": "Short name",
+          "visibility": "Visibility"
+        }
+      }
+    },
+    "profile": {
+      "tabs": {
+        "details": "Details",
+        "recipes": "Recipes"
+      }
+    },
+    "recipe": {
+      "ingredients_title": "Ingredients",
+      "kitchenware_title": "Kitchenware",
+      "author_title": "Author",
+      "steps_title": "Steps"
+    }
+  },
+  "recipe": {
+    "fields": {
+      "difficulty": "Difficulty",
+      "time": "Time",
+      "portions": "Portions"
+    },
+    "difficulty": {
+      "1": "easy",
+      "2": "medium",
+      "3": "hard"
+    }
+  }
+}

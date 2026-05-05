@@ -2,6 +2,11 @@
 /dist
 /node_modules
 /build
+**/dist
+**/build
+**/node_modules
+.cert/
+.tanstack
 
 # Logs
 logs
@@ -45,6 +50,7 @@ lerna-debug.log*
 # temp directory
 .temp
 .tmp
+tmp
 
 # Runtime data
 pids
