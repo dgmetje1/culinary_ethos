@@ -3,7 +3,8 @@
     "default_error": "Hi ha hagut un error en accedir a l'API"
   },
   "common": {
-    "of": "of"
+    "of": "of",
+    "by": "Por"
   },
   "menu": {
     "sidebar": {
@@ -12,14 +13,45 @@
       "purchase_list": "Lista de la compra"
     }
   },
+  "layout": {
+    "header": {
+      "brand": "Culinary Ethos",
+      "search": "Buscar recetas...",
+      "nav": {
+        "home": "Home",
+        "planner": "Planner",
+        "editor": "Editor",
+        "backoffice": "Backoffice"
+      }
+    },
+    "footer": {
+      "brand": "Culinary Ethos",
+      "copyright": "© 2024 Culinary Ethos. Curated for the discerning palate.",
+      "links": {
+        "philosophy": "Philosophy",
+        "terms": "Terms",
+        "privacy": "Privacy",
+        "archive": "Archive"
+      }
+    }
+  },
   "pages": {
     "home": {
       "searcher": {
         "placeholder": "Busca por recetas, categorías o usuarios"
       },
+      "banner": {
+        "edition": "Edición de Temporada",
+        "title": "El Arte de la Simplicidad",
+        "description": "Explora una curaduría de recetas donde cada ingrediente tiene un propósito. Inspiración gastronómica diseñada para el hogar contemporáneo."
+      },
       "recipe_preview": {
         "title": "Receta del día",
         "ingredients_title": "Ingredientes"
+      },
+      "recipes": {
+        "load_more": "Ver más recetas",
+        "minutes": "Min"
       }
     },
     "profile": {

@@ -45,7 +45,7 @@ export type RecipeStep = {
   number: number;
 };
 
-export type RecipeListItem = Pick<Recipe, "id" | "title" | "thumbnailUrl">;
+export type RecipeListItem = Pick<Recipe, "id" | "title" | "thumbnailUrl" | "time" | "author" | "categories">;
 
 export type RecipeList = Array<RecipeListItem>;
 

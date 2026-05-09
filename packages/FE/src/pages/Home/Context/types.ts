@@ -1,4 +1,4 @@
 export type HomePageContextValues = {
-  search: string;
-  setSearch: (value: string) => void;
+  itemsVisible: number;
+  setItemsVisible: (value: number | ((prev: number) => number)) => void;
 };

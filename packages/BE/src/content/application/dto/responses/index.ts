@@ -70,6 +70,14 @@ export class KitchenwareResponseDto {
   content: Record<string, KitchenwareContentResponseDto>;
 }
 
+export class RecipeCategoryResponseDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  name: string;
+}
+
 export class RecipeListItemResponseDto {
   @ApiProperty()
   id: string;
@@ -77,16 +85,17 @@ export class RecipeListItemResponseDto {
   @ApiProperty()
   title: string;
 
+  @ApiProperty({ type: RecipeCategoryResponseDto, isArray: true })
+  categories: RecipeCategoryResponseDto[];
+
+  @ApiProperty()
+  time: number;
+
+  @ApiProperty()
+  author: string;
+
   @ApiProperty({ nullable: true })
   thumbnailUrl: string | null;
-}
-
-export class RecipeCategoryResponseDto {
-  @ApiProperty()
-  id: string;
-
-  @ApiProperty()
-  name: string;
 }
 
 export class RecipeIngredientResponseDto {

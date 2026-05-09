@@ -10,13 +10,7 @@
   },
   "common": {
     "of": "of",
-    "buttons": {
-      "save": "Save",
-      "cancel": "Cancel",
-      "edit": "Edit",
-      "delete": "Delete",
-      "merge": "Merge"
-    }
+    "by": "By"
   },
   "menu": {
     "sidebar": {
@@ -34,14 +28,45 @@
       "kitchenware": "Kitchenware"
     }
   },
+  "layout": {
+    "header": {
+      "brand": "Culinary Ethos",
+      "search": "Search for recipes...",
+      "nav": {
+        "home": "Home",
+        "planner": "Planner",
+        "editor": "Editor",
+        "backoffice": "Backoffice"
+      }
+    },
+    "footer": {
+      "brand": "Culinary Ethos",
+      "copyright": "© 2024 Culinary Ethos. Curated for the discerning palate.",
+      "links": {
+        "philosophy": "Philosophy",
+        "terms": "Terms",
+        "privacy": "Privacy",
+        "archive": "Archive"
+      }
+    }
+  },
   "pages": {
     "home": {
       "searcher": {
         "placeholder": "Search for recipes, categories or users"
       },
+      "banner": {
+        "edition": "Seasonal Edition",
+        "title": "The Art of Simplicity",
+        "description": "Explore a curated collection of recipes where each ingredient has a purpose. Culinary inspiration designed for the contemporary home."
+      },
       "recipe_preview": {
         "title": "Recipe of the day",
         "ingredients_title": "Ingredients"
+      },
+      "recipes": {
+        "load_more": "View more recipes",
+        "minutes": "Min"
       }
     },
     "management": {

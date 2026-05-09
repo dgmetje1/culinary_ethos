@@ -3,6 +3,7 @@ import fs from 'node:fs';
 
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { LanguageInterceptor } from './common/interceptors';
 
 const httpsOptions = {
   key: fs.readFileSync('./.cert/key.pem'),
@@ -13,7 +14,10 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     httpsOptions,
     logger: ['error', 'warn', 'log', 'debug', 'verbose'],
+    cors: true,
   });
+
+  app.useGlobalInterceptors(new LanguageInterceptor());
 
   const config = new DocumentBuilder()
     .setTitle('RCP and Plan API')

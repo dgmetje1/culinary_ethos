@@ -1,10 +1,10 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 
-import config from "@/config";
-import { Language } from "@/types/user";
+import config from '@/config';
 
-import { ApiException } from "./apiException";
-import { RequestConfig } from "./types";
+import { ApiException } from './apiException';
+import { RequestConfig } from './types';
+import { Language } from '@/types/user';
 
 const MAX_RETRIES = 3;
 const defaultConfig: RequestConfig = { withAuth: true };
@@ -13,36 +13,47 @@ export class Api {
   private static _accessToken: string | null;
   private static _lang: Language;
 
-  private _axiosInstance;
+  private _axiosInstance: AxiosInstance;
 
   constructor() {
     this._axiosInstance = axios.create({ baseURL: config.apiUrl });
+
+    this._axiosInstance.interceptors.request.use((config) => {
+      const language = Api._lang || 'en';
+      config.headers['Accept-Language'] = language;
+      return config;
+    });
   }
 
   public async get<T>(url: string, config?: RequestConfig) {
-    return this.request<T>("GET", url, config);
+    return this.request<T>('GET', url, config);
   }
   public async post<T>(url: string, data: unknown, config?: RequestConfig) {
-    return this.request<T>("POST", url, { ...config, data });
+    return this.request<T>('POST', url, { ...config, data });
   }
   public async put<T>(url: string, data: unknown, config?: RequestConfig) {
-    return this.request<T>("PUT", url, { ...config, data });
+    return this.request<T>('PUT', url, { ...config, data });
   }
   public async delete<T>(url: string, data: unknown, config?: RequestConfig) {
-    return this.request<T>("DELETE", url, { ...config, data });
+    return this.request<T>('DELETE', url, { ...config, data });
   }
 
-  public async request<T>(method: string, url: string, config?: RequestConfig, retry: number = 0): Promise<T> {
+  public async request<T>(
+    method: string,
+    url: string,
+    config?: RequestConfig,
+    retry: number = 0,
+  ): Promise<T> {
     try {
       const requestConfig = { ...defaultConfig, ...config };
-      const headers: AxiosRequestConfig["headers"] = {
-        "Accept-Language": Api._lang,
-      };
+      const headers: AxiosRequestConfig['headers'] = {};
 
-      if (requestConfig.withAuth) {
-        if (!Api._accessToken) throw new ApiException("missing-user-token", "Missing user token");
+      if (false && requestConfig.withAuth) {
+        if (!Api._accessToken)
+          throw new ApiException('missing-user-token', 'Missing user token');
         headers.Authorization = `Bearer ${Api._accessToken}`;
       }
+
       const response = await this._axiosInstance.request<T>({
         method,
         url,
@@ -51,8 +62,14 @@ export class Api {
       });
       return response.data;
     } catch (err: unknown) {
-      if (err instanceof ApiException && err.errorCode === "missing-user-token" && retry < MAX_RETRIES) {
-        await new Promise(resolve => setTimeout(() => resolve(undefined), (retry + 1) * 1000));
+      if (
+        err instanceof ApiException &&
+        err.errorCode === 'missing-user-token' &&
+        retry < MAX_RETRIES
+      ) {
+        await new Promise((resolve) =>
+          setTimeout(() => resolve(undefined), (retry + 1) * 1000),
+        );
         return this.request<T>(method, url, config, retry + 1);
       } else {
         throw err;

@@ -1,12 +1,17 @@
 # compiled output
-/dist
-/node_modules
-/build
+
 **/dist
-**/build
+/node_modules
 **/node_modules
 .cert/
 .tanstack
+
+/build
+**/build
+
+tmp
+lib
+dist
 
 # Logs
 logs
@@ -60,4 +65,5 @@ pids
 
 # Diagnostic reports (https://nodejs.org/api/report.html)
 report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
-tsconfig.*.tsbuildinfo
+**/tsconfig.*.tsbuildinfo
+tsconfig.tsbuildinfo

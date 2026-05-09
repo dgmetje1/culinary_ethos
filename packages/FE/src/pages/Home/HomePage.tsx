@@ -1,22 +1,28 @@
-import React from "react";
-import { Box } from "@mui/material";
+import { useEffect } from 'react';
+import { cn } from '@/lib/utils';
+import { useSearch } from '@/context/Search';
 
-import HomePageBanner from "./Banner";
-import HomePageContent from "./Content";
-import HomePageContext from "./Context";
+import HomePageBanner from './Banner';
+import HomePageContent from './Content';
+import HomePageProvider from './Context';
 
 const HomePage = () => {
-  const [search, setSearch] = React.useState("");
+  const { setShowSearch } = useSearch();
 
-  const contextValues = React.useMemo(() => ({ search, setSearch }), [search]);
+  useEffect(() => {
+    setShowSearch(true);
+    return () => setShowSearch(false);
+  }, [setShowSearch]);
 
   return (
-    <HomePageContext.Provider value={contextValues}>
-      <Box bgcolor="#F8F6E3" minHeight="100vh">
-        <HomePageBanner />
+    <HomePageProvider>
+      <div className={cn('min-h-screen', 'bg-[#faf9f7] dark:bg-stone-950')}>
+        <section className={cn('pt-12 pb-5')}>
+          <HomePageBanner />
+        </section>
         <HomePageContent />
-      </Box>
-    </HomePageContext.Provider>
+      </div>
+    </HomePageProvider>
   );
 };
 
