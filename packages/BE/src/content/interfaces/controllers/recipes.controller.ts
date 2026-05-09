@@ -12,6 +12,7 @@ import {
 import { ApiOperation, ApiTags, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import { RecipesService } from '../../application/services';
 import { CreateRecipeDto, RecipeResponseDto, RecipeListItemResponseDto, RecipeDailyResponseDto, RecipeIngredientDto, RecipeKitchenwareDto, RecipeStepDto } from '../../application/dto';
+import { Language } from '../../../common/decorators/language.decorator';
 
 @ApiTags('Recipes')
 @Controller('recipes')
@@ -22,8 +23,11 @@ export class RecipesController {
   @ApiOperation({ summary: 'Get all recipes' })
   @ApiQuery({ name: 'category', required: false, type: Number })
   @ApiResponse({ status: 200, type: [RecipeListItemResponseDto] })
-  async getAll(@Query('category') category?: number): Promise<RecipeListItemResponseDto[]> {
-    return this.recipesService.getAll(category);
+  async getAll(
+    @Query('category') category?: number,
+    @Language() language?: string,
+  ): Promise<RecipeListItemResponseDto[]> {
+    return this.recipesService.getAll(category, language);
   }
 
   @Get('daily')

@@ -1,22 +1,37 @@
-import React from "react";
-import { Container } from "@mui/material";
+import { useTranslation } from 'react-i18next';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
 
-import Category from "@/components/common/Category";
+import HomePageMasonryGrid from '../MasonryGrid';
+import { useHomePageContext } from '../Context';
 
-import HomePageRecipePreviewCard from "../RecipePreviewCard";
+const HomePageContent = () => {
+  const { t } = useTranslation();
+  const { setItemsVisible } = useHomePageContext();
 
-const HomePageContent = React.memo(() => {
   return (
-    <Container maxWidth="lg" sx={{ display: "flex", flexDirection: "column", gap: 4, py: 4, mt: 2 }}>
-      <Category id={undefined} title="What's new" />
-      <Category id={undefined} title="Trending" />
-      <Category id={undefined} title="For you" />
-      <HomePageRecipePreviewCard />
-      <Category id="01HXM79QNG2BFE9S76Z06RRK70" title="Main Dish" />
-      <Category id="01HXM79QNG2BFE9S76Z06RRK70" title="Starters" />
-      <Category id="01HXM79QNG2BFE9S76Z06RRK70" title="Desserts" />
-      <Category id="01HXM79QNG2BFE9S76Z06RRK70" title="First course" />
-    </Container>
+    <div className={cn('max-w-[1200px] mx-auto', 'w-full pb-20 px-6')}>
+      <HomePageMasonryGrid />
+      <div className="mt-20 flex justify-center">
+        <Button
+          variant="outline"
+          className={cn(
+            'border-stone-300 dark:border-stone-700',
+            'px-12 py-4 rounded-full',
+            'text-xs font-semibold uppercase tracking-[0.1em]',
+            'hover:bg-stone-900 hover:text-white',
+            'dark:hover:bg-white dark:hover:text-stone-900',
+            'transition-all duration-300',
+            'bg-white/5 dark:bg-stone-900/50',
+            'backdrop-blur-md',
+          )}
+          onClick={() => setItemsVisible((prev) => prev + 6)}
+        >
+          {t('pages.home.recipes.load_more')}
+        </Button>
+      </div>
+    </div>
   );
-});
+};
+
 export default HomePageContent;

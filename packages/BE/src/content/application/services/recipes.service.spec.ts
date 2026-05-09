@@ -44,7 +44,7 @@ describe('RecipesService', () => {
     it('should return all recipes', async () => {
       mockRepository.findAll.mockResolvedValue([mockRecipe]);
 
-      const result = await service.getAll();
+      const result = await service.getAll(undefined, 'en');
 
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('rec123');
@@ -54,7 +54,7 @@ describe('RecipesService', () => {
     it('should return empty array when no recipes', async () => {
       mockRepository.findAll.mockResolvedValue([]);
 
-      const result = await service.getAll();
+      const result = await service.getAll(undefined, 'en');
 
       expect(result).toEqual([]);
     });

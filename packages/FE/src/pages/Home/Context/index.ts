@@ -1,1 +1,4 @@
-export { default, useHomePageContext } from "./HomePageContext";
+export {
+  HomePageProvider as default,
+  useHomePageContext,
+} from './HomePageContext';

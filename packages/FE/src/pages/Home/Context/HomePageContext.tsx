@@ -1,17 +1,26 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState, ReactNode } from "react";
 
-import { HomePageContextValues } from "./types";
+interface HomePageContextValues {
+  itemsVisible: number;
+  setItemsVisible: (value: number | ((prev: number) => number)) => void;
+}
 
 const HomePageContext = createContext<HomePageContextValues | undefined>(undefined);
 
-export default HomePageContext;
+export const HomePageProvider = ({ children }: { children: ReactNode }) => {
+  const [itemsVisible, setItemsVisible] = useState(6);
+
+  return (
+    <HomePageContext.Provider value={{ itemsVisible, setItemsVisible }}>
+      {children}
+    </HomePageContext.Provider>
+  );
+};
 
 export const useHomePageContext = () => {
   const context = useContext(HomePageContext);
-
   if (!context) {
-    throw new Error("useThemeContext must be used inside the HomePageContext.Provider component");
+    throw new Error("useHomePageContext must be used within a HomePageProvider");
   }
-
   return context;
 };
