@@ -1,4 +1,5 @@
 import { DataSource } from 'typeorm';
+import { ulid } from 'ulidx';
 import * as dotenv from 'dotenv';
 
 dotenv.config({ path: '.env' });
@@ -9,6 +10,51 @@ const { Ingredient } = require('./content/domain/models/ingredient.entity');
 const { Kitchenware } = require('./content/domain/models/kitchenware.entity');
 const { Recipe } = require('./content/domain/models/recipe.entity');
 const { User } = require('./users/user.entity');
+
+const CAT_BREAKFAST = ulid();
+const CAT_LUNCH = ulid();
+const CAT_DINNER = ulid();
+const CAT_DESSERT = ulid();
+const CAT_SNACK = ulid();
+
+const UNIT_CUP = ulid();
+const UNIT_TBSP = ulid();
+const UNIT_TSP = ulid();
+const UNIT_G = ulid();
+const UNIT_ML = ulid();
+const UNIT_L = ulid();
+const UNIT_PIECE = ulid();
+const UNIT_OZ = ulid();
+
+const ING_FLOUR = ulid();
+const ING_SUGAR = ulid();
+const ING_SALT = ulid();
+const ING_EGGS = ulid();
+const ING_MILK = ulid();
+const ING_BUTTER = ulid();
+const ING_OIL = ulid();
+const ING_YEAST = ulid();
+const ING_WATER = ulid();
+const ING_CHOCOLATE = ulid();
+const ING_VANILLA = ulid();
+const ING_BAKING_POWDER = ulid();
+const ING_COCOA = ulid();
+const ING_CREAM = ulid();
+const ING_CHEESE = ulid();
+
+const RECIPE_PANCAKES = ulid();
+const RECIPE_CHOCOLATE_CAKE = ulid();
+const RECIPE_SPAGHETTI_CARBONARA = ulid();
+const RECIPE_CAESAR_SALAD = ulid();
+const RECIPE_BEEF_TACOS = ulid();
+const RECIPE_BERRY_SMOOTHIE = ulid();
+const RECIPE_GRILLED_SALMON = ulid();
+const RECIPE_CHOCOLATE_MOUSSE = ulid();
+const RECIPE_VEGGIE_STIR_FRY = ulid();
+const RECIPE_FRENCH_TOAST = ulid();
+const RECIPE_SHRIMP_PAELLA = ulid();
+const RECIPE_LEMON_CHEESECAKE = ulid();
+const RECIPE_AVOCADO_TOAST = ulid();
 
 async function seed() {
   const dataSource = new DataSource({
@@ -24,10 +70,18 @@ async function seed() {
   await dataSource.initialize();
   const em = dataSource.manager;
 
+  console.log('Cleaning existing data...');
+  await em.clear(Recipe);
+  await em.clear(Ingredient);
+  await em.clear(Kitchenware);
+  await em.clear(Unit);
+  await em.clear(Category);
+  console.log('Clean complete.');
+
   console.log('Seeding categories...');
   const categories = [
     {
-      id: 'cat_breakfast',
+      id: CAT_BREAKFAST,
       content: [
         {
           language: 'en',
@@ -42,7 +96,7 @@ async function seed() {
       ],
     },
     {
-      id: 'cat_lunch',
+      id: CAT_LUNCH,
       content: [
         { language: 'en', name: 'Lunch', description: 'Midday meal recipes' },
         {
@@ -53,7 +107,7 @@ async function seed() {
       ],
     },
     {
-      id: 'cat_dinner',
+      id: CAT_DINNER,
       content: [
         { language: 'en', name: 'Dinner', description: 'Evening meal recipes' },
         {
@@ -64,14 +118,14 @@ async function seed() {
       ],
     },
     {
-      id: 'cat_dessert',
+      id: CAT_DESSERT,
       content: [
         { language: 'en', name: 'Dessert', description: 'Sweet treats' },
         { language: 'es', name: 'Postre', description: 'Dulces golosinas' },
       ],
     },
     {
-      id: 'cat_snack',
+      id: CAT_SNACK,
       content: [
         { language: 'en', name: 'Snack', description: 'Light bites' },
         { language: 'es', name: 'Merienda', description: 'Bocados ligeros' },
@@ -85,7 +139,7 @@ async function seed() {
   console.log('Seeding units...');
   const units = [
     {
-      id: 'unit_cup',
+      id: UNIT_CUP,
       isVisible: true,
       content: [
         { language: 'en', name: 'Cup', shortName: 'cup', singularName: 'Cup' },
@@ -98,7 +152,7 @@ async function seed() {
       ],
     },
     {
-      id: 'unit_tbsp',
+      id: UNIT_TBSP,
       isVisible: true,
       content: [
         {
@@ -116,7 +170,7 @@ async function seed() {
       ],
     },
     {
-      id: 'unit_tsp',
+      id: UNIT_TSP,
       isVisible: true,
       content: [
         {
@@ -134,7 +188,7 @@ async function seed() {
       ],
     },
     {
-      id: 'unit_g',
+      id: UNIT_G,
       isVisible: true,
       content: [
         { language: 'en', name: 'Gram', shortName: 'g', singularName: 'Gram' },
@@ -147,7 +201,7 @@ async function seed() {
       ],
     },
     {
-      id: 'unit_ml',
+      id: UNIT_ML,
       isVisible: true,
       content: [
         {
@@ -165,7 +219,7 @@ async function seed() {
       ],
     },
     {
-      id: 'unit_l',
+      id: UNIT_L,
       isVisible: true,
       content: [
         {
@@ -183,7 +237,7 @@ async function seed() {
       ],
     },
     {
-      id: 'unit_piece',
+      id: UNIT_PIECE,
       isVisible: true,
       content: [
         {
@@ -201,7 +255,7 @@ async function seed() {
       ],
     },
     {
-      id: 'unit_oz',
+      id: UNIT_OZ,
       isVisible: true,
       content: [
         {
@@ -221,7 +275,7 @@ async function seed() {
   console.log('Seeding ingredients...');
   const ingredients = [
     {
-      id: 'ing_flour',
+      id: ING_FLOUR,
       content: [
         { language: 'en', name: 'All-purpose flour', singularName: 'Flour' },
         {
@@ -232,70 +286,70 @@ async function seed() {
       ],
     },
     {
-      id: 'ing_sugar',
+      id: ING_SUGAR,
       content: [
         { language: 'en', name: 'Sugar', singularName: 'Sugar' },
         { language: 'es', name: 'Azucar', singularName: 'Azucar' },
       ],
     },
     {
-      id: 'ing_salt',
+      id: ING_SALT,
       content: [
         { language: 'en', name: 'Salt', singularName: 'Salt' },
         { language: 'es', name: 'Sal', singularName: 'Sal' },
       ],
     },
     {
-      id: 'ing_eggs',
+      id: ING_EGGS,
       content: [
         { language: 'en', name: 'Eggs', singularName: 'Egg' },
         { language: 'es', name: 'Huevos', singularName: 'Huevo' },
       ],
     },
     {
-      id: 'ing_milk',
+      id: ING_MILK,
       content: [
         { language: 'en', name: 'Milk', singularName: 'Milk' },
         { language: 'es', name: 'Leche', singularName: 'Leche' },
       ],
     },
     {
-      id: 'ing_butter',
+      id: ING_BUTTER,
       content: [
         { language: 'en', name: 'Butter', singularName: 'Butter' },
         { language: 'es', name: 'Mantequilla', singularName: 'Mantequilla' },
       ],
     },
     {
-      id: 'ing_oil',
+      id: ING_OIL,
       content: [
         { language: 'en', name: 'Vegetable oil', singularName: 'Oil' },
         { language: 'es', name: 'Aceite vegetal', singularName: 'Aceite' },
       ],
     },
     {
-      id: 'ing_yeast',
+      id: ING_YEAST,
       content: [
         { language: 'en', name: 'Yeast', singularName: 'Yeast' },
         { language: 'es', name: 'Levadura', singularName: 'Levadura' },
       ],
     },
     {
-      id: 'ing_water',
+      id: ING_WATER,
       content: [
         { language: 'en', name: 'Water', singularName: 'Water' },
         { language: 'es', name: 'Agua', singularName: 'Agua' },
       ],
     },
     {
-      id: 'ing_chocolate',
+      id: ING_CHOCOLATE,
       content: [
         { language: 'en', name: 'Chocolate', singularName: 'Chocolate' },
         { language: 'es', name: 'Chocolate', singularName: 'Chocolate' },
       ],
     },
     {
-      id: 'ing_vanilla',
+      id: ING_VANILLA,
       content: [
         { language: 'en', name: 'Vanilla extract', singularName: 'Vanilla' },
         {
@@ -306,7 +360,7 @@ async function seed() {
       ],
     },
     {
-      id: 'ing_baking_powder',
+      id: ING_BAKING_POWDER,
       content: [
         {
           language: 'en',
@@ -321,21 +375,21 @@ async function seed() {
       ],
     },
     {
-      id: 'ing_cocoa',
+      id: ING_COCOA,
       content: [
         { language: 'en', name: 'Cocoa powder', singularName: 'Cocoa' },
         { language: 'es', name: 'Cacao en polvo', singularName: 'Cacao' },
       ],
     },
     {
-      id: 'ing_cream',
+      id: ING_CREAM,
       content: [
         { language: 'en', name: 'Heavy cream', singularName: 'Cream' },
         { language: 'es', name: 'Nata para montar', singularName: 'Nata' },
       ],
     },
     {
-      id: 'ing_cheese',
+      id: ING_CHEESE,
       content: [
         { language: 'en', name: 'Cheddar cheese', singularName: 'Cheese' },
         { language: 'es', name: 'Queso cheddar', singularName: 'Queso' },
@@ -348,13 +402,13 @@ async function seed() {
 
   console.log('Seeding recipes...');
   await em.save(Recipe, {
-    id: 'recipe_pancakes',
+    id: RECIPE_PANCAKES,
     difficulty: 1,
     time: 3600,
     portions: 4,
     visibility: 1,
     author: 'system',
-    uniqueId: 'abc123',
+    uniqueId: ulid(),
     publications: [
       {
         language: 'en',
@@ -382,17 +436,17 @@ async function seed() {
     ],
     ingredients: [],
     kitchenware: [],
-    categoryIds: ['cat_breakfast'],
+    categoryIds: [CAT_BREAKFAST],
   });
 
   await em.save(Recipe, {
-    id: 'recipe_chocolate_cake',
+    id: RECIPE_CHOCOLATE_CAKE,
     difficulty: 3,
     time: 3600,
     portions: 8,
     visibility: 1,
     author: 'system',
-    uniqueId: 'def456',
+    uniqueId: ulid(),
     publications: [
       {
         language: 'en',
@@ -424,17 +478,17 @@ async function seed() {
     ],
     ingredients: [],
     kitchenware: [],
-    categoryIds: ['cat_dessert'],
+    categoryIds: [CAT_DESSERT],
   });
 
   await em.save(Recipe, {
-    id: 'recipe_spaghetti_carbonara',
+    id: RECIPE_SPAGHETTI_CARBONARA,
     difficulty: 2,
     time: 1800,
     portions: 4,
     visibility: 1,
     author: 'system',
-    uniqueId: 'ghi789',
+    uniqueId: ulid(),
     publications: [
       {
         language: 'en',
@@ -481,17 +535,17 @@ async function seed() {
     ],
     ingredients: [],
     kitchenware: [],
-    categoryIds: ['cat_dinner'],
+    categoryIds: [CAT_DINNER],
   });
 
   await em.save(Recipe, {
-    id: 'recipe_caesar_salad',
+    id: RECIPE_CAESAR_SALAD,
     difficulty: 1,
     time: 900,
     portions: 2,
     visibility: 1,
     author: 'system',
-    uniqueId: 'jkl012',
+    uniqueId: ulid(),
     publications: [
       {
         language: 'en',
@@ -523,17 +577,17 @@ async function seed() {
     ],
     ingredients: [],
     kitchenware: [],
-    categoryIds: ['cat_lunch'],
+    categoryIds: [CAT_LUNCH],
   });
 
   await em.save(Recipe, {
-    id: 'recipe_beef_tacos',
+    id: RECIPE_BEEF_TACOS,
     difficulty: 2,
     time: 1200,
     portions: 4,
     visibility: 1,
     author: 'system',
-    uniqueId: 'mno345',
+    uniqueId: ulid(),
     publications: [
       {
         language: 'en',
@@ -565,17 +619,17 @@ async function seed() {
     ],
     ingredients: [],
     kitchenware: [],
-    categoryIds: ['cat_dinner'],
+    categoryIds: [CAT_DINNER],
   });
 
   await em.save(Recipe, {
-    id: 'recipe_berry_smoothie',
+    id: RECIPE_BERRY_SMOOTHIE,
     difficulty: 1,
     time: 600,
     portions: 2,
     visibility: 1,
     author: 'system',
-    uniqueId: 'pqr678',
+    uniqueId: ulid(),
     publications: [
       {
         language: 'en',
@@ -607,17 +661,17 @@ async function seed() {
     ],
     ingredients: [],
     kitchenware: [],
-    categoryIds: ['cat_breakfast'],
+    categoryIds: [CAT_BREAKFAST],
   });
 
   await em.save(Recipe, {
-    id: 'recipe_grilled_salmon',
+    id: RECIPE_GRILLED_SALMON,
     difficulty: 3,
     time: 35,
     portions: 2,
     visibility: 1,
     author: 'system',
-    uniqueId: 'stu901',
+    uniqueId: ulid(),
     publications: [
       {
         language: 'en',
@@ -664,17 +718,17 @@ async function seed() {
     ],
     ingredients: [],
     kitchenware: [],
-    categoryIds: ['cat_dinner'],
+    categoryIds: [CAT_DINNER],
   });
 
   await em.save(Recipe, {
-    id: 'recipe_chocolate_mousse',
+    id: RECIPE_CHOCOLATE_MOUSSE,
     difficulty: 2,
     time: 45,
     portions: 6,
     visibility: 1,
     author: 'system',
-    uniqueId: 'vwx234',
+    uniqueId: ulid(),
     publications: [
       {
         language: 'en',
@@ -721,17 +775,17 @@ async function seed() {
     ],
     ingredients: [],
     kitchenware: [],
-    categoryIds: ['cat_dessert'],
+    categoryIds: [CAT_DESSERT],
   });
 
   await em.save(Recipe, {
-    id: 'recipe_veggie_stir_fry',
+    id: RECIPE_VEGGIE_STIR_FRY,
     difficulty: 1,
     time: 20,
     portions: 3,
     visibility: 1,
     author: 'system',
-    uniqueId: 'yza567',
+    uniqueId: ulid(),
     publications: [
       {
         language: 'en',
@@ -763,17 +817,17 @@ async function seed() {
     ],
     ingredients: [],
     kitchenware: [],
-    categoryIds: ['cat_lunch'],
+    categoryIds: [CAT_LUNCH],
   });
 
   await em.save(Recipe, {
-    id: 'recipe_french_toast',
+    id: RECIPE_FRENCH_TOAST,
     difficulty: 1,
     time: 15,
     portions: 2,
     visibility: 1,
     author: 'system',
-    uniqueId: 'bcd890',
+    uniqueId: ulid(),
     publications: [
       {
         language: 'en',
@@ -820,17 +874,17 @@ async function seed() {
     ],
     ingredients: [],
     kitchenware: [],
-    categoryIds: ['cat_breakfast'],
+    categoryIds: [CAT_BREAKFAST],
   });
 
   await em.save(Recipe, {
-    id: 'recipe_shrimp_paella',
+    id: RECIPE_SHRIMP_PAELLA,
     difficulty: 3,
     time: 60,
     portions: 4,
     visibility: 1,
     author: 'system',
-    uniqueId: 'efg123',
+    uniqueId: ulid(),
     publications: [
       {
         language: 'en',
@@ -877,17 +931,17 @@ async function seed() {
     ],
     ingredients: [],
     kitchenware: [],
-    categoryIds: ['cat_dinner'],
+    categoryIds: [CAT_DINNER],
   });
 
   await em.save(Recipe, {
-    id: 'recipe_lemon_cheesecake',
+    id: RECIPE_LEMON_CHEESECAKE,
     difficulty: 3,
     time: 90,
     portions: 8,
     visibility: 1,
     author: 'system',
-    uniqueId: 'hij456',
+    uniqueId: ulid(),
     publications: [
       {
         language: 'en',
@@ -934,17 +988,17 @@ async function seed() {
     ],
     ingredients: [],
     kitchenware: [],
-    categoryIds: ['cat_dessert'],
+    categoryIds: [CAT_DESSERT],
   });
 
   await em.save(Recipe, {
-    id: 'recipe_avocado_toast',
+    id: RECIPE_AVOCADO_TOAST,
     difficulty: 1,
     time: 10,
     portions: 2,
     visibility: 1,
     author: 'system',
-    uniqueId: 'klm789',
+    uniqueId: ulid(),
     publications: [
       {
         language: 'en',
@@ -976,7 +1030,7 @@ async function seed() {
     ],
     ingredients: [],
     kitchenware: [],
-    categoryIds: ['cat_breakfast'],
+    categoryIds: [CAT_BREAKFAST],
   });
 
   await dataSource.destroy();

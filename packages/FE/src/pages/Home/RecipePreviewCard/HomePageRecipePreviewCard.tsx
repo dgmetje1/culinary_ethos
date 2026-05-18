@@ -71,7 +71,7 @@ const HomePageRecipePreviewCard = () => {
                 <List
                   items={recipe.ingredients.slice(0, 5)}
                   renderItem={ingredient =>
-                    `${ingredient.quantity} ${ingredient.units.shortName} de ${ingredient.name.toLocaleLowerCase()}`
+                    `${ingredient.quantity} ${ingredient.unit?.shortName || ''} de ${ingredient.name.toLocaleLowerCase()}`
                   }
                   shouldSeeMoreBeShown={recipe.ingredients.length > 5}
                   title={

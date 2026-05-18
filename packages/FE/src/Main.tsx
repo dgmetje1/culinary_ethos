@@ -1,13 +1,12 @@
-import { FC } from "react";
-import { Auth0Provider, Auth0ProviderOptions } from "@auth0/auth0-react";
-import { CssBaseline, GlobalStyles, ThemeProvider } from "@mui/material";
-import { QueryClientProvider } from "@tanstack/react-query";
+import { FC } from 'react';
+import { Auth0Provider, Auth0ProviderOptions } from '@auth0/auth0-react';
+import { CssBaseline, GlobalStyles, ThemeProvider } from '@mui/material';
+import { QueryClientProvider } from '@tanstack/react-query';
 
-import App from "@/components/App";
-import config from "@/config";
-import getRouter from "@/config/routing";
-import theme from "@/config/theme";
-import { queryClient } from "@/lib/core/queryClient";
+import App from '@/components/App';
+import config from '@/config';
+import theme from '@/config/theme';
+import { queryClient } from '@/lib/core/queryClient';
 
 const auth0configProps: Auth0ProviderOptions = {
   clientId: config.auth0ClientId,
@@ -18,40 +17,31 @@ const auth0configProps: Auth0ProviderOptions = {
   },
 };
 
-const router = getRouter(queryClient);
-
-// Register things for typesafety
-declare module "@tanstack/react-router" {
-  interface Register {
-    router: typeof router;
-  }
-}
-
 const Main: FC = () => (
   <ThemeProvider theme={theme}>
     <CssBaseline />
     <GlobalStyles
       styles={{
-        "*": { boxSizing: "border-box" },
+        '*': { boxSizing: 'border-box' },
         body: {
-          msOverflowStyle: "none",
-          scrollbarWidth: "none",
-          height: "100dvh",
+          msOverflowStyle: 'none',
+          scrollbarWidth: 'none',
+          height: '100dvh',
         },
-        "#root": {
-          height: "100%",
+        '#root': {
+          height: '100%',
         },
         a: {
-          color: "inherit",
-          textDecoration: "inherit",
+          color: 'inherit',
+          textDecoration: 'inherit',
         },
-        "::-webkit-scrollbar": {
-          width: "0.5em",
-          height: "0.5em",
-          display: "none",
+        '::-webkit-scrollbar': {
+          width: '0.5em',
+          height: '0.5em',
+          display: 'none',
         },
-        "::-webkit-scrollbar-thumb": {
-          backgroundColor: "rgba(0,0,0,0.1)",
+        '::-webkit-scrollbar-thumb': {
+          backgroundColor: 'rgba(0,0,0,0.1)',
         },
       }}
     />

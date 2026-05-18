@@ -3,6 +3,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { RouterProvider } from '@tanstack/react-router';
 
 import withAuth from '@/components/hoc/Auth';
+import { Toaster } from 'sonner';
 import getRouter from '@/config/routing';
 import { useAuthContext } from '@/context/Auth';
 import { SearchProvider } from '@/context/Search';
@@ -37,7 +38,8 @@ const App = () => {
 
   return (
     <SearchProvider>
-      <RouterProvider context={{ authContext }} router={router} />
+      <RouterProvider context={{ authContext }} router={router!} />
+      <Toaster />
     </SearchProvider>
   );
 };

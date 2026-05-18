@@ -21,7 +21,7 @@ export class LoggingInterceptor implements NestInterceptor {
       tap(() => {
         const response = context.switchToHttp().getResponse();
         this.logger.log(
-          `${method} ${url} ${response.statusCode} - ${Date.now() - now}ms`,
+          `${method} ${url} ${response.statusCode} - ${Date.now() - now}ms - ${JSON.stringify(body)}`,
         );
       }),
     );

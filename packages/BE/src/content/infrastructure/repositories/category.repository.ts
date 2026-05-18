@@ -22,6 +22,11 @@ export class CategoryRepository implements ICategoryRepository {
     return result ? { id: result.id, content: result.content } : null;
   }
 
+  async findByIds(ids: string[]): Promise<CategoryAttributes[]> {
+    const results = await this.repository.findByIds(ids);
+    return results.map((r) => ({ id: r.id, content: r.content }));
+  }
+
   async create(content: CategoryContent[]): Promise<CategoryAttributes> {
     const category = this.repository.create({ id: ulid(), content });
     const saved = await this.repository.save(category);

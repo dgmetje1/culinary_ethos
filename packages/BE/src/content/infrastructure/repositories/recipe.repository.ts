@@ -2,7 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ulid } from 'ulidx';
-import { Recipe, RecipeAttributes, CreateRecipeInput, RecipeStep, RecipeIngredient, RecipeKitchenware } from '../../domain/models';
+import {
+  Recipe,
+  RecipeAttributes,
+  CreateRecipeInput,
+  RecipeStep,
+  RecipeIngredient,
+  RecipeKitchenware,
+} from '../../domain/models';
 import { IRecipeRepository } from '../../application/repositories/recipe.repository';
 
 @Injectable()
@@ -13,7 +20,10 @@ export class RecipeRepository implements IRecipeRepository {
   ) {}
 
   async findAll(_categoryId?: number): Promise<RecipeAttributes[]> {
-    const results = await this.repository.find({ take: 20, order: { publicationDate: 'DESC' } });
+    const results = await this.repository.find({
+      take: 20,
+      order: { publicationDate: 'DESC' },
+    });
     return results.map((r) => this.toAttributes(r));
   }
 
@@ -23,8 +33,16 @@ export class RecipeRepository implements IRecipeRepository {
   }
 
   async findDaily(): Promise<RecipeAttributes | null> {
-    const results = await this.repository.find({ order: { publicationDate: 'DESC' }, take: 1 });
+    const results = await this.repository.find({
+      order: { publicationDate: 'DESC' },
+      take: 1,
+    });
     return results.length > 0 ? this.toAttributes(results[0]) : null;
+  }
+
+  async exists(id: string): Promise<boolean> {
+    const count = await this.repository.count({ where: { id } });
+    return count > 0;
   }
 
   async create(input: CreateRecipeInput): Promise<RecipeAttributes> {
@@ -37,32 +55,53 @@ export class RecipeRepository implements IRecipeRepository {
     return this.toAttributes(saved as Recipe);
   }
 
-  async addIngredients(id: string, ingredients: RecipeIngredient[]): Promise<RecipeAttributes | null> {
+  async update(
+    id: string,
+    input: Partial<CreateRecipeInput>,
+  ): Promise<boolean> {
+    const existing = await this.repository.findOne({ where: { id } });
+    if (!existing) return false;
+
+    Object.assign(existing, input);
+    const saved = await this.repository.save(existing);
+    return !!saved;
+  }
+
+  async addIngredients(
+    id: string,
+    ingredients: RecipeIngredient[],
+  ): Promise<boolean> {
     const existing = await this.findById(id);
-    if (!existing) return null;
+    if (!existing) return false;
     const updated = [...existing.ingredients, ...ingredients];
-    await this.repository.update(id, { ingredients: updated });
-    return this.findById(id);
+    const result = await this.repository.update(id, { ingredients: updated });
+    return (result.affected ?? 0) > 0;
   }
 
-  async addKitchenware(id: string, kitchenware: RecipeKitchenware[]): Promise<RecipeAttributes | null> {
+  async addKitchenware(
+    id: string,
+    kitchenware: RecipeKitchenware[],
+  ): Promise<boolean> {
     const existing = await this.findById(id);
-    if (!existing) return null;
+    if (!existing) return false;
     const updated = [...existing.kitchenware, ...kitchenware];
-    await this.repository.update(id, { kitchenware: updated });
-    return this.findById(id);
+    const result = await this.repository.update(id, { kitchenware: updated });
+    return (result.affected ?? 0) > 0;
   }
 
-  async addSteps(id: string, steps: RecipeStep[]): Promise<RecipeAttributes | null> {
+  async addSteps(id: string, steps: RecipeStep[]): Promise<boolean> {
     const existing = await this.findById(id);
-    if (!existing) return null;
+    if (!existing) return false;
     const updated = [...existing.steps, ...steps];
-    await this.repository.update(id, { steps: updated });
-    return this.findById(id);
+    const result = await this.repository.update(id, { steps: updated });
+    return (result.affected ?? 0) > 0;
   }
 
   private toAttributes(recipe: Recipe): RecipeAttributes {
     const categoryIds = recipe.categoryIds ? recipe.categoryIds : [];
+    const steps = recipe.steps ? recipe.steps : [];
+    const kitchenware = recipe.kitchenware ? recipe.kitchenware : [];
+    const ingredients = recipe.ingredients ? recipe.ingredients : [];
     return {
       id: recipe.id,
       difficulty: recipe.difficulty,
@@ -75,9 +114,9 @@ export class RecipeRepository implements IRecipeRepository {
       headerImg: recipe.headerImg,
       publicationDate: recipe.publicationDate,
       publications: recipe.publications,
-      steps: recipe.steps,
-      ingredients: recipe.ingredients,
-      kitchenware: recipe.kitchenware,
+      steps,
+      ingredients,
+      kitchenware,
       categoryIds,
     };
   }

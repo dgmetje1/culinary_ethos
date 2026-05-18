@@ -118,6 +118,34 @@ export class RecipeIngredientResponseDto {
   unit: { id: string; name: string; shortName: string } | null;
 }
 
+export class RecipeKitchenwareResponseDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  name: string;
+
+  @ApiProperty()
+  singularName: string;
+
+  @ApiProperty()
+  quantity: number;
+}
+
+export class RecipeStepResponseDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  title: string;
+
+  @ApiProperty()
+  body: string;
+
+  @ApiProperty()
+  number: number;
+}
+
 export class RecipeResponseDto {
   @ApiProperty()
   id: string;
@@ -157,6 +185,11 @@ export class RecipeResponseDto {
 
   @ApiProperty({ type: RecipeIngredientResponseDto, isArray: true })
   ingredients: RecipeIngredientResponseDto[];
+  @ApiProperty({ type: RecipeKitchenwareResponseDto, isArray: true })
+  kitchenware: RecipeKitchenwareResponseDto[];
+
+  @ApiProperty({ type: RecipeStepResponseDto, isArray: true })
+  steps: RecipeStepResponseDto[];
 }
 
 export class RecipeDailyResponseDto {

@@ -1,0 +1,49 @@
+import { useQueryClient } from '@tanstack/react-query';
+
+import { Api } from '@/lib/api';
+import { useApiMutation } from '@/middleware/api';
+import { CreateRecipeDTO } from '@/types/createRecipe';
+
+import { getRecipesKeys, getRecipeKeys } from './keys';
+
+export const useCreateRecipe = () => {
+  const queryClient = useQueryClient();
+  const createRecipe: (data: CreateRecipeDTO) => Promise<string> = async (
+    data: CreateRecipeDTO,
+  ) => {
+    const api = new Api();
+    const response: string = await api.post('recipes', data);
+
+    return response;
+  };
+
+  return useApiMutation('', createRecipe, {
+    onSuccess: (recipeId) => {
+      const { queryKey } = getRecipesKeys({});
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+};
+
+export const useUpdateRecipe = () => {
+  const queryClient = useQueryClient();
+  const updateRecipe = async ({
+    id,
+    data,
+  }: {
+    id: string;
+    data: CreateRecipeDTO;
+  }) => {
+    const api = new Api();
+    const response = await api.put(`recipes/${id}`, data);
+
+    return response;
+  };
+
+  return useApiMutation('', updateRecipe, {
+    onSuccess: (_, variables) => {
+      const { queryKey } = getRecipeKeys(variables.id);
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+};

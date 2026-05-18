@@ -16,13 +16,50 @@ export class Api {
   private _axiosInstance: AxiosInstance;
 
   constructor() {
-    this._axiosInstance = axios.create({ baseURL: config.apiUrl });
+    this._axiosInstance = axios.create({
+      baseURL: config.apiUrl,
+      withCredentials: true,
+    });
 
     this._axiosInstance.interceptors.request.use((config) => {
       const language = Api._lang || 'en';
       config.headers['Accept-Language'] = language;
       return config;
     });
+
+    this._axiosInstance.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        const status = error.response?.status;
+        let errorCode = 'unknown-error';
+        let message = 'An unexpected error occurred';
+
+        if (status === 400) {
+          errorCode = 'bad-request';
+          message = error.response?.data?.message || 'Invalid request';
+        } else if (status === 401) {
+          errorCode = 'unauthorized';
+          message = 'Authentication required';
+        } else if (status === 403) {
+          errorCode = 'forbidden';
+          message = 'Access denied';
+        } else if (status === 404) {
+          errorCode = 'not-found';
+          message = error.response?.data?.message || 'Resource not found';
+        } else if (status === 422) {
+          errorCode = 'validation-error';
+          message = error.response?.data?.message || 'Validation failed';
+        } else if (status && status >= 500) {
+          errorCode = 'server-error';
+          message = 'Server error. Please try again later.';
+        } else if (!error.response) {
+          errorCode = 'network-error';
+          message = 'Network error. Please check your connection.';
+        }
+
+        return Promise.reject(new ApiException(errorCode, message));
+      },
+    );
   }
 
   public async get<T>(url: string, config?: RequestConfig) {
@@ -38,6 +75,25 @@ export class Api {
     return this.request<T>('DELETE', url, { ...config, data });
   }
 
+  public async uploadFile<T>(
+    url: string,
+    file: File,
+    category: string,
+    config?: RequestConfig,
+  ) {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('category', category);
+
+    return this.request<T>('POST', url, {
+      ...config,
+      data: formData,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  }
+
   public async request<T>(
     method: string,
     url: string,
@@ -46,7 +102,7 @@ export class Api {
   ): Promise<T> {
     try {
       const requestConfig = { ...defaultConfig, ...config };
-      const headers: AxiosRequestConfig['headers'] = {};
+      const headers: Record<string, string> = {};
 
       if (false && requestConfig.withAuth) {
         if (!Api._accessToken)

@@ -1,18 +1,18 @@
-import React from "react";
-import { useAuth0 } from "@auth0/auth0-react";
-import { AccountCircle } from "@mui/icons-material";
-import { Avatar, Divider, Popover, Typography } from "@mui/material";
-import IconButton from "@mui/material/IconButton";
-import MenuItem from "@mui/material/MenuItem";
-import { useNavigate } from "@tanstack/react-router";
+import React from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
+import { AccountCircle } from '@mui/icons-material';
+import { Avatar, Divider, Popover, Typography } from '@mui/material';
+import IconButton from '@mui/material/IconButton';
+import MenuItem from '@mui/material/MenuItem';
+import { useRouter } from '@tanstack/react-router';
 
-import config from "@/config";
-import { useAuthContext } from "@/context/Auth";
+import config from '@/config';
+import { useAuthContext } from '@/context/Auth';
 
 const HeaderProfileMenu = () => {
   const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
   const { account } = useAuthContext();
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -35,8 +35,8 @@ const HeaderProfileMenu = () => {
 
   const handleGoToProfile = React.useCallback(() => {
     handleClose();
-    navigate({ to: "/profile" });
-  }, [navigate]);
+    router.navigate({ to: '/profile' });
+  }, [router]);
 
   const authenticatedProfileLinks = React.useMemo(
     () => (
@@ -58,7 +58,10 @@ const HeaderProfileMenu = () => {
     [handleGoToProfile, handleLogout, user?.nickname],
   );
 
-  const anonymousProfileLinks = React.useMemo(() => <MenuItem onClick={handleLogin}>Log in</MenuItem>, [handleLogin]);
+  const anonymousProfileLinks = React.useMemo(
+    () => <MenuItem onClick={handleLogin}>Log in</MenuItem>,
+    [handleLogin],
+  );
 
   return (
     <>
@@ -70,7 +73,10 @@ const HeaderProfileMenu = () => {
         onClick={handleMenu}
       >
         {isAuthenticated && account?.profilePicture ? (
-          <Avatar alt={`${account?.nickName} profile picture`} src={`${config.cdnUrl}/${account.profilePicture}`} />
+          <Avatar
+            alt={`${account?.nickName} profile picture`}
+            src={`${config.cdnUrl}/${account.profilePicture}`}
+          />
         ) : (
           <AccountCircle fontSize="large" />
         )}
@@ -78,8 +84,8 @@ const HeaderProfileMenu = () => {
       <Popover
         anchorEl={anchorEl}
         anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "right",
+          vertical: 'bottom',
+          horizontal: 'right',
         }}
         id="menu-appbar"
         onClose={handleClose}

@@ -1,10 +1,19 @@
-import { useSuspenseApiQuery } from "@/middleware/api";
+import { useApiQuery, useSuspenseApiQuery } from "@/middleware/api";
 
 import { getCategoriesKeys } from "./keys";
-import { getCategoriesOptions } from "./options";
+import { getCategories } from "./queries";
+
+export const useGetCategories = () => {
+  const { key, queryKey } = getCategoriesKeys();
+
+  return useApiQuery(key, queryKey, () => getCategories());
+};
 
 export const useSuspenseGetCategories = () => {
   const { key } = getCategoriesKeys();
 
-  return useSuspenseApiQuery(key, getCategoriesOptions());
+  return useSuspenseApiQuery(key, {
+    queryKey: [key],
+    queryFn: () => getCategories(),
+  });
 };

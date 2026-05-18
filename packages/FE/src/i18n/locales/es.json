@@ -3,8 +3,11 @@
     "default_error": "Hi ha hagut un error en accedir a l'API"
   },
   "common": {
-    "of": "of",
-    "by": "Por"
+    "of": "de",
+    "by": "Por",
+    "saving": "Guardando...",
+    "success": "Éxito",
+    "error": "Error"
   },
   "menu": {
     "sidebar": {
@@ -61,22 +64,102 @@
       }
     },
     "recipe": {
-      "ingredients_title": "Ingredients",
-      "kitchenware_title": "Kitchenware",
-      "author_title": "Author",
-      "steps_title": "Steps"
+      "ingredients_title": "Ingredientes",
+      "kitchenware_title": "Utensilios",
+      "author_title": "Autor",
+      "steps_title": "Preparación"
+    },
+    "editor": {
+      "title": "Editor de Recetas",
+      "description": "Defina su visión culinaria con precisión editorial. Cada detalle importa en la creación de una experiencia gastronómica única.",
+      "fields": {
+        "title": {
+          "label": "Título de la Obra",
+          "placeholder": "Ej. Risotto de Azafrán y Pera Caramelizada"
+        },
+        "description": {
+          "label": "Descripción / Inspiración",
+          "placeholder": "Relate la historia detrás de este plato..."
+        },
+        "author": {
+          "label": "Nombre del Autor",
+          "placeholder": "Tu nombre o pseudónimo"
+        }
+      },
+      "sections": {
+        "ingredients": {
+          "title": "Ingredientes",
+          "placeholder": "Ej. 300g Arroz Carnaroli",
+          "search": "Buscar ingredientes...",
+          "empty": "Sin ingredientes añadidos"
+        },
+        "tools": {
+          "title": "Utensilios",
+          "add_placeholder": "Añadir utensilio...",
+          "search": "Buscar utensilios...",
+          "add": "Añadir utensilio",
+          "empty": "Sin utensilios añadidos"
+        },
+        "steps": {
+          "title": "Preparación paso a paso",
+          "add_photo": "Añadir Foto",
+          "placeholder": "Comience por infusionar el azafrán en una pequeña porción del caldo caliente...",
+          "title_placeholder": "Título del paso...",
+          "add_step": "AÑADIR OTRO PASO"
+        },
+        "image": {
+          "upload": "SUBIR FOTO PRINCIPAL",
+          "recommendation": "Recomendado: 1200x1500px en alta resolución.",
+          "header": "Imagen de cabecera",
+          "headerRecommendation": "Requerido: 1500x1024px"
+        },
+        "metadata": {
+          "title": "Ajustes de Publicación",
+          "time": "Tiempo estimado",
+          "difficulty": "Dificultad",
+          "portions": "Porciones",
+          "categories": "Categorías"
+        },
+        "tip": {
+          "title": "Consejo Editorial",
+          "content": "Utilice verbos de acción precisos como 'emulsionar', 'tamizar' o 'reducir' para elevar la calidad de sus instrucciones."
+        }
+      },
+      "difficulty": {
+        "beginner": "Principiante",
+        "intermediate": "Intermedio",
+        "advanced": "Chef Avanzado"
+      },
+      "actions": {
+        "discard": "DESCARTAR",
+        "publish": "PUBLICAR RECETA",
+        "update": "ACTUALIZAR RECETA",
+        "preview": "VER RECETA"
+      },
+      "quantity": "Cant",
+      "optional": "Opcional",
+      "no_unit": "Sin unidad",
+      "add": "Añadir",
+      "cancel": "Cancelar",
+      "select_category": "Selecciona una categoría...",
+      "toast": {
+        "createSuccess": "¡Receta creada correctamente!",
+        "updateSuccess": "¡Receta actualizada correctamente!",
+        "error": "Error al guardar la receta. Inténtalo de nuevo."
+      }
     }
   },
   "recipe": {
     "fields": {
-      "difficulty": "Difficulty",
-      "time": "Time",
-      "portions": "Portions"
+      "difficulty": "Dificultad",
+      "time": "Tiempo",
+      "portions": "Porciones",
+      "calories": "Calorías"
     },
     "difficulty": {
-      "1": "easy",
-      "2": "medium",
-      "3": "hard"
+      "1": "fácil",
+      "2": "medio",
+      "3": "difícil"
     }
   }
 }

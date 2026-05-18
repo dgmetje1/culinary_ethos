@@ -1,10 +1,19 @@
-import { useSuspenseApiQuery } from "@/middleware/api";
+import { useApiQuery, useSuspenseApiQuery } from "@/middleware/api";
 
 import { getKitchenwareKeys } from "./keys";
-import { getKitchenwareOptions } from "./options";
+import { getKitchenware } from "./queries";
+
+export const useGetKitchenware = () => {
+  const { key, queryKey } = getKitchenwareKeys();
+
+  return useApiQuery(key, queryKey, () => getKitchenware());
+};
 
 export const useSuspenseGetKitchenware = () => {
   const { key } = getKitchenwareKeys();
 
-  return useSuspenseApiQuery(key, getKitchenwareOptions());
+  return useSuspenseApiQuery(key, {
+    queryKey: [key],
+    queryFn: () => getKitchenware(),
+  });
 };

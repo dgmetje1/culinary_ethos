@@ -11,7 +11,15 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiResponse, ApiQuery } from '@nestjs/swagger';
 import { RecipesService } from '../../application/services';
-import { CreateRecipeDto, RecipeResponseDto, RecipeListItemResponseDto, RecipeDailyResponseDto, RecipeIngredientDto, RecipeKitchenwareDto, RecipeStepDto } from '../../application/dto';
+import {
+  CreateRecipeDto,
+  RecipeResponseDto,
+  RecipeListItemResponseDto,
+  RecipeDailyResponseDto,
+  RecipeIngredientDto,
+  RecipeKitchenwareDto,
+  RecipeStepDto,
+} from '../../application/dto';
 import { Language } from '../../../common/decorators/language.decorator';
 
 @ApiTags('Recipes')
@@ -40,8 +48,11 @@ export class RecipesController {
   @Get(':id')
   @ApiOperation({ summary: 'Get recipe by ID' })
   @ApiResponse({ status: 200, type: RecipeResponseDto })
-  async getById(@Param('id') id: string): Promise<RecipeResponseDto> {
-    return this.recipesService.getById(id);
+  async getById(
+    @Param('id') id: string,
+    @Language() language?: string,
+  ): Promise<RecipeResponseDto> {
+    return this.recipesService.getById(id, language);
   }
 
   @Post()
@@ -50,6 +61,17 @@ export class RecipesController {
   @ApiResponse({ status: 201, type: String })
   async create(@Body() dto: CreateRecipeDto): Promise<string> {
     return this.recipesService.create(dto);
+  }
+
+  @Put(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Update a recipe' })
+  @ApiResponse({ status: 204 })
+  async update(
+    @Param('id') id: string,
+    @Body() dto: CreateRecipeDto,
+  ): Promise<void> {
+    await this.recipesService.update(id, dto);
   }
 
   @Put(':id/ingredients')
