@@ -49,7 +49,7 @@ const HomePageMasonryGrid = () => {
               )}
             >
               <img
-                src={`${config.cdnUrl}/${recipe.thumbnailUrl}`}
+                src={`${config.cdnUrl}${recipe.thumbnailUrl}`}
                 alt={recipe.title}
                 className={cn(
                   'w-full object-cover',

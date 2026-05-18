@@ -12,6 +12,7 @@
 tmp
 lib
 dist
+**/dist
 
 # Logs
 logs

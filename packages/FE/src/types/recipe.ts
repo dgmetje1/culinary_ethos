@@ -1,6 +1,5 @@
 import { Category } from "./category";
 import { Ingredient } from "./ingredients";
-import { Tool } from "./kitchenware";
 import { Unit } from "./unit";
 import { Language } from "./user";
 
@@ -26,7 +25,7 @@ export type Recipe = {
   publicationDate: Date;
   categories: RecipeCategory[];
   ingredients: RecipeIngredient[];
-  kitchenware: Tool[];
+  kitchenware: RecipeKitchenware[];
   steps: RecipeStep[];
 };
 
@@ -35,8 +34,15 @@ export type RecipeIngredient = Pick<Ingredient, "id"> &
   Ingredient["content"][Language] & {
     quantity: number;
     optional: boolean;
-    units: Pick<Unit, "id" | "isVisible"> & Unit["content"][Language];
+    unit: Pick<Unit, "id" | "isVisible"> & Unit["content"][Language] | null;
   };
+
+export type RecipeKitchenware = {
+  id: string;
+  name: string;
+  singularName: string;
+  quantity: number;
+};
 
 export type RecipeStep = {
   id: string;

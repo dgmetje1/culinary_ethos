@@ -1,35 +1,41 @@
-import { Avatar, Box } from "@mui/material";
-import Typography from "@mui/material/Typography";
 import { useTranslation } from "react-i18next";
+import { ChefHat } from "lucide-react";
 
-import { RecipeDetailRoute } from "@/config/routing";
-import { useSuspenseGetRecipe } from "@/queries/recipes";
-import { useSuspenseGetUserSummary } from "@/queries/users";
+import { cn } from "@/lib/utils";
 
-import RecipeDetailPageCard from "../RecipeDetailPageCard";
+interface RecipeDetailPageAuthorCardProps {
+  author: string;
+}
 
-const RecipeDetailPageAuthorCard = () => {
+const RecipeDetailPageAuthorCard = ({ author }: RecipeDetailPageAuthorCardProps) => {
   const { t } = useTranslation();
-  const { id } = RecipeDetailRoute.useParams();
-  const { data: recipe } = useSuspenseGetRecipe(id);
-
-  const { data: authorInfo } = useSuspenseGetUserSummary(recipe.author);
 
   return (
-    <RecipeDetailPageCard>
-      <Typography fontWeight={600} variant="h5">
-        {t("pages.recipe.author_title")}
-      </Typography>
-      <Box alignItems="center" columnGap={2} display="flex">
-        <Avatar src={authorInfo.profilePicture ?? undefined} />
-        <Box display="flex" flexDirection="column" justifyContent="flex-start">
-          <Typography fontWeight={600} variant="body1">{`${authorInfo.name} ${authorInfo.lastName}`}</Typography>
-          <Typography color="grey.600" fontStyle="italic" variant="body3">
-            @{authorInfo.nickName}
-          </Typography>
-        </Box>
-      </Box>
-    </RecipeDetailPageCard>
+    <div
+      className={cn(
+        "bg-white/70 dark:bg-stone-900/70",
+        "backdrop-blur-xl",
+        "p-8 rounded-xl",
+        "border border-stone-200/30 dark:border-stone-800/30"
+      )}
+    >
+      <div className="flex items-center gap-4">
+        <div className="w-16 h-16 rounded-full overflow-hidden bg-stone-200 dark:bg-stone-800 flex items-center justify-center">
+          <ChefHat className="w-8 h-8 text-stone-500" />
+        </div>
+        <div>
+          <p
+            className={cn(
+              "text-xs font-semibold uppercase tracking-wider",
+              "text-stone-500 dark:text-stone-400"
+            )}
+          >
+            {t("pages.recipe.author_title").toUpperCase()}
+          </p>
+          <p className="text-xl font-serif">{author}</p>
+        </div>
+      </div>
+    </div>
   );
 };
 

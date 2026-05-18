@@ -58,6 +58,7 @@ export interface CreateRecipeInput {
   ingredients: RecipeIngredient[];
   kitchenware: RecipeKitchenware[];
   steps: RecipeStep[];
+  thumbnailUrl?: string;
 }
 
 @Entity({ name: 'recipes' })

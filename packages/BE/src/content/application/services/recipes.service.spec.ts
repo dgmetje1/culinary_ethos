@@ -4,7 +4,11 @@ import { EntityNotFoundError, InvalidParameterError } from '../../../common/exce
 
 describe('RecipesService', () => {
   let service: RecipesService;
-  let mockRepository: any;
+  let mockRecipeRepository: any;
+  let mockCategoryRepository: any;
+  let mockIngredientRepository: any;
+  let mockKitchenwareRepository: any;
+  let mockUnitRepository: any;
 
   const mockRecipe = {
     id: 'rec123',
@@ -28,21 +32,44 @@ describe('RecipesService', () => {
   };
 
   beforeEach(() => {
-    mockRepository = {
+    mockRecipeRepository = {
       findAll: vi.fn(),
       findById: vi.fn(),
       findDaily: vi.fn(),
+      exists: vi.fn(),
       create: vi.fn(),
+      update: vi.fn(),
       addIngredients: vi.fn(),
       addKitchenware: vi.fn(),
       addSteps: vi.fn(),
     };
-    service = new RecipesService(mockRepository);
+    mockCategoryRepository = {
+      findAll: vi.fn(),
+      findById: vi.fn(),
+      findByIds: vi.fn(),
+    };
+    mockIngredientRepository = {
+      findById: vi.fn(),
+    };
+    mockKitchenwareRepository = {
+      findById: vi.fn(),
+    };
+    mockUnitRepository = {
+      findById: vi.fn(),
+    };
+    service = new RecipesService(
+      mockRecipeRepository,
+      mockCategoryRepository,
+      mockIngredientRepository,
+      mockKitchenwareRepository,
+      mockUnitRepository,
+    );
   });
 
   describe('getAll', () => {
     it('should return all recipes', async () => {
-      mockRepository.findAll.mockResolvedValue([mockRecipe]);
+      mockRecipeRepository.findAll.mockResolvedValue([mockRecipe]);
+      mockCategoryRepository.findAll.mockResolvedValue([]);
 
       const result = await service.getAll(undefined, 'en');
 
@@ -52,7 +79,8 @@ describe('RecipesService', () => {
     });
 
     it('should return empty array when no recipes', async () => {
-      mockRepository.findAll.mockResolvedValue([]);
+      mockRecipeRepository.findAll.mockResolvedValue([]);
+      mockCategoryRepository.findAll.mockResolvedValue([]);
 
       const result = await service.getAll(undefined, 'en');
 
@@ -62,7 +90,11 @@ describe('RecipesService', () => {
 
   describe('getById', () => {
     it('should return recipe by id', async () => {
-      mockRepository.findById.mockResolvedValue(mockRecipe);
+      mockRecipeRepository.findById.mockResolvedValue(mockRecipe);
+      mockCategoryRepository.findByIds.mockResolvedValue([]);
+      mockIngredientRepository.findById.mockResolvedValue(null);
+      mockKitchenwareRepository.findById.mockResolvedValue(null);
+      mockUnitRepository.findById.mockResolvedValue(null);
 
       const result = await service.getById('rec123');
 
@@ -71,7 +103,7 @@ describe('RecipesService', () => {
     });
 
     it('should throw EntityNotFoundError when recipe not found', async () => {
-      mockRepository.findById.mockResolvedValue(null);
+      mockRecipeRepository.findById.mockResolvedValue(null);
 
       await expect(service.getById('invalid')).rejects.toThrow(EntityNotFoundError);
     });
@@ -79,7 +111,7 @@ describe('RecipesService', () => {
 
   describe('getDaily', () => {
     it('should return daily recipe', async () => {
-      mockRepository.findDaily.mockResolvedValue(mockRecipe);
+      mockRecipeRepository.findDaily.mockResolvedValue(mockRecipe);
 
       const result = await service.getDaily();
 
@@ -87,7 +119,7 @@ describe('RecipesService', () => {
     });
 
     it('should throw EntityNotFoundError when no daily recipe', async () => {
-      mockRepository.findDaily.mockResolvedValue(null);
+      mockRecipeRepository.findDaily.mockResolvedValue(null);
 
       await expect(service.getDaily()).rejects.toThrow(EntityNotFoundError);
     });
@@ -95,7 +127,7 @@ describe('RecipesService', () => {
 
   describe('create', () => {
     it('should create recipe and return id', async () => {
-      mockRepository.create.mockResolvedValue({ ...mockRecipe, id: 'new123' });
+      mockRecipeRepository.create.mockResolvedValue({ ...mockRecipe, id: 'new123' });
 
       const result = await service.create({
         difficulty: 1,
@@ -107,7 +139,7 @@ describe('RecipesService', () => {
       });
 
       expect(result).toBe('new123');
-      expect(mockRepository.create).toHaveBeenCalled();
+      expect(mockRecipeRepository.create).toHaveBeenCalled();
     });
 
     it('should throw InvalidParameterError when publications is empty', async () => {
@@ -126,20 +158,20 @@ describe('RecipesService', () => {
 
   describe('addIngredients', () => {
     it('should add ingredients to recipe', async () => {
-      mockRepository.findById.mockResolvedValue(mockRecipe);
-      mockRepository.addIngredients.mockResolvedValue(mockRecipe);
+      mockRecipeRepository.findById.mockResolvedValue(mockRecipe);
+      mockRecipeRepository.addIngredients.mockResolvedValue(mockRecipe);
 
       await service.addIngredients('rec123', [
         { id: 'ing1', unitId: 'unit1', quantity: 100, isOptional: false },
       ]);
 
-      expect(mockRepository.addIngredients).toHaveBeenCalledWith('rec123', [
+      expect(mockRecipeRepository.addIngredients).toHaveBeenCalledWith('rec123', [
         { id: 'ing1', unitId: 'unit1', quantity: 100, isOptional: false },
       ]);
     });
 
     it('should throw EntityNotFoundError when recipe not found', async () => {
-      mockRepository.findById.mockResolvedValue(null);
+      mockRecipeRepository.findById.mockResolvedValue(null);
 
       await expect(service.addIngredients('invalid', [])).rejects.toThrow(EntityNotFoundError);
     });
@@ -147,25 +179,25 @@ describe('RecipesService', () => {
 
   describe('addKitchenware', () => {
     it('should add kitchenware to recipe', async () => {
-      mockRepository.findById.mockResolvedValue(mockRecipe);
-      mockRepository.addKitchenware.mockResolvedValue(mockRecipe);
+      mockRecipeRepository.findById.mockResolvedValue(mockRecipe);
+      mockRecipeRepository.addKitchenware.mockResolvedValue(mockRecipe);
 
       await service.addKitchenware('rec123', [{ id: 'kit1', quantity: 1 }]);
 
-      expect(mockRepository.addKitchenware).toHaveBeenCalledWith('rec123', [{ id: 'kit1', quantity: 1 }]);
+      expect(mockRecipeRepository.addKitchenware).toHaveBeenCalledWith('rec123', [{ id: 'kit1', quantity: 1 }]);
     });
   });
 
   describe('addSteps', () => {
     it('should add steps to recipe', async () => {
-      mockRepository.findById.mockResolvedValue(mockRecipe);
-      mockRepository.addSteps.mockResolvedValue(mockRecipe);
+      mockRecipeRepository.findById.mockResolvedValue(mockRecipe);
+      mockRecipeRepository.addSteps.mockResolvedValue(mockRecipe);
 
       await service.addSteps('rec123', [
         { number: 1, content: [{ language: 'en', title: 'Step 1', body: 'Do something' }] },
       ]);
 
-      expect(mockRepository.addSteps).toHaveBeenCalled();
+      expect(mockRecipeRepository.addSteps).toHaveBeenCalled();
     });
   });
 });

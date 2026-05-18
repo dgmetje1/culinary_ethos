@@ -1,10 +1,19 @@
-import { useSuspenseApiQuery } from "@/middleware/api";
+import { useApiQuery, useSuspenseApiQuery } from "@/middleware/api";
 
 import { getUnitsKeys } from "./keys";
-import { getUnitsOptions } from "./options";
+import { getUnits } from "./queries";
+
+export const useGetUnits = () => {
+  const { key, queryKey } = getUnitsKeys();
+
+  return useApiQuery(key, queryKey, () => getUnits());
+};
 
 export const useSuspenseGetUnits = () => {
   const { key } = getUnitsKeys();
 
-  return useSuspenseApiQuery(key, getUnitsOptions());
+  return useSuspenseApiQuery(key, {
+    queryKey: [key],
+    queryFn: () => getUnits(),
+  });
 };

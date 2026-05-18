@@ -10,7 +10,10 @@
   },
   "common": {
     "of": "of",
-    "by": "By"
+    "by": "By",
+    "saving": "Saving...",
+    "success": "Success",
+    "error": "Error"
   },
   "menu": {
     "sidebar": {
@@ -166,13 +169,93 @@
       "kitchenware_title": "Kitchenware",
       "author_title": "Author",
       "steps_title": "Steps"
+    },
+    "editor": {
+      "title": "Recipe Editor",
+      "description": "Define your culinary vision with editorial precision. Every detail matters in creating a unique gastronomic experience.",
+      "fields": {
+        "title": {
+          "label": "Title of the Work",
+          "placeholder": "E.g. Saffron Risotto with Caramelized Pear"
+        },
+        "description": {
+          "label": "Description / Inspiration",
+          "placeholder": "Tell the story behind this dish..."
+        },
+        "author": {
+          "label": "Author Name",
+          "placeholder": "Your name or pseudonym"
+        }
+      },
+      "sections": {
+        "ingredients": {
+          "title": "Ingredients",
+          "placeholder": "E.g. 300g Carnaroli Rice",
+          "search": "Search ingredients...",
+          "empty": "No ingredients added yet"
+        },
+        "tools": {
+          "title": "Utensils",
+          "add_placeholder": "Add a tool...",
+          "search": "Search utensils...",
+          "add": "Add utensil",
+          "empty": "No utensils added yet"
+        },
+        "steps": {
+          "title": "Step by Step Preparation",
+          "add_photo": "Add Photo",
+          "placeholder": "Start by infusing the saffron in a small portion of hot stock...",
+          "title_placeholder": "Step title...",
+          "add_step": "ADD ANOTHER STEP"
+        },
+        "image": {
+          "upload": "UPLOAD MAIN PHOTO",
+          "recommendation": "Recommended: 1200x1500px in high resolution.",
+          "header": "Header Image",
+          "headerRecommendation": "Required: 1500x1024px"
+        },
+        "metadata": {
+          "title": "Publication Settings",
+          "time": "Estimated time",
+          "difficulty": "Difficulty",
+          "portions": "Portions",
+          "categories": "Categories"
+        },
+        "tip": {
+          "title": "Editorial Tip",
+          "content": "Use precise action verbs like 'emulsify', 'sift' or 'reduce' to elevate the quality of your instructions."
+        }
+      },
+      "difficulty": {
+        "beginner": "Beginner",
+        "intermediate": "Intermediate",
+        "advanced": "Advanced Chef"
+      },
+      "actions": {
+        "discard": "DISCARD",
+        "publish": "PUBLISH RECIPE",
+        "update": "UPDATE RECIPE",
+        "preview": "VIEW RECIPE"
+      },
+      "quantity": "Qty",
+      "optional": "Optional",
+      "no_unit": "No unit",
+      "add": "Add",
+      "cancel": "Cancel",
+      "select_category": "Select a category...",
+      "toast": {
+        "createSuccess": "Recipe created successfully!",
+        "updateSuccess": "Recipe updated successfully!",
+        "error": "Failed to save recipe. Please try again."
+      }
     }
   },
   "recipe": {
     "fields": {
       "difficulty": "Difficulty",
       "time": "Time",
-      "portions": "Portions"
+      "portions": "Portions",
+      "calories": "Calories"
     },
     "difficulty": {
       "1": "easy",

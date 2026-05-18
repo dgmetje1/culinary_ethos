@@ -7,7 +7,7 @@ import { getAccountKeys, getUserKeys, getUserSummaryKeys } from "./keys";
 import { getUserOptions, getUserSummaryOptions } from "./options";
 import { getAccount } from "./queries";
 
-export const useGetAccount = (enabled?: UndefinedInitialDataOptions["enabled"]) => {
+export const useGetAccount = (enabled?: UndefinedInitialDataOptions<User>["enabled"]) => {
   const { key, queryKey } = getAccountKeys();
 
   return useApiQuery(key, queryKey, () => getAccount(), {

@@ -44,6 +44,12 @@ const StyledRecipeCardBox = styled(Box)`
     object-fit: cover;
     border-radius: var(--radius); /* Using CSS variable for border radius */
   }
+
+  &:hover {
+    border-color: hsl(var(--primary));
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  }
 `;
 
 const cardDefaultProps: Partial<BoxProps> = {
@@ -55,19 +61,14 @@ const cardDefaultProps: Partial<BoxProps> = {
   borderRadius: "var(--radius)", /* Using CSS variable for border radius */
   overflow: "hidden",
   border: "1px solid hsl(var(--border))", /* Using CSS variable for border */
-  backgroundColor: "hsl(var(--card))", /* Using CSS variable for card background */
+  bgcolor: "hsl(var(--card))", /* Using CSS variable for card background */
   transition: "all 0.2s ease-in-out",
 };
 
 const StyledRecipeCard = (props: BoxProps) => (
   <StyledRecipeCardBox 
     {...cardDefaultProps} 
-    {...props} 
-    _hover={{
-      borderColor: "hsl(var(--primary))",
-      transform: "translateY(-2px)",
-      boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)"
-    }}
+    {...props}
   />
 );
 
