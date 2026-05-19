@@ -17,7 +17,12 @@ import {
   KitchenwareRepository,
   UnitRepository,
 } from '../../infrastructure';
-import { CategoryAttributes, IngredientAttributes, KitchenwareAttributes, UnitAttributes } from '../../domain/models';
+import {
+  CategoryAttributes,
+  IngredientAttributes,
+  KitchenwareAttributes,
+  UnitAttributes,
+} from '../../domain/models';
 
 @Injectable()
 export class RecipesService {
@@ -79,18 +84,25 @@ export class RecipesService {
     }));
   }
 
-  async getById(id: string, language: string = 'en'): Promise<RecipeResponseDto> {
+  async getById(
+    id: string,
+    language: string = 'en',
+  ): Promise<RecipeResponseDto> {
     const recipe = await this.recipeRepository.findById(id);
     if (!recipe) {
       throw new EntityNotFoundError('Recipe not found', 'Recipe', [{ id }]);
     }
 
-    const [categoryMap, ingredientMap, kitchenwareMap] = await this.getRelatedEntitiesMaps(recipe);
+    const [categoryMap, ingredientMap, kitchenwareMap] =
+      await this.getRelatedEntitiesMaps(recipe);
 
     return {
       id: recipe.id,
       title: this.getPublicationTitle(recipe.publications, language),
-      description: this.getPublicationDescription(recipe.publications, language),
+      description: this.getPublicationDescription(
+        recipe.publications,
+        language,
+      ),
       thumbnailUrl: recipe.thumbnailUrl,
       headerImg: recipe.headerImg,
       difficulty: recipe.difficulty,
@@ -100,31 +112,59 @@ export class RecipesService {
       author: recipe.author,
       publicationDate: recipe.publicationDate,
       categories: this.mapCategories(recipe.categoryIds, categoryMap, language),
-      ingredients: await this.mapIngredients(recipe.ingredients, ingredientMap, language),
-      kitchenware: this.mapKitchenware(recipe.kitchenware, kitchenwareMap, language),
+      ingredients: await this.mapIngredients(
+        recipe.ingredients,
+        ingredientMap,
+        language,
+      ),
+      kitchenware: this.mapKitchenware(
+        recipe.kitchenware,
+        kitchenwareMap,
+        language,
+      ),
       steps: this.mapSteps(recipe.steps, language),
     };
   }
 
-  private async getRelatedEntitiesMaps(recipe: { categoryIds: string[]; ingredients: { id: string }[]; kitchenware: { id: string }[] }) {
+  private async getRelatedEntitiesMaps(recipe: {
+    categoryIds: string[];
+    ingredients: { id: string }[];
+    kitchenware: { id: string }[];
+  }) {
     const [categories, ingredientsData, kitchenwareData] = await Promise.all([
       this.categoryRepository.findByIds(recipe.categoryIds),
-      Promise.all(recipe.ingredients.map((ri) => this.ingredientRepository.findById(ri.id))),
-      Promise.all(recipe.kitchenware.map((rk) => this.kitchenwareRepository.findById(rk.id))),
+      Promise.all(
+        recipe.ingredients.map((ri) =>
+          this.ingredientRepository.findById(ri.id),
+        ),
+      ),
+      Promise.all(
+        recipe.kitchenware.map((rk) =>
+          this.kitchenwareRepository.findById(rk.id),
+        ),
+      ),
     ]);
 
     return [
       new Map<string, CategoryAttributes>(categories.map((c) => [c.id, c])),
       new Map<string, IngredientAttributes>(
-        ingredientsData.filter((i): i is IngredientAttributes => i !== null).map((i) => [i.id, i]),
+        ingredientsData
+          .filter((i): i is IngredientAttributes => i !== null)
+          .map((i) => [i.id, i]),
       ),
       new Map<string, KitchenwareAttributes>(
-        kitchenwareData.filter((k): k is KitchenwareAttributes => k !== null).map((k) => [k.id, k]),
+        kitchenwareData
+          .filter((k): k is KitchenwareAttributes => k !== null)
+          .map((k) => [k.id, k]),
       ),
     ] as const;
   }
 
-  private mapCategories(categoryIds: string[], categoryMap: Map<string, CategoryAttributes>, language: string) {
+  private mapCategories(
+    categoryIds: string[],
+    categoryMap: Map<string, CategoryAttributes>,
+    language: string,
+  ) {
     return categoryIds
       .map((catId) => categoryMap.get(catId))
       .filter((cat): cat is CategoryAttributes => cat !== undefined)
@@ -135,7 +175,12 @@ export class RecipesService {
   }
 
   private async mapIngredients(
-    ingredients: { id: string; unitId: string | null; quantity: number; isOptional: boolean }[],
+    ingredients: {
+      id: string;
+      unitId: string | null;
+      quantity: number;
+      isOptional: boolean;
+    }[],
     ingredientMap: Map<string, IngredientAttributes>,
     language: string,
   ) {
@@ -145,7 +190,11 @@ export class RecipesService {
         return {
           id: ri.id,
           name: this.getLocalizedContent(ing?.content, 'name', language),
-          singularName: this.getLocalizedContent(ing?.content, 'singularName', language),
+          singularName: this.getLocalizedContent(
+            ing?.content,
+            'singularName',
+            language,
+          ),
           quantity: ri.quantity,
           optional: ri.isOptional,
           unit: await this.getUnitResponse(ri.unitId, language),
@@ -154,24 +203,42 @@ export class RecipesService {
     );
   }
 
-  private mapKitchenware(kitchenware: { id: string; quantity: number }[], kitchenwareMap: Map<string, KitchenwareAttributes>, language: string) {
+  private mapKitchenware(
+    kitchenware: { id: string; quantity: number }[],
+    kitchenwareMap: Map<string, KitchenwareAttributes>,
+    language: string,
+  ) {
     return kitchenware.map((rk) => {
       const kw = kitchenwareMap.get(rk.id);
       return {
         id: rk.id,
         name: this.getLocalizedContent(kw?.content, 'name', language),
-        singularName: this.getLocalizedContent(kw?.content, 'singularName', language),
+        singularName: this.getLocalizedContent(
+          kw?.content,
+          'singularName',
+          language,
+        ),
         quantity: rk.quantity,
       };
     });
   }
 
-  private mapSteps(steps: { number: number; content: { language: string; title: string; body: string }[] }[], language: string) {
+  private mapSteps(
+    steps: {
+      number: number;
+      content: { language: string; title: string; body: string }[];
+      imageUrl?: string;
+    }[],
+    language: string,
+  ) {
     return steps.map((step, index) => ({
       id: String(index + 1),
-      title: this.getLocalizedContent(step.content, 'title', language) || `Step ${index + 1}`,
+      title:
+        this.getLocalizedContent(step.content, 'title', language) ||
+        `Step ${index + 1}`,
       body: this.getLocalizedContent(step.content, 'body', language),
       number: step.number,
+      imageUrl: step.imageUrl,
     }));
   }
 
@@ -186,7 +253,11 @@ export class RecipesService {
     };
   }
 
-  private getLocalizedContent<T extends { language: string }>(content: T[] | undefined, key: keyof T, language: string): string {
+  private getLocalizedContent<T extends { language: string }>(
+    content: T[] | undefined,
+    key: keyof T,
+    language: string,
+  ): string {
     if (!content) return '';
     const localized = content.find((c) => c.language === language);
     const fallback = content[0];

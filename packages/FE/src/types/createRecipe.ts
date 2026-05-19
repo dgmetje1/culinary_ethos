@@ -15,6 +15,7 @@ export interface RecipeStepContentDTO {
 export interface RecipeStepDTO {
   number: number;
   content: RecipeStepContentDTO[];
+  imageUrl?: string;
 }
 
 export interface RecipeIngredientDTO {

@@ -49,6 +49,7 @@ export type RecipeStep = {
   title: string;
   body: string;
   number: number;
+  imageUrl?: string;
 };
 
 export type RecipeListItem = Pick<Recipe, "id" | "title" | "thumbnailUrl" | "time" | "author" | "categories">;

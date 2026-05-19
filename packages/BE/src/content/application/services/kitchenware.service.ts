@@ -23,11 +23,12 @@ export class KitchenwareService {
     }));
   }
 
-  async create(dto: CreateKitchenwareDto): Promise<void> {
+  async create(dto: CreateKitchenwareDto): Promise<{ id: string }> {
     if (!dto.content || dto.content.length === 0) {
       throw new InvalidParameterError('Content is required', 'Kitchenware');
     }
-    await this.kitchenwareRepository.create(dto.content);
+    const result = await this.kitchenwareRepository.create(dto.content);
+    return { id: result.id };
   }
 
   async update(dto: UpdateKitchenwareDto): Promise<void> {

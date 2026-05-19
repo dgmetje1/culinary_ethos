@@ -13,7 +13,8 @@
     "by": "By",
     "saving": "Saving...",
     "success": "Success",
-    "error": "Error"
+    "error": "Error",
+    "cancel": "Cancel"
   },
   "menu": {
     "sidebar": {
@@ -173,6 +174,8 @@
     "editor": {
       "title": "Recipe Editor",
       "description": "Define your culinary vision with editorial precision. Every detail matters in creating a unique gastronomic experience.",
+      "edit_title": "Edit Recipe",
+      "edit_description": "Refine your culinary creation with editorial precision.",
       "fields": {
         "title": {
           "label": "Title of the Work",
@@ -242,6 +245,22 @@
       "no_unit": "No unit",
       "add": "Add",
       "cancel": "Cancel",
+      "ingredients": {
+        "createNew": "Create \"{{name}}\"",
+        "create": "Create",
+        "created": "Ingredient created successfully!",
+        "createError": "Failed to create ingredient",
+        "name": "Name",
+        "singularName": "Singular name"
+      },
+      "kitchenware": {
+        "createNew": "Create \"{{name}}\"",
+        "create": "Create",
+        "created": "Kitchenware created successfully!",
+        "createError": "Failed to create kitchenware",
+        "name": "Name",
+        "singularName": "Singular name"
+      },
       "select_category": "Select a category...",
       "toast": {
         "createSuccess": "Recipe created successfully!",

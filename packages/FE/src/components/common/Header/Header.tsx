@@ -57,17 +57,6 @@ const Header = () => {
               {t('layout.header.nav.planner')}
             </Link>
             <Link
-              to="/editor"
-              className={cn(
-                'font-serif text-lg tracking-tight',
-                'text-stone-500 dark:text-stone-400',
-                'hover:text-stone-900 dark:hover:text-stone-50',
-                'transition-colors duration-300',
-              )}
-            >
-              {t('layout.header.nav.editor')}
-            </Link>
-            <Link
               to="/backoffice"
               className={cn(
                 'font-serif text-lg tracking-tight',

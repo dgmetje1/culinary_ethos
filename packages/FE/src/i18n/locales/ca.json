@@ -3,7 +3,10 @@
     "default_error": "Hi ha hagut un error en accedir a l'API"
   },
   "common": {
-    "by": "Per"
+    "by": "Per",
+    "saving": "Guardant...",
+    "error": "Error",
+    "cancel": "Cancel·lar"
   },
   "layout": {
     "header": {
@@ -40,6 +43,44 @@
       "recipes": {
         "load_more": "Veure més receptes",
         "minutes": "Min"
+      }
+    },
+    "editor": {
+      "title": "Editor de Receptes",
+      "description": "Definiu la vostra visió culinària amb precisió editorial. Cada detall importa en la creació d'una experiència gastronòmica única.",
+      "edit_title": "Editar Recepta",
+      "edit_description": "Perfeccioneu la vostra creació culinària amb precisió editorial.",
+      "add": "Afegir",
+      "cancel": "Cancel·lar",
+      "optional": "Opcional",
+      "quantity": "Quantitat",
+      "sections": {
+        "ingredients": {
+          "title": "Ingredients",
+          "search": "Cercar ingredients...",
+          "empty": "No s'han afegit ingredients"
+        },
+        "tools": {
+          "title": "Utensilis",
+          "search": "Cercar utensilis...",
+          "empty": "No s'han afegit utensilis"
+        }
+      },
+      "ingredients": {
+        "createNew": "Crear \"{{name}}\"",
+        "create": "Crear",
+        "created": "Ingredient creat correctament!",
+        "createError": "Error al crear l'ingredient",
+        "name": "Nom",
+        "singularName": "Nom singular"
+      },
+      "kitchenware": {
+        "createNew": "Crear \"{{name}}\"",
+        "create": "Crear",
+        "created": "Utensili creat correctament!",
+        "createError": "Error al crear l'utensili",
+        "name": "Nom",
+        "singularName": "Nom singular"
       }
     }
   }

@@ -5,7 +5,8 @@ import { Plus, X, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { useGetKitchenware } from '@/queries/kitchenware';
+import { useGetKitchenware, useCreateKitchenware } from '@/queries/kitchenware';
+import { toast } from 'sonner';
 import i18n from '@/i18n';
 import { Language } from '@/types/user';
 import { Tool } from '@/types/kitchenware';
@@ -24,10 +25,14 @@ interface KitchenwareSelectorProps {
 const KitchenwareSelector = ({ kitchenware, onChange }: KitchenwareSelectorProps) => {
   const { t } = useTranslation();
   const { data: kitchenwareData = [] } = useGetKitchenware();
+  const createKitchenware = useCreateKitchenware();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [isAdding, setIsAdding] = useState(false);
   const [selectedKitchenwareId, setSelectedKitchenwareId] = useState('');
+  const [isCreatingNew, setIsCreatingNew] = useState(false);
+  const [newKitchenwareName, setNewKitchenwareName] = useState('');
+  const [newKitchenwareSingular, setNewKitchenwareSingular] = useState('');
 
   const currentLang = i18n.language as Language;
 
@@ -40,6 +45,8 @@ const KitchenwareSelector = ({ kitchenware, onChange }: KitchenwareSelectorProps
       : kitchenwareData;
     return list.slice(0, 10);
   }, [kitchenwareData, searchTerm, currentLang]);
+
+  const showCreateNew = searchTerm.length > 0 && filteredKitchenware.length === 0;
 
   const handleAddKitchenware = () => {
     if (!selectedKitchenwareId) return;
@@ -63,6 +70,46 @@ const KitchenwareSelector = ({ kitchenware, onChange }: KitchenwareSelectorProps
 
   const handleRemoveKitchenware = (kitchenwareId: string) => {
     onChange(kitchenware.filter((k) => k.kitchenwareId !== kitchenwareId));
+  };
+
+  const handleCreateNewKitchenware = async () => {
+    const nameToUse = newKitchenwareName.trim() || searchTerm.trim();
+    const singularToUse = newKitchenwareSingular.trim() || nameToUse;
+
+    if (!nameToUse) return;
+
+    try {
+      const newKitchenware = (await createKitchenware.mutateAsync({
+        content: [
+          {
+            language: currentLang,
+            name: nameToUse,
+            singularName: singularToUse,
+          },
+        ],
+      } as any)) as { id: string } | string;
+
+      toast.success(t('pages.editor.kitchenware.created'));
+
+      const newKitchenwareId = typeof newKitchenware === 'object' ? newKitchenware.id : newKitchenware;
+
+      onChange([
+        ...kitchenware,
+        {
+          kitchenwareId: newKitchenwareId,
+          quantity: 1,
+          name: nameToUse,
+        },
+      ]);
+
+      setSearchTerm('');
+      setNewKitchenwareName('');
+      setNewKitchenwareSingular('');
+      setIsAdding(false);
+      setIsCreatingNew(false);
+    } catch {
+      toast.error(t('pages.editor.kitchenware.createError'));
+    }
   };
 
   return (
@@ -157,6 +204,73 @@ const KitchenwareSelector = ({ kitchenware, onChange }: KitchenwareSelectorProps
                   {tool.content[currentLang]?.name}
                 </button>
               ))}
+            </div>
+          )}
+
+          {showCreateNew && !selectedKitchenwareId && !isCreatingNew && (
+            <div className="border border-stone-200 dark:border-stone-700 rounded-lg overflow-hidden">
+              <button
+                className="w-full text-left px-3 py-2 flex items-center gap-2 hover:bg-orange-50 dark:hover:bg-orange-900/20 text-sm text-orange-700 dark:text-orange-400 font-medium"
+                onClick={() => {
+                  setIsCreatingNew(true);
+                  setNewKitchenwareName(searchTerm);
+                }}
+                type="button"
+              >
+                <Plus className="w-4 h-4" />
+                {t('pages.editor.kitchenware.createNew', { name: searchTerm })}
+              </button>
+            </div>
+          )}
+
+          {isCreatingNew && (
+            <div className="space-y-3">
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <Input
+                    className="h-9 bg-white dark:bg-stone-900 text-sm"
+                    placeholder={t('pages.editor.kitchenware.name')}
+                    value={newKitchenwareName}
+                    onChange={(e) => {
+                      setNewKitchenwareName(e.target.value);
+                      setSearchTerm(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="flex-1">
+                  <Input
+                    className="h-9 bg-white dark:bg-stone-900 text-sm"
+                    placeholder={t('pages.editor.kitchenware.singularName')}
+                    value={newKitchenwareSingular}
+                    onChange={(e) => setNewKitchenwareSingular(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  className="h-9"
+                  onClick={handleCreateNewKitchenware}
+                  disabled={createKitchenware.isPending}
+                  type="button"
+                >
+                  {createKitchenware.isPending ? t('common.saving') : t('pages.editor.kitchenware.create')}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 text-stone-500"
+                  onClick={() => {
+                    setIsCreatingNew(false);
+                    setSearchTerm('');
+                    setNewKitchenwareName('');
+                    setNewKitchenwareSingular('');
+                  }}
+                  type="button"
+                >
+                  {t('common.cancel')}
+                </Button>
+              </div>
             </div>
           )}
 

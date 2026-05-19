@@ -10,6 +10,7 @@ interface RecipeImageUploadProps {
   thumbnailUrl?: string;
   onChange: (file: File | undefined) => void;
   recommendation?: string;
+  showRecommendation?: boolean;
   aspectRatio?: number;
 }
 
@@ -18,6 +19,7 @@ const RecipeImageUpload = ({
   thumbnailUrl,
   onChange,
   recommendation,
+  showRecommendation = true,
   aspectRatio = 4 / 5,
 }: RecipeImageUploadProps) => {
   const { t } = useTranslation();
@@ -88,9 +90,11 @@ const RecipeImageUpload = ({
         >
           {t('pages.editor.sections.image.upload')}
         </span>
-        <p className="text-xs mt-4 text-stone-300">
-          {recommendation || t('pages.editor.sections.image.recommendation')}
-        </p>
+        {showRecommendation && (
+          <p className="text-xs mt-4 text-stone-300">
+            {recommendation || t('pages.editor.sections.image.recommendation')}
+          </p>
+        )}
       </div>
       {preview && (
         <>

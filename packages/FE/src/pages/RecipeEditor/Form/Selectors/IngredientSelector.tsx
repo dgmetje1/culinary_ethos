@@ -5,8 +5,9 @@ import { Plus, X, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import { useGetIngredients } from '@/queries/ingredients';
+import { useGetIngredients, useCreateIngredient } from '@/queries/ingredients';
 import { useGetUnits } from '@/queries/units';
+import { toast } from 'sonner';
 import i18n from '@/i18n';
 import { Language } from '@/types/user';
 import { Ingredient } from '@/types/ingredients';
@@ -29,6 +30,7 @@ const IngredientSelector = ({ ingredients, onChange }: IngredientSelectorProps) 
   const { t } = useTranslation();
   const { data: ingredientsData = [] } = useGetIngredients();
   const { data: unitsData = [] } = useGetUnits();
+  const createIngredient = useCreateIngredient();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [isAdding, setIsAdding] = useState(false);
@@ -36,6 +38,9 @@ const IngredientSelector = ({ ingredients, onChange }: IngredientSelectorProps) 
   const [selectedUnitId, setSelectedUnitId] = useState<string>('');
   const [quantity, setQuantity] = useState<number>(1);
   const [isOptional, setIsOptional] = useState(false);
+  const [isCreatingNew, setIsCreatingNew] = useState(false);
+  const [newIngredientName, setNewIngredientName] = useState('');
+  const [newIngredientSingular, setNewIngredientSingular] = useState('');
 
   const currentLang = i18n.language as Language;
 
@@ -48,6 +53,8 @@ const IngredientSelector = ({ ingredients, onChange }: IngredientSelectorProps) 
       : ingredientsData;
     return list.slice(0, 10);
   }, [ingredientsData, searchTerm, currentLang]);
+
+  const showCreateNew = searchTerm.length > 0 && filteredIngredients.length === 0;
 
   const visibleUnits = useMemo(() => {
     return unitsData.filter((unit: Unit) => unit.isVisible);
@@ -76,6 +83,62 @@ const IngredientSelector = ({ ingredients, onChange }: IngredientSelectorProps) 
     setIsOptional(false);
     setSearchTerm('');
     setIsAdding(false);
+  };
+
+  const handleCreateNewIngredient = async () => {
+    const nameToUse = newIngredientName.trim() || searchTerm.trim();
+    const singularToUse = newIngredientSingular.trim() || nameToUse;
+
+    if (!nameToUse) return;
+
+    try {
+      const newIngredient = (await createIngredient.mutateAsync({
+        content: [
+          {
+            language: currentLang,
+            name: nameToUse,
+            singularName: singularToUse,
+          },
+        ],
+      } as any)) as { id: string } | string;
+
+      toast.success(t('pages.editor.ingredients.created'));
+
+      const createdIngredientId = typeof newIngredient === 'object' ? newIngredient.id : newIngredient;
+
+      const createdIngredient: Ingredient = {
+        id: createdIngredientId,
+        content: {
+          [currentLang]: {
+            name: nameToUse,
+            singularName: singularToUse,
+          },
+        },
+      };
+
+      onChange([
+        ...ingredients,
+        {
+          ingredientId: createdIngredient.id,
+          unitId: selectedUnitId || null,
+          quantity,
+          isOptional,
+          name: nameToUse,
+        },
+      ]);
+
+      setSelectedIngredientId('');
+      setSelectedUnitId('');
+      setQuantity(1);
+      setIsOptional(false);
+      setSearchTerm('');
+      setNewIngredientName('');
+      setNewIngredientSingular('');
+      setIsAdding(false);
+      setIsCreatingNew(false);
+    } catch {
+      toast.error(t('pages.editor.ingredients.createError'));
+    }
   };
 
   const handleRemoveIngredient = (ingredientId: string) => {
@@ -190,6 +253,100 @@ const IngredientSelector = ({ ingredients, onChange }: IngredientSelectorProps) 
                   {ing.content[currentLang]?.name}
                 </button>
               ))}
+            </div>
+          )}
+
+          {showCreateNew && !selectedIngredientId && (
+            <div className="border border-stone-200 dark:border-stone-700 rounded-lg overflow-hidden">
+              <button
+                className="w-full text-left px-3 py-2 flex items-center gap-2 hover:bg-orange-50 dark:hover:bg-orange-900/20 text-sm text-orange-700 dark:text-orange-400 font-medium"
+                onClick={() => setIsCreatingNew(true)}
+                type="button"
+              >
+                <Plus className="w-4 h-4" />
+                {t('pages.editor.ingredients.createNew', { name: searchTerm })}
+              </button>
+            </div>
+          )}
+
+          {isCreatingNew && (
+            <div className="space-y-3">
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <Input
+                    className="h-9 bg-white dark:bg-stone-900 text-sm"
+                    placeholder={t('pages.editor.ingredients.name')}
+                    value={newIngredientName || searchTerm}
+                    onChange={(e) => {
+                      setNewIngredientName(e.target.value);
+                      setSearchTerm(e.target.value);
+                    }}
+                  />
+                </div>
+                <div className="flex-1">
+                  <Input
+                    className="h-9 bg-white dark:bg-stone-900 text-sm"
+                    placeholder={t('pages.editor.ingredients.singularName')}
+                    value={newIngredientSingular}
+                    onChange={(e) => setNewIngredientSingular(e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2 items-center">
+                <Input
+                  type="number"
+                  className="w-20 h-9 bg-white dark:bg-stone-900"
+                  min="0.1"
+                  step="0.1"
+                  value={quantity}
+                  onChange={(e) => setQuantity(parseFloat(e.target.value) || 1)}
+                  placeholder={t('pages.editor.quantity')}
+                />
+                <select
+                  className="flex-1 h-9 min-w-[120px] bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-700 rounded-md px-2 text-sm text-stone-900 dark:text-stone-100"
+                  value={selectedUnitId}
+                  onChange={(e) => setSelectedUnitId(e.target.value)}
+                >
+                  <option value="">{t('pages.editor.no_unit')}</option>
+                  {visibleUnits.map((unit: Unit) => (
+                    <option key={unit.id} value={unit.id}>
+                      {unit.content[currentLang]?.shortName} - {unit.content[currentLang]?.name}
+                    </option>
+                  ))}
+                </select>
+                <label className="flex items-center gap-2 text-xs text-stone-600 dark:text-stone-400 whitespace-nowrap">
+                  <input
+                    type="checkbox"
+                    checked={isOptional}
+                    onChange={(e) => setIsOptional(e.target.checked)}
+                    className="rounded border-stone-300"
+                  />
+                  {t('pages.editor.optional')}
+                </label>
+                <Button
+                  size="sm"
+                  className="h-9"
+                  onClick={handleCreateNewIngredient}
+                  disabled={createIngredient.isPending}
+                  type="button"
+                >
+                  {createIngredient.isPending ? t('common.saving') : t('pages.editor.ingredients.create')}
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-9 text-stone-500"
+                  onClick={() => {
+                    setIsCreatingNew(false);
+                    setSearchTerm('');
+                    setNewIngredientName('');
+                    setNewIngredientSingular('');
+                  }}
+                  type="button"
+                >
+                  {t('common.cancel')}
+                </Button>
+              </div>
             </div>
           )}
 
