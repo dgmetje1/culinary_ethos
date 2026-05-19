@@ -144,6 +144,9 @@ export class RecipeStepResponseDto {
 
   @ApiProperty()
   number: number;
+
+  @ApiProperty({ nullable: true })
+  imageUrl?: string;
 }
 
 export class RecipeResponseDto {

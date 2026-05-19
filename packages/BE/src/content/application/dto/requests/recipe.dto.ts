@@ -41,6 +41,11 @@ export class RecipeStepDto {
   @ValidateNested({ each: true })
   @Type(() => RecipeStepContentDto)
   content: RecipeStepContentDto[];
+
+  @ApiProperty({ nullable: true })
+  @IsOptional()
+  @IsString()
+  imageUrl?: string;
 }
 
 export class RecipeIngredientDto {

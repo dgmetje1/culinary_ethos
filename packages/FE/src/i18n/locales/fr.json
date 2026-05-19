@@ -3,7 +3,10 @@
     "default_error": "Il y a eu une erreur lors de l'accès à l'API"
   },
   "common": {
-    "by": "Par"
+    "by": "Par",
+    "saving": "Enregistrement...",
+    "error": "Erreur",
+    "cancel": "Annuler"
   },
   "layout": {
     "header": {
@@ -40,6 +43,44 @@
       "recipes": {
         "load_more": "Voir plus de recettes",
         "minutes": "Min"
+      }
+    },
+    "editor": {
+      "title": "Éditeur de Recettes",
+      "description": "Définissez votre vision culinaire avec une précision éditoriale. Chaque détail compte dans la création d'une expérience gastronomique unique.",
+      "edit_title": "Modifier la Recette",
+      "edit_description": "Affinez votre création culinaire avec une précision éditoriale.",
+      "add": "Ajouter",
+      "cancel": "Annuler",
+      "optional": "Facultatif",
+      "quantity": "Quantité",
+      "sections": {
+        "ingredients": {
+          "title": "Ingrédients",
+          "search": "Rechercher des ingrédients...",
+          "empty": "Aucun ingrédient ajouté"
+        },
+        "tools": {
+          "title": "Ustensiles",
+          "search": "Rechercher des ustensiles...",
+          "empty": "Aucun ustensile ajouté"
+        }
+      },
+      "ingredients": {
+        "createNew": "Créer \"{{name}}\"",
+        "create": "Créer",
+        "created": "Ingrédient créé avec succès!",
+        "createError": "Erreur lors de la création de l'ingrédient",
+        "name": "Nom",
+        "singularName": "Nom singulier"
+      },
+      "kitchenware": {
+        "createNew": "Créer \"{{name}}\"",
+        "create": "Créer",
+        "created": "Ustensile créé avec succès!",
+        "createError": "Erreur lors de la création de l'ustensile",
+        "name": "Nom",
+        "singularName": "Nom singulier"
       }
     }
   }

@@ -29,8 +29,8 @@ export class IngredientsController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create an ingredient' })
   @ApiResponse({ status: 201 })
-  async create(@Body() dto: CreateIngredientDto): Promise<void> {
-    await this.ingredientsService.create(dto);
+  async create(@Body() dto: CreateIngredientDto): Promise<{ id: string }> {
+    return this.ingredientsService.create(dto);
   }
 
   @Put()

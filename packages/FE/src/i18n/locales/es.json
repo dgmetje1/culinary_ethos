@@ -7,7 +7,8 @@
     "by": "Por",
     "saving": "Guardando...",
     "success": "Éxito",
-    "error": "Error"
+    "error": "Error",
+    "cancel": "Cancelar"
   },
   "menu": {
     "sidebar": {
@@ -72,6 +73,8 @@
     "editor": {
       "title": "Editor de Recetas",
       "description": "Defina su visión culinaria con precisión editorial. Cada detalle importa en la creación de una experiencia gastronómica única.",
+      "edit_title": "Editar Receta",
+      "edit_description": "Perfeccione su creación culinaria con precisión editorial.",
       "fields": {
         "title": {
           "label": "Título de la Obra",
@@ -141,6 +144,22 @@
       "no_unit": "Sin unidad",
       "add": "Añadir",
       "cancel": "Cancelar",
+      "ingredients": {
+        "createNew": "Crear \"{{name}}\"",
+        "create": "Crear",
+        "created": "¡Ingrediente creado correctamente!",
+        "createError": "Error al crear el ingrediente",
+        "name": "Nombre",
+        "singularName": "Nombre singular"
+      },
+      "kitchenware": {
+        "createNew": "Crear \"{{name}}\"",
+        "create": "Crear",
+        "created": "¡Utensilio creado correctamente!",
+        "createError": "Error al crear el utensilio",
+        "name": "Nombre",
+        "singularName": "Nombre singular"
+      },
       "select_category": "Selecciona una categoría...",
       "toast": {
         "createSuccess": "¡Receta creada correctamente!",

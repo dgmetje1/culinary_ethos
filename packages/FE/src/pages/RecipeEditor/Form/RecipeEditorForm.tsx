@@ -60,6 +60,8 @@ const recipeFormSchema = z.object({
       id: z.string(),
       title: z.string(),
       description: z.string(),
+      imageUrl: z.string().optional(),
+      imageFile: z.instanceof(File).optional(),
     }),
   ),
   time: z.number().min(1, 'Time must be greater than 0'),
@@ -128,6 +130,7 @@ const transformToCreateRecipeDto = (data: RecipeFormData): CreateRecipeDTO => {
             body: sanitizeHtml(step.description),
           },
         ],
+        imageUrl: step.imageUrl,
       })),
     headerImg: data.headerImgUrl,
   };
@@ -141,8 +144,20 @@ const defaultValues: RecipeFormData = {
   kitchenware: [],
   categories: [],
   steps: [
-    { id: '1', title: '', description: '' },
-    { id: '2', title: '', description: '' },
+    {
+      id: '1',
+      title: '',
+      description: '',
+      imageUrl: undefined,
+      imageFile: undefined,
+    },
+    {
+      id: '2',
+      title: '',
+      description: '',
+      imageUrl: undefined,
+      imageFile: undefined,
+    },
   ],
   time: 0,
   difficulty: 'intermediate',
@@ -193,6 +208,8 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
         id: step.id,
         title: step.title,
         description: step.body,
+        imageUrl: (step as unknown as { imageUrl?: string }).imageUrl,
+        imageFile: undefined,
       })),
       time: initialData.time,
       difficulty:
@@ -257,10 +274,30 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
       }
     }
 
+    const stepImageUrls: Record<string, string> = {};
+    for (const step of data.steps) {
+      if (step.imageFile) {
+        try {
+          const uploadResult = (await uploadFile.mutateAsync({
+            file: step.imageFile,
+            category: 'recipes',
+          })) as UploadFileResponse;
+          stepImageUrls[step.id] = uploadResult.relativePath;
+        } catch (error) {
+          console.error('Failed to upload step image:', error);
+          return;
+        }
+      }
+    }
+
     const dto = transformToCreateRecipeDto({
       ...data,
       thumbnailUrl,
       headerImgUrl,
+      steps: data.steps.map((step) => ({
+        ...step,
+        imageUrl: step.imageUrl || stepImageUrls[step.id] || undefined,
+      })),
     });
 
     try {
@@ -347,7 +384,9 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
                 thumbnailFile={formData.headerImgFile}
                 thumbnailUrl={formData.headerImgUrl}
                 onChange={handleHeaderImageChange}
-                recommendation={t('pages.editor.sections.image.headerRecommendation')}
+                recommendation={t(
+                  'pages.editor.sections.image.headerRecommendation',
+                )}
                 aspectRatio={1500 / 1024}
               />
             </section>
@@ -366,7 +405,6 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
                 }
               />
             </section>
-
             <PreparationSteps
               steps={formData.steps}
               onChange={(steps) =>

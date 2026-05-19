@@ -29,8 +29,8 @@ export class KitchenwareController {
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create kitchenware' })
   @ApiResponse({ status: 201 })
-  async create(@Body() dto: CreateKitchenwareDto): Promise<void> {
-    await this.kitchenwareService.create(dto);
+  async create(@Body() dto: CreateKitchenwareDto): Promise<{ id: string }> {
+    return this.kitchenwareService.create(dto);
   }
 
   @Put()

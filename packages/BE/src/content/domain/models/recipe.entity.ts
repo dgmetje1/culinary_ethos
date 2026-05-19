@@ -15,6 +15,7 @@ export interface RecipeStep {
     title: string;
     body: string;
   }[];
+  imageUrl?: string;
 }
 
 export interface RecipeIngredient {
@@ -59,6 +60,7 @@ export interface CreateRecipeInput {
   kitchenware: RecipeKitchenware[];
   steps: RecipeStep[];
   thumbnailUrl?: string;
+  headerImg?: string;
 }
 
 @Entity({ name: 'recipes' })
