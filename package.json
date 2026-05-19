@@ -1,5 +1,5 @@
 {
-  "name": "@rcp-and-plan/root",
+  "name": "@culinary-ethos/root",
   "version": "0.0.1",
   "private": true,
   "devDependencies": {
@@ -10,15 +10,15 @@
   },
   "scripts": {
     "dev:all": "pnpm -r --parallel run dev",
-    "dev:be": "pnpm --filter @rcp-and-plan/be run start:dev",
-    "dev:fe": "pnpm --filter @rcp-and-plan/fe run dev",
-    "build:be": "pnpm --filter @rcp-and-plan/be run build",
-    "build:fe": "pnpm --filter @rcp-and-plan/fe run build",
-    "test": "pnpm --filter @rcp-and-plan/be run test",
-    "test:be": "pnpm --filter @rcp-and-plan/be run test",
-    "test:fe": "pnpm --filter @rcp-and-plan/fe run test",
+    "dev:be": "pnpm --filter @culinary-ethos/be run start:dev",
+    "dev:fe": "pnpm --filter @culinary-ethos/fe run dev",
+    "build:be": "pnpm --filter @culinary-ethos/be run build",
+    "build:fe": "pnpm --filter @culinary-ethos/fe run build",
+    "test": "pnpm --filter @culinary-ethos/be run test",
+    "test:be": "pnpm --filter @culinary-ethos/be run test",
+    "test:fe": "pnpm --filter @culinary-ethos/fe run test",
     "lint": "pnpm -r run lint",
-    "lint:be": "pnpm --filter @rcp-and-plan/be run lint",
-    "lint:fe": "pnpm --filter @rcp-and-plan/fe run lint"
+    "lint:be": "pnpm --filter @culinary-ethos/be run lint",
+    "lint:fe": "pnpm --filter @culinary-ethos/fe run lint"
   }
 }
