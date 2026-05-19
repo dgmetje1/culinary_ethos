@@ -2,12 +2,12 @@
 services:
   postgres:
     image: postgres:15-alpine
-    container_name: rcp_and_plan_postgres
+    container_name: culinary_ethos_postgres
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-rcp_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rcp_password}
-      POSTGRES_DB: ${POSTGRES_DB:-rcp_and_plan_db}
+      POSTGRES_USER: ${POSTGRES_USER:-culinary_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-culinary_password}
+      POSTGRES_DB: ${POSTGRES_DB:-culinary_ethos_db}
     ports:
       - "5432:5432"
     volumes:
