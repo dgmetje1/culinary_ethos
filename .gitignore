@@ -3,7 +3,8 @@
 **/dist
 /node_modules
 **/node_modules
-.cert/
+.cert
+**/.cert
 .tanstack
 
 /build
