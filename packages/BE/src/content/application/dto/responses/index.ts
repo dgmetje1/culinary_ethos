@@ -96,6 +96,9 @@ export class RecipeListItemResponseDto {
 
   @ApiProperty({ nullable: true })
   thumbnailUrl: string | null;
+
+  @ApiProperty()
+  portions: number;
 }
 
 export class RecipeIngredientResponseDto {
@@ -193,6 +196,46 @@ export class RecipeResponseDto {
 
   @ApiProperty({ type: RecipeStepResponseDto, isArray: true })
   steps: RecipeStepResponseDto[];
+}
+
+export class MealPlanEntryResponseDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  day: number;
+
+  @ApiProperty()
+  mealType: string;
+
+  @ApiProperty()
+  recipeId: string;
+
+  @ApiProperty()
+  recipeTitle: string;
+
+  @ApiProperty({ nullable: true })
+  recipeImageUrl?: string;
+
+  @ApiProperty({ nullable: true })
+  portions?: number;
+}
+
+export class MealPlanResponseDto {
+  @ApiProperty()
+  id: string;
+
+  @ApiProperty()
+  weekStart: string;
+
+  @ApiProperty({ type: [MealPlanEntryResponseDto] })
+  entries: MealPlanEntryResponseDto[];
+
+  @ApiProperty()
+  createdAt: Date;
+
+  @ApiProperty()
+  updatedAt: Date;
 }
 
 export class RecipeDailyResponseDto {

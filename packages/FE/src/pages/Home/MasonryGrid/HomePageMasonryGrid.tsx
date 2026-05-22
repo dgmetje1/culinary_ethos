@@ -3,7 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { Bookmark } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { cn, composeCdnUrl } from '@/lib/utils';
 import { useGetRecipes } from '@/queries/recipes';
 import config from '@/config';
 import { useSearch } from '@/context/Search';
@@ -49,7 +49,7 @@ const HomePageMasonryGrid = () => {
               )}
             >
               <img
-                src={`${config.cdnUrl}${recipe.thumbnailUrl}`}
+                src={composeCdnUrl(config.cdnUrl, recipe.thumbnailUrl)}
                 alt={recipe.title}
                 className={cn(
                   'w-full object-cover',

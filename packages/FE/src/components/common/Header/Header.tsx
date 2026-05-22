@@ -36,31 +36,53 @@ const Header = () => {
           <nav className="hidden md:flex items-center gap-8">
             <Link
               to="/"
+              activeProps={{
+                className: cn(
+                  'border-b-2 border-stone-900 dark:border-stone-50',
+                  'text-stone-900 dark:text-stone-50',
+                ),
+              }}
               className={cn(
                 'font-serif text-lg tracking-tight',
-                'text-stone-900 dark:text-stone-50',
-                'border-b-2 border-stone-900 dark:border-stone-50',
+                'text-stone-500 dark:text-stone-400',
+                'hover:text-stone-900 dark:hover:text-stone-50',
+                'transition-colors duration-300',
                 'pb-1',
               )}
             >
               {t('layout.header.nav.home')}
             </Link>
             <Link
-              to="/planner"
+              to="/plans"
+              activeProps={{
+                className: cn(
+                  'border-b-2 border-stone-900 dark:border-stone-50',
+                  'text-stone-900 dark:text-stone-50',
+                ),
+              }}
               className={cn(
                 'font-serif text-lg tracking-tight',
                 'text-stone-500 dark:text-stone-400',
                 'hover:text-stone-900 dark:hover:text-stone-50',
                 'transition-colors duration-300',
+                'pb-1',
               )}
             >
               {t('layout.header.nav.planner')}
             </Link>
             <Link
               to="/backoffice"
+              activeProps={{
+                className: cn(
+                  'border-b-2 border-stone-900 dark:border-stone-50',
+                  'text-stone-900 dark:text-stone-50',
+                ),
+              }}
               className={cn(
                 'font-serif text-lg tracking-tight',
                 'text-stone-500 dark:text-stone-400',
+
+                'pb-1',
                 'hover:text-stone-900 dark:hover:text-stone-50',
                 'transition-colors duration-300',
               )}

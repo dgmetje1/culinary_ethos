@@ -3,3 +3,4 @@ export * from './unit.repository';
 export * from './ingredient.repository';
 export * from './kitchenware.repository';
 export * from './recipe.repository';
+export * from './meal-plan.repository';

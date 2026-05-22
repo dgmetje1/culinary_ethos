@@ -39,7 +39,7 @@ const App = () => {
   return (
     <SearchProvider>
       <RouterProvider context={{ authContext }} router={router!} />
-      <Toaster />
+      <Toaster position="top-center" richColors={true} />
     </SearchProvider>
   );
 };

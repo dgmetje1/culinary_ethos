@@ -39,6 +39,32 @@
       }
     }
   },
+  "plans": {
+    "favorites": "Mis Favoritos",
+    "weekly": "Planificador Semanal",
+    "previous": "Anterior",
+    "next": "Siguiente",
+    "days": {
+      "monday": "Lun",
+      "tuesday": "Mar",
+      "wednesday": "Mié",
+      "thursday": "Jue",
+      "friday": "Vie",
+      "saturday": "Sáb",
+      "sunday": "Dom"
+    },
+    "mealTypes": {
+      "breakfast": "Desayuno",
+      "lunch": "Almuerzo",
+      "dinner": "Cena",
+      "brunch": "Brunch"
+    },
+    "shoppingList": {
+      "title": "Lista de Compra",
+      "ingredients": "{{count}} ingredientes detectados para esta semana.",
+      "viewFull": "Ver Lista Completa"
+    }
+  },
   "pages": {
     "home": {
       "searcher": {

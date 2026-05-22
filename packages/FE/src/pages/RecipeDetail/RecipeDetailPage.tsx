@@ -5,7 +5,7 @@ import { useRouter } from '@tanstack/react-router';
 
 import { Button } from '@/components/ui/button';
 import config from '@/config';
-import { cn } from '@/lib/utils';
+import { cn, composeCdnUrl } from '@/lib/utils';
 import { useSuspenseGetRecipe } from '@/queries/recipes';
 
 import RecipeDetailPageIngredientsCard from './cards/Ingredients';
@@ -40,7 +40,7 @@ const RecipeDetailPage = () => {
           <img
             alt={recipe.title}
             className="w-full h-full object-cover"
-            src={`${config.cdnUrl}${recipe.headerImg}`}
+            src={composeCdnUrl(config.cdnUrl, recipe.headerImg)}
           />
         ) : (
           <div

@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ImagePlus, Upload, X } from 'lucide-react';
 
-import { cn } from '@/lib/utils';
+import { cn, composeCdnUrl } from '@/lib/utils';
 import config from '@/config';
 
 interface RecipeImageUploadProps {
@@ -28,7 +28,7 @@ const RecipeImageUpload = ({
 
   useEffect(() => {
     if (thumbnailUrl && !thumbnailFile) {
-      setPreview(`${config.cdnUrl}${thumbnailUrl}`);
+      setPreview(composeCdnUrl(config.cdnUrl, thumbnailUrl));
     }
   }, [thumbnailUrl, thumbnailFile]);
 

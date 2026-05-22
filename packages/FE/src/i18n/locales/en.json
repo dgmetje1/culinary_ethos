@@ -54,6 +54,32 @@
       }
     }
   },
+  "plans": {
+    "favorites": "My Favorites",
+    "weekly": "Weekly Planner",
+    "previous": "Previous",
+    "next": "Next",
+    "days": {
+      "monday": "Mon",
+      "tuesday": "Tue",
+      "wednesday": "Wed",
+      "thursday": "Thu",
+      "friday": "Fri",
+      "saturday": "Sat",
+      "sunday": "Sun"
+    },
+    "mealTypes": {
+      "breakfast": "Breakfast",
+      "lunch": "Lunch",
+      "dinner": "Dinner",
+      "brunch": "Brunch"
+    },
+    "shoppingList": {
+      "title": "Shopping List",
+      "ingredients": "{{count}} ingredients detected for this week.",
+      "viewFull": "View Full List"
+    }
+  },
   "pages": {
     "home": {
       "searcher": {
