@@ -1,15 +1,5 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
-
-export interface CategoryContent {
-  language: string;
-  name: string;
-  description: string;
-}
-
-export interface CategoryAttributes {
-  id: string;
-  content: CategoryContent[];
-}
+import { CategoryContent } from './category.types';
 
 @Entity({ name: 'categories' })
 export class Category {

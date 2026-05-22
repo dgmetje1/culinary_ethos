@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import {
   EntityNotFoundError,
   InvalidParameterError,
@@ -9,11 +9,13 @@ import {
   MergeIngredientDto,
   IngredientResponseDto,
 } from '../dto';
-import { IngredientRepository } from '../../infrastructure';
+import { INGREDIENT_REPOSITORY, IIngredientRepository } from '../repositories/ingredient.repository';
 
 @Injectable()
 export class IngredientsService {
-  constructor(private readonly ingredientRepository: IngredientRepository) {}
+  constructor(
+    @Inject(INGREDIENT_REPOSITORY) private readonly ingredientRepository: IIngredientRepository,
+  ) {}
 
   private mapToResponse(
     content: { language: string; name: string; singularName: string }[],

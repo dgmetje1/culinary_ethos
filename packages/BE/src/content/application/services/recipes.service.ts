@@ -1,22 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { CreateRecipeInput } from '../repositories/recipe.repository';
-import {
-  EntityNotFoundError,
-  InvalidParameterError,
-} from '../../../common/exceptions';
+import { Injectable, Inject } from '@nestjs/common';
+import { EntityNotFoundError, InvalidParameterError } from '../../../common/exceptions';
 import {
   CreateRecipeDto,
   RecipeResponseDto,
   RecipeListItemResponseDto,
   RecipeDailyResponseDto,
 } from '../dto';
-import {
-  CategoryRepository,
-  RecipeRepository,
-  IngredientRepository,
-  KitchenwareRepository,
-  UnitRepository,
-} from '../../infrastructure';
+import { RECIPE_REPOSITORY, IRecipeRepository, CreateRecipeInput } from '../repositories/recipe.repository';
+import { CATEGORY_REPOSITORY, ICategoryRepository } from '../repositories/category.repository';
+import { INGREDIENT_REPOSITORY, IIngredientRepository } from '../repositories/ingredient.repository';
+import { KITCHENWARE_REPOSITORY, IKitchenwareRepository } from '../repositories/kitchenware.repository';
+import { UNIT_REPOSITORY, IUnitRepository } from '../repositories/unit.repository';
+import { LocalizationHelper } from '../../../common/utils/localization.util';
 import {
   CategoryAttributes,
   IngredientAttributes,
@@ -27,28 +22,15 @@ import {
 @Injectable()
 export class RecipesService {
   constructor(
-    private readonly recipeRepository: RecipeRepository,
-    private readonly categoryRepository: CategoryRepository,
-    private readonly ingredientRepository: IngredientRepository,
-    private readonly kitchenwareRepository: KitchenwareRepository,
-    private readonly unitRepository: UnitRepository,
+    @Inject(RECIPE_REPOSITORY) private readonly recipeRepository: IRecipeRepository,
+    @Inject(CATEGORY_REPOSITORY) private readonly categoryRepository: ICategoryRepository,
+    @Inject(INGREDIENT_REPOSITORY) private readonly ingredientRepository: IIngredientRepository,
+    @Inject(KITCHENWARE_REPOSITORY) private readonly kitchenwareRepository: IKitchenwareRepository,
+    @Inject(UNIT_REPOSITORY) private readonly unitRepository: IUnitRepository,
   ) {}
 
-  private getPublicationTitle(
-    publications: { language: string; title: string }[],
-    language: string,
-  ): string {
-    const pub = publications.find((p) => p.language === language);
-    return pub?.title || publications[0]?.title || '';
-  }
-
-  private getPublicationDescription(
-    publications: { language: string; description: string }[],
-    language: string,
-  ): string {
-    const pub = publications.find((p) => p.language === language);
-    return pub?.description || publications[0]?.description || '';
-  }
+  private getPublicationTitle = LocalizationHelper.getPublicationTitle;
+  private getPublicationDescription = LocalizationHelper.getPublicationDescription;
 
   async getAll(
     categoryId?: number,
@@ -132,31 +114,22 @@ export class RecipesService {
     ingredients: { id: string }[];
     kitchenware: { id: string }[];
   }) {
+    const ingredientIds = recipe.ingredients.map((ri) => ri.id);
+    const kitchenwareIds = recipe.kitchenware.map((rk) => rk.id);
+
     const [categories, ingredientsData, kitchenwareData] = await Promise.all([
       this.categoryRepository.findByIds(recipe.categoryIds),
-      Promise.all(
-        recipe.ingredients.map((ri) =>
-          this.ingredientRepository.findById(ri.id),
-        ),
-      ),
-      Promise.all(
-        recipe.kitchenware.map((rk) =>
-          this.kitchenwareRepository.findById(rk.id),
-        ),
-      ),
+      this.ingredientRepository.findByIds(ingredientIds),
+      this.kitchenwareRepository.findByIds(kitchenwareIds),
     ]);
 
     return [
       new Map<string, CategoryAttributes>(categories.map((c) => [c.id, c])),
       new Map<string, IngredientAttributes>(
-        ingredientsData
-          .filter((i): i is IngredientAttributes => i !== null)
-          .map((i) => [i.id, i]),
+        ingredientsData.map((i) => [i.id, i]),
       ),
       new Map<string, KitchenwareAttributes>(
-        kitchenwareData
-          .filter((k): k is KitchenwareAttributes => k !== null)
-          .map((k) => [k.id, k]),
+        kitchenwareData.map((k) => [k.id, k]),
       ),
     ] as const;
   }
@@ -254,16 +227,7 @@ export class RecipesService {
     };
   }
 
-  private getLocalizedContent<T extends { language: string }>(
-    content: T[] | undefined,
-    key: keyof T,
-    language: string,
-  ): string {
-    if (!content) return '';
-    const localized = content.find((c) => c.language === language);
-    const fallback = content[0];
-    return (localized?.[key] as string) || (fallback?.[key] as string) || '';
-  }
+  private getLocalizedContent = LocalizationHelper.getLocalizedContent;
 
   async getDaily(): Promise<RecipeDailyResponseDto> {
     const recipe = await this.recipeRepository.findDaily();

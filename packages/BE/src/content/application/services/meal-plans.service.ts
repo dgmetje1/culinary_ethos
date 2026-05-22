@@ -1,11 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { EntityNotFoundError } from '../../../common/exceptions';
 import { CreateMealPlanDto, UpdateMealPlanDto, MealPlanResponseDto } from '../dto';
-import { MealPlanRepository } from '../../infrastructure';
+import { MEAL_PLAN_REPOSITORY, IMealPlanRepository } from '../repositories/meal-plan.repository';
 
 @Injectable()
 export class MealPlansService {
-  constructor(private readonly mealPlanRepository: MealPlanRepository) {}
+  constructor(
+    @Inject(MEAL_PLAN_REPOSITORY) private readonly mealPlanRepository: IMealPlanRepository,
+  ) {}
 
   async getByWeekStart(weekStart: string): Promise<MealPlanResponseDto | null> {
     const plan = await this.mealPlanRepository.findByWeekStart(weekStart);

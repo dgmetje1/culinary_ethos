@@ -1,32 +1,12 @@
-export interface MealPlanEntry {
-  id: string;
-  day: number;
-  mealType: string;
-  recipeId: string;
-  recipeTitle: string;
-  recipeImageUrl?: string;
-}
-
-export interface MealPlanAttributes {
-  id: string;
-  weekStart: string;
-  entries: MealPlanEntry[];
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-export interface CreateMealPlanInput {
-  weekStart: string;
-  entries?: MealPlanEntry[];
-}
-
-import { Entity, Column, PrimaryColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
+import { MealPlanEntry } from './meal-plan.types';
 
 @Entity({ name: 'meal_plans' })
 export class MealPlan {
   @PrimaryColumn({ type: 'varchar' })
   id: string;
 
+  @Index()
   @Column({ type: 'varchar' })
   weekStart: string;
 

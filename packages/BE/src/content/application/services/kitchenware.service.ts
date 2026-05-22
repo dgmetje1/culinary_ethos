@@ -1,11 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { EntityNotFoundError, InvalidParameterError } from '../../../common/exceptions';
 import { CreateKitchenwareDto, UpdateKitchenwareDto, MergeKitchenwareDto, KitchenwareResponseDto } from '../dto';
-import { KitchenwareRepository } from '../../infrastructure';
+import { KITCHENWARE_REPOSITORY, IKitchenwareRepository } from '../repositories/kitchenware.repository';
 
 @Injectable()
 export class KitchenwareService {
-  constructor(private readonly kitchenwareRepository: KitchenwareRepository) {}
+  constructor(
+    @Inject(KITCHENWARE_REPOSITORY) private readonly kitchenwareRepository: IKitchenwareRepository,
+  ) {}
 
   private mapToResponse(content: { language: string; name: string; singularName: string }[]): Record<string, { name: string; singularName: string }> {
     const result: Record<string, { name: string; singularName: string }> = {};

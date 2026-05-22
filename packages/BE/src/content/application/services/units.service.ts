@@ -1,11 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { EntityNotFoundError, InvalidParameterError } from '../../../common/exceptions';
 import { CreateUnitDto, UpdateUnitDto, UnitResponseDto } from '../dto';
-import { UnitRepository } from '../../infrastructure';
+import { UNIT_REPOSITORY, IUnitRepository } from '../repositories/unit.repository';
 
 @Injectable()
 export class UnitsService {
-  constructor(private readonly unitRepository: UnitRepository) {}
+  constructor(
+    @Inject(UNIT_REPOSITORY) private readonly unitRepository: IUnitRepository,
+  ) {}
 
   private mapToResponse(content: { language: string; name: string; shortName: string; singularName: string }[]): Record<string, { name: string; shortName: string; singularName: string }> {
     const result: Record<string, { name: string; shortName: string; singularName: string }> = {};

@@ -55,7 +55,7 @@ const Menu = forwardRef<HTMLDivElement, PropsWithChildren<MenuProps>>(
     return (
       <Drawer anchor="left" onClose={toggleMenu(false)} open={open} {...drawerProps} PaperProps={{ ref: ref }}>
         <Box display="flex" justifyContent="center" m={2} mb={4}>
-          <img alt="logo Rcp & Plan" height={75} src={logo} />
+          <img alt="logo Rcp & Plan" height={75} src={logo} loading="lazy" />
         </Box>
         <Box
           display="flex"

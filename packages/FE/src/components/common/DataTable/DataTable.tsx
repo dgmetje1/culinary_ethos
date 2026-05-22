@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { memo, useState } from "react";
 import { Info } from "@mui/icons-material";
 import { flexRender, getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from "@tanstack/react-table";
 
@@ -60,4 +60,4 @@ const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValu
     </Table>
   );
 };
-export default DataTable;
+export default memo(DataTable) as typeof DataTable;
