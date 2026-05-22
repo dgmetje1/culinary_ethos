@@ -1,11 +1,14 @@
+import { lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Plus } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
-import RichTextEditor from '@/components/common/RichTextEditor/RichTextEditor';
 import RecipeImageUpload from '../ImageUpload/RecipeImageUpload';
+const RichTextEditor = lazy(
+  () => import('@/components/common/RichTextEditor/RichTextEditor'),
+);
 
 interface Step {
   id: string;
@@ -111,14 +114,16 @@ const PreparationSteps = ({ steps, onChange }: PreparationStepsProps) => {
                 value={step.title}
                 onChange={(e) => handleUpdateStepTitle(step.id, e.target.value)}
               />
-              <RichTextEditor
-                value={step.description}
-                onChange={(value) =>
-                  handleUpdateStepDescription(step.id, value)
-                }
-                placeholder={t('pages.editor.sections.steps.placeholder')}
-                className="bg-white/50 dark:bg-stone-800/50 rounded-lg"
-              />
+              <Suspense fallback={<div className="h-32 bg-stone-100 dark:bg-stone-800 rounded-lg animate-pulse" />}>
+                <RichTextEditor
+                  value={step.description}
+                  onChange={(value) =>
+                    handleUpdateStepDescription(step.id, value)
+                  }
+                  placeholder={t('pages.editor.sections.steps.placeholder')}
+                  className="bg-white/50 dark:bg-stone-800/50 rounded-lg"
+                />
+              </Suspense>
             </div>
           </div>
         ))}

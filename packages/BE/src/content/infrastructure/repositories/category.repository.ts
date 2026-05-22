@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { ulid } from 'ulidx';
 import { Category, CategoryAttributes, CategoryContent } from '../../domain/models';
 import { ICategoryRepository } from '../../application/repositories/category.repository';
@@ -23,7 +23,8 @@ export class CategoryRepository implements ICategoryRepository {
   }
 
   async findByIds(ids: string[]): Promise<CategoryAttributes[]> {
-    const results = await this.repository.findByIds(ids);
+    if (ids.length === 0) return [];
+    const results = await this.repository.find({ where: { id: In(ids) } });
     return results.map((r) => ({ id: r.id, content: r.content }));
   }
 

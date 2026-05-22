@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { ulid } from 'ulidx';
 import { Kitchenware, KitchenwareAttributes, KitchenwareContent } from '../../domain/models';
 import { IKitchenwareRepository } from '../../application/repositories/kitchenware.repository';
@@ -20,6 +20,12 @@ export class KitchenwareRepository implements IKitchenwareRepository {
   async findById(id: string): Promise<KitchenwareAttributes | null> {
     const result = await this.repository.findOne({ where: { id } });
     return result ? { id: result.id, content: result.content } : null;
+  }
+
+  async findByIds(ids: string[]): Promise<KitchenwareAttributes[]> {
+    if (ids.length === 0) return [];
+    const results = await this.repository.find({ where: { id: In(ids) } });
+    return results.map((r) => ({ id: r.id, content: r.content }));
   }
 
   async create(content: KitchenwareContent[]): Promise<KitchenwareAttributes> {

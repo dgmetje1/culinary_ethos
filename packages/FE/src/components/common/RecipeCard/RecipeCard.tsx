@@ -1,3 +1,4 @@
+import { memo } from "react";
 import { Typography } from "@mui/material";
 import { Link } from "@tanstack/react-router";
 
@@ -7,11 +8,15 @@ import { composeCdnUrl } from "@/lib/utils";
 import StyledRecipeCard, { StyledRecipeCardOverlay } from "./styled";
 import { RecipeCardProps } from "./types";
 
-const RecipeCard = ({ id, title, thumbnailUrl }: RecipeCardProps) => {
+const RecipeCard = memo(({ id, title, thumbnailUrl }: RecipeCardProps) => {
   return (
     <StyledRecipeCard>
       <Link params={{ id: id.toString() }} to="/recipe/$id">
-        <img src={composeCdnUrl(config.cdnUrl, thumbnailUrl)} width="100%" />
+        <img
+          src={composeCdnUrl(config.cdnUrl, thumbnailUrl)}
+          width="100%"
+          loading="lazy"
+        />
         <StyledRecipeCardOverlay className="overlay">
           <Typography
             sx={{
@@ -29,6 +34,6 @@ const RecipeCard = ({ id, title, thumbnailUrl }: RecipeCardProps) => {
       </Link>
     </StyledRecipeCard>
   );
-};
+});
 
 export default RecipeCard;

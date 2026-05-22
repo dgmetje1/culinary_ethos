@@ -4,22 +4,12 @@ import {
   RecipeStep,
   RecipeIngredient,
   RecipeKitchenware,
+  CreateRecipeInput,
 } from '../../domain/models';
 
-export interface CreateRecipeInput {
-  difficulty: number;
-  time: number;
-  portions: number;
-  visibility: number;
-  author: string;
-  publications: RecipePublication[];
-  categoryIds: string[];
-  ingredients: RecipeIngredient[];
-  kitchenware: RecipeKitchenware[];
-  steps: RecipeStep[];
-  thumbnailUrl?: string;
-  headerImg?: string;
-}
+export type { CreateRecipeInput };
+
+export const RECIPE_REPOSITORY = 'RECIPE_REPOSITORY';
 
 export interface IRecipeRepository {
   findAll(categoryId?: number): Promise<RecipeAttributes[]>;

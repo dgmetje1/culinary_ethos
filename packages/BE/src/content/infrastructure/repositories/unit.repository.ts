@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { ulid } from 'ulidx';
 import { Unit, UnitAttributes, UnitContent } from '../../domain/models';
 import { IUnitRepository } from '../../application/repositories/unit.repository';
@@ -20,6 +20,12 @@ export class UnitRepository implements IUnitRepository {
   async findById(id: string): Promise<UnitAttributes | null> {
     const result = await this.repository.findOne({ where: { id } });
     return result ? { id: result.id, isVisible: result.isVisible, content: result.content } : null;
+  }
+
+  async findByIds(ids: string[]): Promise<UnitAttributes[]> {
+    if (ids.length === 0) return [];
+    const results = await this.repository.find({ where: { id: In(ids) } });
+    return results.map((r) => ({ id: r.id, isVisible: r.isVisible, content: r.content }));
   }
 
   async create(isVisible: boolean, content: UnitContent[]): Promise<UnitAttributes> {

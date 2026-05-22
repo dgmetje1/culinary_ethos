@@ -1,3 +1,4 @@
+import { memo } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 
@@ -21,4 +22,4 @@ const List = <T extends ListItem>({ items, renderItem, title, shouldSeeMoreBeSho
   </>
 );
 
-export default List;
+export default memo(List) as typeof List;

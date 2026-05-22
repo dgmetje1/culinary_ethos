@@ -1,15 +1,5 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
-
-export interface KitchenwareContent {
-  language: string;
-  name: string;
-  singularName: string;
-}
-
-export interface KitchenwareAttributes {
-  id: string;
-  content: KitchenwareContent[];
-}
+import { KitchenwareContent } from './kitchenware.types';
 
 @Entity({ name: 'kitchenware' })
 export class Kitchenware {

@@ -1,17 +1,5 @@
 import { Entity, Column, PrimaryColumn } from 'typeorm';
-
-export interface UnitContent {
-  language: string;
-  name: string;
-  shortName: string;
-  singularName: string;
-}
-
-export interface UnitAttributes {
-  id: string;
-  isVisible: boolean;
-  content: UnitContent[];
-}
+import { UnitContent } from './unit.types';
 
 @Entity({ name: 'units' })
 export class Unit {

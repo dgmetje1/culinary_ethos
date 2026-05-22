@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { EntityNotFoundError } from '../../../common/exceptions';
 import {
   UserAccountResponseDto,
@@ -6,11 +6,13 @@ import {
   CreateUserRequestDto,
   UpdateUserRequestDto,
 } from '../dto';
-import { UserRepository } from '../../infrastructure';
+import { USER_REPOSITORY, IUserRepository } from '../repositories/i-user.repository';
 
 @Injectable()
 export class UserQueriesService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
+  ) {}
 
   private mapToAccountResponse(result: {
     id: string;

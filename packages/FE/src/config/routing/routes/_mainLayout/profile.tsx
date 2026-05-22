@@ -1,8 +1,9 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import { createFileRoute, lazy, redirect } from "@tanstack/react-router";
 
 import Loader from "@/components/common/Loader";
-import ProfilePage from "@/pages/Profile/ProfilePage";
 import { getUserOptions } from "@/queries/users";
+
+const ProfilePage = lazy(() => import("@/pages/Profile/ProfilePage"));
 
 export const Route = createFileRoute("/_mainLayout/profile")({
   beforeLoad: ({ context, location }) => {

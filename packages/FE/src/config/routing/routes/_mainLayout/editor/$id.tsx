@@ -1,8 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, lazy } from '@tanstack/react-router';
 
 import Loader from '@/components/common/Loader';
-import RecipeEditorPage from '@/pages/RecipeEditor';
 import { getRecipeOptions } from '@/queries/recipes/options';
+
+const RecipeEditorPage = lazy(() => import('@/pages/RecipeEditor'));
 
 export const Route = createFileRoute('/_mainLayout/editor/$id')({
   loader: ({ context: { queryClient }, params: { id } }) => {

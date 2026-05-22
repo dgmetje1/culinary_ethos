@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { BlobServiceClient } from '@azure/storage-blob';
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuidv4 } from 'uuid';
@@ -34,7 +34,7 @@ export class FilesService {
 
     if (!connectionString) {
       this.logger.error('Azure storage connection string is not configured');
-      throw new Error('Azure storage connection string is not configured');
+      throw new InternalServerErrorException('Azure storage connection string is not configured');
     }
 
     this.blobServiceClient = BlobServiceClient.fromConnectionString(connectionString);
@@ -49,13 +49,13 @@ export class FilesService {
     this.init();
 
     if (!file) {
-      throw new Error('No file provided');
+      throw new BadRequestException('No file provided');
     }
 
     const validCategory = this.validateCategory(category);
 
     if (!this.blobServiceClient) {
-      throw new Error('Azure storage client not initialized');
+      throw new InternalServerErrorException('Azure storage client not initialized');
     }
 
     const containerClient = this.blobServiceClient.getContainerClient(
@@ -82,7 +82,7 @@ export class FilesService {
 
   private validateCategory(category: string): FileCategory {
     if (!this.allowedCategories.includes(category as FileCategory)) {
-      throw new Error(
+      throw new BadRequestException(
         `Invalid category. Allowed: ${this.allowedCategories.join(', ')}`,
       );
     }

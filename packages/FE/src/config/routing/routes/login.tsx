@@ -1,7 +1,10 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, lazy } from "@tanstack/react-router";
 
-import LoginPage from "@/pages/auth/Login";
+import Loader from "@/components/common/Loader";
+
+const LoginPage = lazy(() => import("@/pages/auth/Login"));
 
 export const Route = createFileRoute("/login")({
   component: LoginPage,
+  pendingComponent: Loader,
 });

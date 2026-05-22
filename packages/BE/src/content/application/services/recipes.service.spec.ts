@@ -50,9 +50,11 @@ describe('RecipesService', () => {
     };
     mockIngredientRepository = {
       findById: vi.fn(),
+      findByIds: vi.fn(),
     };
     mockKitchenwareRepository = {
       findById: vi.fn(),
+      findByIds: vi.fn(),
     };
     mockUnitRepository = {
       findById: vi.fn(),
@@ -92,8 +94,8 @@ describe('RecipesService', () => {
     it('should return recipe by id', async () => {
       mockRecipeRepository.findById.mockResolvedValue(mockRecipe);
       mockCategoryRepository.findByIds.mockResolvedValue([]);
-      mockIngredientRepository.findById.mockResolvedValue(null);
-      mockKitchenwareRepository.findById.mockResolvedValue(null);
+      mockIngredientRepository.findByIds.mockResolvedValue([]);
+      mockKitchenwareRepository.findByIds.mockResolvedValue([]);
       mockUnitRepository.findById.mockResolvedValue(null);
 
       const result = await service.getById('rec123');

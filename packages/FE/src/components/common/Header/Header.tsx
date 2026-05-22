@@ -1,3 +1,4 @@
+import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from '@tanstack/react-router';
 import { Search, Bell, User } from 'lucide-react';
@@ -9,6 +10,15 @@ import { useSearch } from '@/context/Search';
 const Header = () => {
   const { t } = useTranslation();
   const { search, setSearch, showSearch } = useSearch();
+  const [localSearch, setLocalSearch] = useState(search);
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+
+  useEffect(() => {
+    debounceRef.current = setTimeout(() => {
+      setSearch(localSearch);
+    }, 300);
+    return () => clearTimeout(debounceRef.current);
+  }, [localSearch, setSearch]);
 
   return (
     <header
@@ -106,8 +116,8 @@ const Header = () => {
                 )}
                 placeholder={t('layout.header.search')}
                 type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                value={localSearch}
+                onChange={(e) => setLocalSearch(e.target.value)}
               />
             </div>
           )}
@@ -125,4 +135,4 @@ const Header = () => {
   );
 };
 
-export default Header;
+export default memo(Header);

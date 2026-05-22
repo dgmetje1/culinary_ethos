@@ -1,11 +1,14 @@
-import { Injectable, BadRequestException } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { EntityNotFoundError, InvalidParameterError } from '../../../common/exceptions';
 import { CreateCategoryDto, UpdateCategoryDto, CategoryResponseDto } from '../dto';
-import { CategoryRepository } from '../../infrastructure';
+import { CATEGORY_REPOSITORY, ICategoryRepository } from '../repositories/category.repository';
+import { LocalizationHelper } from '../../../common/utils/localization.util';
 
 @Injectable()
 export class CategoriesService {
-  constructor(private readonly categoryRepository: CategoryRepository) {}
+  constructor(
+    @Inject(CATEGORY_REPOSITORY) private readonly categoryRepository: ICategoryRepository,
+  ) {}
 
   private mapToResponse(content: { language: string; name: string; description: string }[]): Record<string, { name: string; description: string }> {
     const result: Record<string, { name: string; description: string }> = {};
