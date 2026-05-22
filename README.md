@@ -1,73 +1,118 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Culinary Ethos
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A recipe management platform with a NestJS backend and React frontend.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Project Structure
 
-## Description
-
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Installation
-
-```bash
-$ pnpm install
+```
+culinary-ethos/
+├── packages/
+│   ├── BE/          # NestJS backend (TypeScript 6, TypeORM, PostgreSQL)
+│   └── FE/          # React frontend (Vite, TanStack Router, MUI + Tailwind)
+├── devops/
+│   └── docker-compose.yml  # PostgreSQL 15
+├── pnpm-workspace.yaml
+└── package.json
 ```
 
-## Running the app
+## Tech Stack
+
+### Backend (`packages/BE`)
+- **Framework:** NestJS 11 with DDD architecture
+- **Language:** TypeScript 6
+- **ORM:** TypeORM with PostgreSQL
+- **Auth:** Auth0 (JWT via Passport)
+- **Storage:** Azure Blob Storage
+- **Validation:** class-validator + class-transformer
+- **Testing:** Vitest
+- **Docs:** Swagger/OpenAPI
+
+### Frontend (`packages/FE`)
+- **Framework:** React 19
+- **Bundler:** Vite 8
+- **Routing:** TanStack Router
+- **Data Fetching:** TanStack React Query
+- **UI:** MUI 6 + Tailwind CSS + shadcn/ui
+- **Forms:** React Hook Form + Zod
+- **Auth:** Auth0 React SDK
+- **i18n:** i18next
+
+## Prerequisites
+
+- [pnpm](https://pnpm.io/) (package manager)
+- Node.js >= 20
+- Docker (for local PostgreSQL)
+
+## Getting Started
+
+### 1. Install dependencies
 
 ```bash
-# development
-$ pnpm run start
-
-# watch mode
-$ pnpm run start:dev
-
-# production mode
-$ pnpm run start:prod
+pnpm install
 ```
 
-## Test
+### 2. Set up environment variables
 
 ```bash
-# unit tests
-$ pnpm run test
-
-# e2e tests
-$ pnpm run test:e2e
-
-# test coverage
-$ pnpm run test:cov
+cp packages/BE/.env.example packages/BE/.env
+cp packages/FE/.env.example packages/FE/.env
 ```
 
-## Support
+Required variables for **backend**: `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `AUTH0_*` values.
+Required variables for **frontend**: `VITE_AUTH0_*` values, `VITE_API_URL`.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### 3. Start PostgreSQL
 
-## Stay in touch
+```bash
+docker compose -f devops/docker-compose.yml up -d
+```
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+### 4. Start development servers
+
+```bash
+# Both backend and frontend in parallel
+pnpm run dev:all
+
+# Backend only (http://localhost:3000)
+pnpm run dev:be
+
+# Frontend only (http://localhost:5173)
+pnpm run dev:fe
+```
+
+## Available Commands
+
+| Command | Description |
+|---------|-------------|
+| `pnpm run dev:all` | Start BE + FE in parallel |
+| `pnpm run dev:be` | Start NestJS backend (watch mode) |
+| `pnpm run dev:fe` | Start Vite frontend |
+| `pnpm run build:be` | Build backend |
+| `pnpm run build:fe` | Build frontend |
+| `pnpm run test` | Run backend unit tests |
+| `pnpm run test:be` | Run backend unit tests |
+| `pnpm run test:fe` | Run frontend tests |
+| `pnpm run lint` | Lint both packages |
+| `pnpm run lint:be` | Lint backend |
+| `pnpm run lint:fe` | Lint frontend |
+
+## Backend Architecture
+
+Follows Domain-Driven Design with bounded contexts:
+
+```
+packages/BE/src/
+├── content/          # Recipes, ingredients, categories, kitchenware, units, meal plans
+│   ├── domain/       # Entities, value objects
+│   ├── application/  # Use cases / services
+│   ├── infrastructure/ # TypeORM repositories
+│   └── interfaces/   # REST controllers
+├── social/           # User profiles and social features
+├── users/            # User management module
+├── files/            # File upload (Azure Blob Storage)
+└── common/           # Shared interceptors, filters, decorators
+```
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+[MIT](LICENSE)
