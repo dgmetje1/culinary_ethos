@@ -7,6 +7,7 @@ import MenuItem from '@mui/material/MenuItem';
 import { useRouter } from '@tanstack/react-router';
 
 import config from '@/config';
+import { composeCdnUrl } from '@/lib/utils';
 import { useAuthContext } from '@/context/Auth';
 
 const HeaderProfileMenu = () => {
@@ -75,7 +76,7 @@ const HeaderProfileMenu = () => {
         {isAuthenticated && account?.profilePicture ? (
           <Avatar
             alt={`${account?.nickName} profile picture`}
-            src={`${config.cdnUrl}/${account.profilePicture}`}
+            src={composeCdnUrl(config.cdnUrl, account.profilePicture)}
           />
         ) : (
           <AccountCircle fontSize="large" />

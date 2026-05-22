@@ -9,6 +9,8 @@ interface RecipeMetadataProps {
   onTimeChange: (time: number) => void;
   onDifficultyChange: (difficulty: string) => void;
   onPortionsChange: (portions: number) => void;
+  timeError?: string;
+  portionsError?: string;
 }
 
 const RecipeMetadata = ({
@@ -18,6 +20,8 @@ const RecipeMetadata = ({
   onTimeChange,
   onDifficultyChange,
   onPortionsChange,
+  timeError,
+  portionsError,
 }: RecipeMetadataProps) => {
   const { t } = useTranslation();
 
@@ -44,23 +48,30 @@ const RecipeMetadata = ({
           <label className={cn('text-base text-stone-600 dark:text-stone-400')}>
             {t('pages.editor.sections.metadata.time')}
           </label>
-          <select
-            className={cn(
-              'bg-transparent border-none',
-              'font-base text-stone-900 dark:text-stone-100 text-right',
-              'focus:ring-0 cursor-pointer',
+          <div className="flex flex-col items-end gap-1">
+            <select
+              className={cn(
+                'bg-transparent border-none',
+                'font-base text-stone-900 dark:text-stone-100 text-right',
+                'focus:ring-0 cursor-pointer',
+                timeError && 'text-red-500',
+              )}
+              value={time}
+              onChange={(e) => onTimeChange(Number(e.target.value))}
+            >
+              <option value="" disabled>Select time</option>
+              <option value="15">15 min</option>
+              <option value="30">30 min</option>
+              <option value="45">45 min</option>
+              <option value="60">1h</option>
+              <option value="90">1h 30min</option>
+              <option value="120">2h</option>
+              <option value="180">3h+</option>
+            </select>
+            {timeError && (
+              <span className="text-xs text-red-500">{timeError}</span>
             )}
-            value={time}
-            onChange={(e) => onTimeChange(Number(e.target.value))}
-          >
-            <option value="15">15 min</option>
-            <option value="30">30 min</option>
-            <option value="45">45 min</option>
-            <option value="60">1h</option>
-            <option value="90">1h 30min</option>
-            <option value="120">2h</option>
-            <option value="180">3h+</option>
-          </select>
+          </div>
         </div>
         <div className="flex justify-between items-center py-3 border-b border-stone-200/20 dark:border-stone-700/20">
           <label className={cn('text-base text-stone-600 dark:text-stone-400')}>
@@ -90,18 +101,24 @@ const RecipeMetadata = ({
           <label className={cn('text-base text-stone-600 dark:text-stone-400')}>
             {t('pages.editor.sections.metadata.portions')}
           </label>
-          <input
-            className={cn(
-              'bg-transparent border-none',
-              'font-base text-stone-900 dark:text-stone-100 text-right',
-              'focus:ring-0 w-16',
+          <div className="flex flex-col items-end gap-1">
+            <input
+              className={cn(
+                'bg-transparent border-none',
+                'font-base text-stone-900 dark:text-stone-100 text-right',
+                'focus:ring-0 w-16',
+                portionsError && 'text-red-500',
+              )}
+              type="number"
+              min="1"
+              max="20"
+              value={portions}
+              onChange={(e) => onPortionsChange(parseInt(e.target.value) || 1)}
+            />
+            {portionsError && (
+              <span className="text-xs text-red-500">{portionsError}</span>
             )}
-            type="number"
-            min="1"
-            max="20"
-            value={portions}
-            onChange={(e) => onPortionsChange(parseInt(e.target.value) || 1)}
-          />
+          </div>
         </div>
       </div>
     </div>

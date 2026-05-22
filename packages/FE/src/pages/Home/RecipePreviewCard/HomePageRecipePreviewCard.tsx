@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import List from "@/components/common/List";
 import config from "@/config";
+import { composeCdnUrl } from "@/lib/utils";
 import { printTime } from "@/lib/parsers/time";
 import { useGetDailyRecipe } from "@/queries/recipes";
 import { DailyRecipe, RecipeDifficulty } from "@/types/recipe";
@@ -43,7 +44,7 @@ const HomePageRecipePreviewCard = () => {
         </Grid>
         <Grid item sx={{ img: { borderRadius: 2, boxShadow: "2px 1px 3px #aaa" } }} xs={4}>
           <Link params={{ id: recipe.id.toString() }} to="/recipe/$id">
-            <img src={`${config.cdnUrl}/${recipe.thumbnailUrl}`} width="100%" />
+            <img src={composeCdnUrl(config.cdnUrl, recipe.thumbnailUrl)} width="100%" />
           </Link>
         </Grid>
         <Grid display="flex" flexDirection="column" gap={2} item xs={8}>

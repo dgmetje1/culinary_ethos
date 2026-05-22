@@ -52,7 +52,7 @@ export type RecipeStep = {
   imageUrl?: string;
 };
 
-export type RecipeListItem = Pick<Recipe, "id" | "title" | "thumbnailUrl" | "time" | "author" | "categories">;
+export type RecipeListItem = Pick<Recipe, "id" | "title" | "thumbnailUrl" | "time" | "author" | "categories" | "portions">;
 
 export type RecipeList = Array<RecipeListItem>;
 

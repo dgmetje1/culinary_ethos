@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 
-import { cn } from '@/lib/utils';
+import { cn, composeCdnUrl } from '@/lib/utils';
 import { sanitizeHtml } from '@/lib/sanitizeHtml';
 import { RecipeStep } from '@/types/recipe';
 import config from '@/config';
@@ -58,7 +58,7 @@ const RecipeDetailPageStepsSection = ({
               <img
                 alt={step.title}
                 className="w-full aspect-[5/4] object-cover rounded-xl mt-6"
-                src={`${config.cdnUrl}${step.imageUrl}`}
+                src={composeCdnUrl(config.cdnUrl, step.imageUrl)}
               />
             )}
           </div>

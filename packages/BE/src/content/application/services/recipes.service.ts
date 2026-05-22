@@ -81,6 +81,7 @@ export class RecipesService {
       time: r.time,
       author: r.author,
       thumbnailUrl: r.thumbnailUrl,
+      portions: r.portions,
     }));
   }
 

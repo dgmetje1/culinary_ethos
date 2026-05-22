@@ -66,7 +66,7 @@ const recipeFormSchema = z.object({
   ),
   time: z.number().min(1, 'Time must be greater than 0'),
   difficulty: z.string(),
-  portions: z.number(),
+  portions: z.number().min(1, 'Portions must be at least 1'),
   thumbnailFile: z.instanceof(File).optional(),
   thumbnailUrl: z.string().optional(),
   headerImgFile: z.instanceof(File).optional(),
@@ -467,11 +467,13 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
               time={formData.time}
               difficulty={formData.difficulty}
               portions={formData.portions}
-              onTimeChange={(time) => setValue('time', time)}
+              onTimeChange={(time) => setValue('time', time, { shouldValidate: true })}
               onDifficultyChange={(difficulty) =>
                 setValue('difficulty', difficulty)
               }
-              onPortionsChange={(portions) => setValue('portions', portions)}
+              onPortionsChange={(portions) => setValue('portions', portions, { shouldValidate: true })}
+              timeError={errors.time?.message as string | undefined}
+              portionsError={errors.portions?.message as string | undefined}
             />
             <CategorySelector
               categories={formData.categories}
