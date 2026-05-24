@@ -1,5 +1,4 @@
 import { useMemo } from "react";
-import { Box, Chip, Grid, Paper, Typography } from "@mui/material";
 import { Link } from "@tanstack/react-router";
 import { useTranslation } from "react-i18next";
 
@@ -34,40 +33,48 @@ const HomePageRecipePreviewCard = () => {
   const recipeContent = useMemo(() => {
     if (isLoading || !recipe) return null;
 
-    //TODO review layout on mobile devices
     return (
-      <Grid columnSpacing={4} container spacing={2}>
-        <Grid item xs={12}>
-          <Typography color="#444" fontWeight="600" variant="h4">
+      <div style={{ display: "grid", columnGap: "1rem", gridTemplateColumns: "repeat(12, 1fr)", rowGap: "0.5rem" }}>
+        <div style={{ gridColumn: "span 12" }}>
+          <h4 style={{ color: "#444", fontWeight: 600, fontSize: "1.25rem" }}>
             {t("pages.home.recipe_preview.title")}
-          </Typography>
-        </Grid>
-        <Grid item sx={{ img: { borderRadius: 2, boxShadow: "2px 1px 3px #aaa" } }} xs={4}>
+          </h4>
+        </div>
+        <div style={{ gridColumn: "span 4" }}>
           <Link params={{ id: recipe.id.toString() }} to="/recipe/$id">
-            <img src={composeCdnUrl(config.cdnUrl, recipe.thumbnailUrl)} width="100%" />
+            <img
+              src={composeCdnUrl(config.cdnUrl, recipe.thumbnailUrl)}
+              width="100%"
+              style={{ borderRadius: "0.5rem", boxShadow: "2px 1px 3px #aaa" }}
+            />
           </Link>
-        </Grid>
-        <Grid display="flex" flexDirection="column" gap={2} item xs={8}>
+        </div>
+        <div style={{ gridColumn: "span 8", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           <Link params={{ id: recipe.id.toString() }} to="/recipe/$id">
-            <Typography fontWeight={600} variant="h5">
-              {recipe.title}
-            </Typography>
+            <h5 style={{ fontWeight: 600, fontSize: "1.15rem" }}>{recipe.title}</h5>
           </Link>
-          <Grid container spacing={2}>
-            <Grid display="flex" flexDirection="column" gap={2} item xs>
-              <Box display="flex" gap={1}>
-                {recipe.categories?.map(category => <Chip key={category.id} label={category.name} />)}
-              </Box>
-              <Box display="flex" flexDirection="column" rowGap={2}>
+          <div style={{ display: "grid", columnGap: "0.5rem", gridTemplateColumns: "repeat(12, 1fr)" }}>
+            <div style={{ gridColumn: "span 6", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              <div style={{ display: "flex", gap: "0.25rem" }}>
+                {recipe.categories?.map(category => (
+                  <span
+                    key={category.id}
+                    className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-stone-200 text-stone-800"
+                  >
+                    {category.name}
+                  </span>
+                ))}
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", rowGap: "0.5rem" }}>
                 {CARD_FIELDS.map(field => (
-                  <Typography key={field.key}>
+                  <p key={field.key}>
                     <strong>{t(`recipe.fields.${field.key}`)}: </strong>
                     {field.getValue(recipe)}
-                  </Typography>
+                  </p>
                 ))}
-              </Box>
-            </Grid>
-            <Grid item xs>
+              </div>
+            </div>
+            <div style={{ gridColumn: "span 6" }}>
               {!!recipe.ingredients.length && (
                 <List
                   items={recipe.ingredients.slice(0, 5)}
@@ -76,23 +83,23 @@ const HomePageRecipePreviewCard = () => {
                   }
                   shouldSeeMoreBeShown={recipe.ingredients.length > 5}
                   title={
-                    <Typography fontWeight={600} variant="subtitle1">
+                    <p style={{ fontWeight: 600, fontSize: "0.9rem" }}>
                       {t("pages.home.recipe_preview.ingredients_title")}
-                    </Typography>
+                    </p>
                   }
                 />
               )}
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
+            </div>
+          </div>
+        </div>
+      </div>
     );
   }, [isLoading, recipe, t]);
 
   return (
-    <Paper component="section" sx={{ p: 5, bgcolor: "#f0efef" }}>
+    <section style={{ padding: "1.25rem", backgroundColor: "#f0efef", borderRadius: "var(--radius)" }}>
       {recipeContent}
-    </Paper>
+    </section>
   );
 };
 

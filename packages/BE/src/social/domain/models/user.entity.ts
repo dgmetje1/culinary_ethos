@@ -9,6 +9,8 @@ export interface UserAttributes {
   email: string;
   language: string;
   profile_picture: string | null;
+  role: string;
+  status: string;
 }
 
 @Entity({ name: 'users' })
@@ -37,4 +39,10 @@ export class User {
 
   @Column({ type: 'varchar', nullable: true })
   profile_picture!: string | null;
+
+  @Column({ type: 'varchar', default: 'chef' })
+  role!: string;
+
+  @Column({ type: 'varchar', default: 'active' })
+  status!: string;
 }

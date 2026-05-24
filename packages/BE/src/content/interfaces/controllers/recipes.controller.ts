@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Put,
+  Delete,
   Body,
   Param,
   Query,
@@ -36,6 +37,17 @@ export class RecipesController {
     @Language() language?: string,
   ): Promise<RecipeListItemResponseDto[]> {
     return this.recipesService.getAll(category, language);
+  }
+
+  @Get('admin')
+  @ApiOperation({ summary: 'Get all recipes for admin (with status filter)' })
+  @ApiQuery({ name: 'status', required: false, type: String })
+  @ApiResponse({ status: 200, type: [RecipeResponseDto] })
+  async getAllAdmin(
+    @Query('status') status?: string,
+    @Language() language?: string,
+  ): Promise<RecipeResponseDto[]> {
+    return this.recipesService.getAllAdmin(status, language);
   }
 
   @Get('daily')
@@ -72,6 +84,47 @@ export class RecipesController {
     @Body() dto: CreateRecipeDto,
   ): Promise<void> {
     await this.recipesService.update(id, dto);
+  }
+
+  @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  @ApiOperation({ summary: 'Delete a recipe' })
+  @ApiResponse({ status: 204 })
+  async delete(@Param('id') id: string): Promise<void> {
+    await this.recipesService.delete(id);
+  }
+
+  @Put(':id/approve')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Approve a flagged recipe' })
+  @ApiResponse({ status: 200, type: RecipeResponseDto })
+  async approve(
+    @Param('id') id: string,
+    @Language() language?: string,
+  ): Promise<RecipeResponseDto> {
+    return this.recipesService.approve(id, 'admin', language);
+  }
+
+  @Put(':id/flag')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Flag a published recipe for review' })
+  @ApiResponse({ status: 200, type: RecipeResponseDto })
+  async flag(
+    @Param('id') id: string,
+    @Language() language?: string,
+  ): Promise<RecipeResponseDto> {
+    return this.recipesService.flag(id, language);
+  }
+
+  @Put(':id/reject')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Reject a flagged recipe (ban it)' })
+  @ApiResponse({ status: 200, type: RecipeResponseDto })
+  async reject(
+    @Param('id') id: string,
+    @Language() language?: string,
+  ): Promise<RecipeResponseDto> {
+    return this.recipesService.reject(id, 'admin', language);
   }
 
   @Put(':id/ingredients')

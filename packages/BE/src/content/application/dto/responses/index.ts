@@ -196,6 +196,15 @@ export class RecipeResponseDto {
 
   @ApiProperty({ type: RecipeStepResponseDto, isArray: true })
   steps: RecipeStepResponseDto[];
+
+  @ApiProperty({ default: 'published' })
+  status?: string;
+
+  @ApiProperty({ nullable: true })
+  reviewedBy?: string | null;
+
+  @ApiProperty({ nullable: true })
+  reviewedAt?: Date | null;
 }
 
 export class MealPlanEntryResponseDto {

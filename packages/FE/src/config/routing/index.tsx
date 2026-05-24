@@ -13,7 +13,7 @@ const getRouter = (queryClient: QueryClient): typeof singletonRouter => {
     context: {
       queryClient,
       authContext: undefined!,
-      getTitle: () => 'Rcp & Plan',
+      getTitle: () => 'Culinary Ethos',
     },
     defaultPreload: 'intent',
     // Since we're using React Query, we don't want loader calls to ever be stale

@@ -16,6 +16,14 @@ export const getUserKeys = () => {
 
   return { key, queryKey };
 };
+
+export const getAllUsersKeys = () => {
+  const queryKey = [API_ACTION_BASE, "getAllUsers"];
+  const key = queryKey.join("/");
+
+  return { key, queryKey };
+};
+
 export const getUserSummaryKeys = (userId: User["id"]) => {
   const baseQueryKey = [API_ACTION_BASE, "getUserSummary"];
   const key = baseQueryKey.join("/");

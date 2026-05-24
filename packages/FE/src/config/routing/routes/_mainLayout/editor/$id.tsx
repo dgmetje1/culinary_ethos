@@ -1,4 +1,5 @@
-import { createFileRoute, lazy } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
+import { lazy } from 'react';
 
 import Loader from '@/components/common/Loader';
 import { getRecipeOptions } from '@/queries/recipes/options';

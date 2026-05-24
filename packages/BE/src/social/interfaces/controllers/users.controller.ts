@@ -19,6 +19,7 @@ import {
 import { UserQueriesService } from '../../application/services';
 import {
   UserAccountResponseDto,
+  UserAdminResponseDto,
   UserSummaryResponseDto,
   CreateUserRequestDto,
   UpdateUserRequestDto,
@@ -41,6 +42,17 @@ export class UsersController {
     @Body() data: CreateUserRequestDto,
   ): Promise<UserAccountResponseDto> {
     return this.userQueriesService.createUser(data);
+  }
+
+  @Get('all')
+  @ApiOperation({ summary: 'Get all users (admin)' })
+  @ApiResponse({
+    status: 200,
+    description: 'Return all users.',
+    type: [UserAdminResponseDto],
+  })
+  async findAll(): Promise<UserAdminResponseDto[]> {
+    return this.userQueriesService.getAllUsers();
   }
 
   @Get('account/:accountId')
@@ -87,9 +99,45 @@ export class UsersController {
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a user' })
-  @ApiParam({ name: 'id', type: String })
   @ApiResponse({ status: 204, description: 'The user has been deleted.' })
   async deleteUser(@Param('id') id: string): Promise<void> {
     await this.userQueriesService.deleteUser(id);
+  }
+
+  @Put(':id/suspend')
+  @ApiOperation({ summary: 'Suspend a user' })
+  @ApiResponse({
+    status: 200,
+    description: 'The user has been suspended.',
+    type: UserAdminResponseDto,
+  })
+  async suspendUser(@Param('id') id: string): Promise<UserAdminResponseDto> {
+    return this.userQueriesService.suspendUser(id);
+  }
+
+  @Put(':id/activate')
+  @ApiOperation({ summary: 'Activate a user' })
+  @ApiResponse({
+    status: 200,
+    description: 'The user has been activated.',
+    type: UserAdminResponseDto,
+  })
+  async activateUser(@Param('id') id: string): Promise<UserAdminResponseDto> {
+    return this.userQueriesService.activateUser(id);
+  }
+
+  @Put(':id/role')
+  @ApiOperation({ summary: 'Change user role' })
+  @ApiResponse({
+    status: 200,
+    description: 'The user role has been changed.',
+    type: UserAdminResponseDto,
+  })
+  @ApiBody({ schema: { properties: { role: { type: 'string' } } } })
+  async changeUserRole(
+    @Param('id') id: string,
+    @Body() data: { role: string },
+  ): Promise<UserAdminResponseDto> {
+    return this.userQueriesService.changeUserRole(id, data.role);
   }
 }

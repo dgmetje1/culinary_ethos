@@ -1,5 +1,7 @@
-import { Avatar, Box, Button, Typography } from "@mui/material";
+import { User } from "lucide-react";
 
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import config from "@/config";
 import { composeCdnUrl } from "@/lib/utils";
 import { useSuspenseGetUser } from "@/queries/users";
@@ -7,17 +9,20 @@ import { useSuspenseGetUser } from "@/queries/users";
 const ProfilePageAccountDetails = () => {
   const { data: user } = useSuspenseGetUser();
   return (
-    <Box alignItems="center" component="section" display="flex" gap={3} mb={2} py={3}>
-      <Avatar src={composeCdnUrl(config.cdnUrl, user.profilePicture)} sx={{ height: 96, width: 96 }} />
-      <Box display="flex" flexDirection="column" rowGap={1}>
-        <Typography component="h1" fontWeight={700} variant="h4">
-          {user.nickName}
-        </Typography>
-        <Button size="small" variant="outlined">
+    <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.5rem", padding: "0.75rem 0" }}>
+      <Avatar className="h-24 w-24">
+        <AvatarImage src={composeCdnUrl(config.cdnUrl, user.profilePicture)} />
+        <AvatarFallback>
+          <User className="w-8 h-8" />
+        </AvatarFallback>
+      </Avatar>
+      <div style={{ display: "flex", flexDirection: "column", rowGap: "0.25rem" }}>
+        <h1 style={{ fontWeight: 700, fontSize: "1.5rem" }}>{user.nickName}</h1>
+        <Button size="sm" variant="outline">
           Follow
         </Button>
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 };
 

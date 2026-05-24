@@ -43,8 +43,25 @@ export class UserRepository implements IUserRepository {
           email: '',
           language: '',
           profile_picture: result.profile_picture,
+          role: '',
+          status: '',
         }
       : null;
+  }
+
+  async findAll(): Promise<UserAttributes[]> {
+    const results = await this.userRepository.find({
+      order: { name: 'ASC' },
+    });
+    return results.map((r) => this.toAttributes(r));
+  }
+
+  async countNewThisMonth(): Promise<number> {
+    return this.userRepository.count();
+  }
+
+  async countAll(): Promise<number> {
+    return this.userRepository.count();
   }
 
   async create(data: CreateUserInput): Promise<UserAttributes> {
@@ -79,6 +96,8 @@ export class UserRepository implements IUserRepository {
       email: user.email,
       language: user.language,
       profile_picture: user.profile_picture,
+      role: user.role,
+      status: user.status,
     };
   }
 }

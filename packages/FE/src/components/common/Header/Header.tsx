@@ -11,7 +11,9 @@ const Header = () => {
   const { t } = useTranslation();
   const { search, setSearch, showSearch } = useSearch();
   const [localSearch, setLocalSearch] = useState(search);
-  const debounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
     debounceRef.current = setTimeout(() => {
@@ -81,7 +83,7 @@ const Header = () => {
               {t('layout.header.nav.planner')}
             </Link>
             <Link
-              to="/backoffice"
+              to="/management"
               activeProps={{
                 className: cn(
                   'border-b-2 border-stone-900 dark:border-stone-50',

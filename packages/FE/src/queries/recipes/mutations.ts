@@ -4,7 +4,7 @@ import { Api } from '@/lib/api';
 import { useApiMutation } from '@/middleware/api';
 import { CreateRecipeDTO } from '@/types/createRecipe';
 
-import { getRecipesKeys, getRecipeKeys } from './keys';
+import { getAdminRecipesKeys, getRecipesKeys, getRecipeKeys } from './keys';
 
 export const useCreateRecipe = () => {
   const queryClient = useQueryClient();
@@ -20,6 +20,62 @@ export const useCreateRecipe = () => {
   return useApiMutation('', createRecipe, {
     onSuccess: (recipeId) => {
       const { queryKey } = getRecipesKeys({});
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+};
+
+export const useApproveRecipe = () => {
+  const queryClient = useQueryClient();
+
+  return useApiMutation('', async (id: string) => {
+    const api = new Api();
+    return api.put(`recipes/${id}/approve`, {});
+  }, {
+    onSuccess: () => {
+      const { queryKey } = getAdminRecipesKeys();
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+};
+
+export const useFlagRecipe = () => {
+  const queryClient = useQueryClient();
+
+  return useApiMutation('', async (id: string) => {
+    const api = new Api();
+    return api.put(`recipes/${id}/flag`, {});
+  }, {
+    onSuccess: () => {
+      const { queryKey } = getAdminRecipesKeys();
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+};
+
+export const useBanRecipe = () => {
+  const queryClient = useQueryClient();
+
+  return useApiMutation('', async (id: string) => {
+    const api = new Api();
+    return api.put(`recipes/${id}/reject`, {});
+  }, {
+    onSuccess: () => {
+      const { queryKey } = getAdminRecipesKeys();
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+};
+
+export const useDeleteRecipe = () => {
+  const queryClient = useQueryClient();
+
+  return useApiMutation('', async (id: string) => {
+    const api = new Api();
+    return api.delete(`recipes/${id}`, {});
+  }, {
+    onSuccess: () => {
+      const { queryKey } = getAdminRecipesKeys();
       queryClient.invalidateQueries({ queryKey });
     },
   });

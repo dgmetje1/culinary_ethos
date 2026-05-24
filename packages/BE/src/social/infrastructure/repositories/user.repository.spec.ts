@@ -100,6 +100,8 @@ describe('UserRepository', () => {
         email: '',
         language: '',
         profile_picture: null,
+        role: '',
+        status: '',
       });
       expect(mockTypeOrmRepo.findOne).toHaveBeenCalledWith({
         where: { id: 'user123' },

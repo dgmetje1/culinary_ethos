@@ -21,7 +21,21 @@ export class RecipeRepository implements IRecipeRepository {
 
   async findAll(_categoryId?: number): Promise<RecipeAttributes[]> {
     const results = await this.repository.find({
+      where: [
+        { status: 'published' },
+        { status: 'approved' },
+      ],
       take: 20,
+      order: { publicationDate: 'DESC' },
+    });
+    return results.map((r) => this.toAttributes(r));
+  }
+
+  async findAllAdmin(status?: string): Promise<RecipeAttributes[]> {
+    const where: any = {};
+    if (status) where.status = status;
+    const results = await this.repository.find({
+      where,
       order: { publicationDate: 'DESC' },
     });
     return results.map((r) => this.toAttributes(r));
@@ -34,6 +48,10 @@ export class RecipeRepository implements IRecipeRepository {
 
   async findDaily(): Promise<RecipeAttributes | null> {
     const results = await this.repository.find({
+      where: [
+        { status: 'published' },
+        { status: 'approved' },
+      ],
       order: { publicationDate: 'DESC' },
       take: 1,
     });
@@ -50,6 +68,7 @@ export class RecipeRepository implements IRecipeRepository {
       id: ulid(),
       uniqueId: ulid(),
       ...input,
+      status: 'published',
     });
     const saved = await this.repository.save(recipe);
     return this.toAttributes(saved as Recipe);
@@ -97,6 +116,19 @@ export class RecipeRepository implements IRecipeRepository {
     return (result.affected ?? 0) > 0;
   }
 
+  async delete(id: string): Promise<boolean> {
+    const result = await this.repository.delete(id);
+    return (result.affected ?? 0) > 0;
+  }
+
+  async countByStatus(status: string): Promise<number> {
+    return this.repository.count({ where: { status } });
+  }
+
+  async countAll(): Promise<number> {
+    return this.repository.count();
+  }
+
   private toAttributes(recipe: Recipe): RecipeAttributes {
     const categoryIds = recipe.categoryIds ? recipe.categoryIds : [];
     const steps = recipe.steps ? recipe.steps : [];
@@ -118,6 +150,9 @@ export class RecipeRepository implements IRecipeRepository {
       ingredients,
       kitchenware,
       categoryIds,
+      status: recipe.status,
+      reviewedBy: recipe.reviewedBy,
+      reviewedAt: recipe.reviewedAt,
     };
   }
 }

@@ -1,7 +1,7 @@
 import { createLazyFileRoute } from "@tanstack/react-router";
 
-import ManagementKitchenwarePage from "@/pages/Management/pages/Kitchenware";
+import KitchenwareSection from "@/pages/Management/sections/KitchenwareSection";
 
 export const Route = createLazyFileRoute("/management/kitchenware")({
-  component: ManagementKitchenwarePage,
+  component: KitchenwareSection,
 });

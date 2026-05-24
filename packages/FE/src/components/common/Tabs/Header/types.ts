@@ -1,3 +1,6 @@
-import { TabsProps as MuiTabsProps } from "@mui/material/Tabs";
+import { ReactNode } from "react";
 
-export type TabsHeaderProps = MuiTabsProps;
+export type TabsHeaderProps = {
+  children?: ReactNode;
+  [key: string]: unknown;
+};

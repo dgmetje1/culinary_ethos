@@ -1,17 +1,24 @@
-import { Box } from "@mui/material";
-
 import { useTabsContext } from "../Context";
 import { TabContentProps } from "./types";
 
-const TabContent = ({ children, contentIndex, display, ...rest }: TabContentProps) => {
+const TabContent = ({ children, contentIndex, display, style, ...rest }: TabContentProps) => {
   const { index } = useTabsContext();
 
   const hidden = index !== contentIndex;
 
   return (
-    <Box hidden={hidden} p={2} role="tabpanel" {...rest} display={hidden ? "none" : display}>
+    <div
+      hidden={hidden}
+      role="tabpanel"
+      style={{
+        ...style,
+        display: hidden ? "none" : (display as string | undefined),
+        padding: "0.5rem",
+      }}
+      {...rest}
+    >
       {index === contentIndex && children}
-    </Box>
+    </div>
   );
 };
 

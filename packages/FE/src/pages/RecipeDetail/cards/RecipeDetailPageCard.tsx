@@ -1,20 +1,19 @@
-import { type PropsWithChildren } from "react";
-import Paper, { type PaperProps } from "@mui/material/Paper";
+import { type PropsWithChildren, type HTMLAttributes } from "react";
 
-const RecipeDetailPageCard = ({ children, ...rest }: PropsWithChildren<PaperProps>) => (
-  <Paper
-    component="section"
-    sx={{
+const RecipeDetailPageCard = ({ children, ...rest }: PropsWithChildren<HTMLAttributes<HTMLElement>>) => (
+  <section
+    style={{
       display: "flex",
       flexDirection: "column",
-      p: { xs: 3, md: 4 },
-      bgcolor: "#f0efef",
-      gap: 1,
+      padding: "0.75rem 1rem",
+      backgroundColor: "#f0efef",
+      gap: "0.25rem",
+      borderRadius: "var(--radius)",
     }}
     {...rest}
   >
     {children}
-  </Paper>
+  </section>
 );
 
 export default RecipeDetailPageCard;

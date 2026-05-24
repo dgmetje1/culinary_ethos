@@ -48,6 +48,10 @@ describe('RecipeRepository', () => {
       expect(result).toHaveLength(1);
       expect(result[0].id).toBe('rec123');
       expect(mockTypeOrmRepo.find).toHaveBeenCalledWith({
+        where: [
+          { status: 'published' },
+          { status: 'approved' },
+        ],
         take: 20,
         order: { publicationDate: 'DESC' },
       });
