@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, useStore } from '@tanstack/react-form';
 import { z } from 'zod';
 import { useNavigate, useRouter } from '@tanstack/react-router';
 import { Eye } from 'lucide-react';
@@ -28,7 +27,7 @@ import RecipeMetadata from '../Metadata/RecipeMetadata';
 import EditorialTip from '../EditorialTip';
 
 const recipeFormSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
+  title: z.string().min(1, i18n.t('pages.editor.validation.titleRequired')),
   description: z.string().optional(),
   author: z.string().optional(),
   ingredients: z.array(
@@ -54,7 +53,7 @@ const recipeFormSchema = z.object({
         name: z.string(),
       }),
     )
-    .min(1, 'At least one category is required'),
+    .min(1, i18n.t('pages.editor.validation.categoriesMin')),
   steps: z.array(
     z.object({
       id: z.string(),
@@ -64,9 +63,9 @@ const recipeFormSchema = z.object({
       imageFile: z.instanceof(File).optional(),
     }),
   ),
-  time: z.number().min(1, 'Time must be greater than 0'),
+  time: z.number().min(1, i18n.t('pages.editor.validation.timeMin')),
   difficulty: z.string(),
-  portions: z.number().min(1, 'Portions must be at least 1'),
+  portions: z.number().min(1, i18n.t('pages.editor.validation.portionsMin')),
   thumbnailFile: z.instanceof(File).optional(),
   thumbnailUrl: z.string().optional(),
   headerImgFile: z.instanceof(File).optional(),
@@ -224,128 +223,144 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
     };
   };
 
-  const {
-    register,
-    handleSubmit,
-    setValue,
-    watch,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<RecipeFormData>({
-    resolver: zodResolver(recipeFormSchema),
+  const form = useForm({
     defaultValues: defaultValues,
+    validators: {
+      onSubmit: ({ value }: { value: RecipeFormData }) => {
+        const result = recipeFormSchema.safeParse(value);
+        if (result.success) return undefined;
+        const fieldErrors: Record<string, string> = {};
+        for (const issue of result.error.issues) {
+          const path = issue.path.join('.');
+          if (path && !fieldErrors[path]) {
+            fieldErrors[path] = issue.message;
+          }
+        }
+        return fieldErrors;
+      },
+    },
+    onSubmit: async ({ value }) => {
+      const data = value as unknown as RecipeFormData;
+      let thumbnailUrl = data.thumbnailUrl;
+      let headerImgUrl = data.headerImgUrl;
+
+      if (data.thumbnailFile) {
+        try {
+          const uploadResult = (await uploadFile.mutateAsync({
+            file: data.thumbnailFile,
+            category: 'recipes',
+          })) as UploadFileResponse;
+          thumbnailUrl = uploadResult.relativePath;
+        } catch (error) {
+          console.error('Failed to upload thumbnail:', error);
+          return;
+        }
+      }
+
+      if (data.headerImgFile) {
+        try {
+          const uploadResult = (await uploadFile.mutateAsync({
+            file: data.headerImgFile,
+            category: 'recipes',
+          })) as UploadFileResponse;
+          headerImgUrl = uploadResult.relativePath;
+        } catch (error) {
+          console.error('Failed to upload header image:', error);
+          return;
+        }
+      }
+
+      const stepImageUrls: Record<string, string> = {};
+      for (const step of data.steps) {
+        if (step.imageFile) {
+          try {
+            const uploadResult = (await uploadFile.mutateAsync({
+              file: step.imageFile,
+              category: 'recipes',
+            })) as UploadFileResponse;
+            stepImageUrls[step.id] = uploadResult.relativePath;
+          } catch (error) {
+            console.error('Failed to upload step image:', error);
+            return;
+          }
+        }
+      }
+
+      const dto = transformToCreateRecipeDto({
+        ...data,
+        thumbnailUrl,
+        headerImgUrl,
+        steps: data.steps.map((step) => ({
+          ...step,
+          imageUrl: step.imageUrl || stepImageUrls[step.id] || undefined,
+        })),
+      });
+
+      try {
+        if (isEditing && initialData) {
+          await updateRecipe.mutateAsync({ id: initialData.id, data: dto });
+          toast.success(t('pages.editor.toast.updateSuccess'));
+        } else {
+          const recipeId = await createRecipe.mutateAsync(dto);
+          toast.success(t('pages.editor.toast.createSuccess'));
+          navigate({
+            to: '/editor/$id',
+            params: { id: recipeId },
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          } as any);
+        }
+      } catch (error) {
+        toast.error(t('pages.editor.toast.error'));
+      }
+    },
   });
 
   useEffect(() => {
     if (initialData) {
-      reset(getInitialValues());
+      form.reset(getInitialValues());
     }
-  }, [initialData, reset]);
+  }, [initialData]);
 
-  const formData = watch();
-
-  const onSubmit = async (data: RecipeFormData) => {
-    let thumbnailUrl = data.thumbnailUrl;
-    let headerImgUrl = data.headerImgUrl;
-
-    if (data.thumbnailFile) {
-      try {
-        const uploadResult = (await uploadFile.mutateAsync({
-          file: data.thumbnailFile,
-          category: 'recipes',
-        })) as UploadFileResponse;
-        thumbnailUrl = uploadResult.relativePath;
-      } catch (error) {
-        console.error('Failed to upload thumbnail:', error);
-        return;
-      }
-    }
-
-    if (data.headerImgFile) {
-      try {
-        const uploadResult = (await uploadFile.mutateAsync({
-          file: data.headerImgFile,
-          category: 'recipes',
-        })) as UploadFileResponse;
-        headerImgUrl = uploadResult.relativePath;
-      } catch (error) {
-        console.error('Failed to upload header image:', error);
-        return;
-      }
-    }
-
-    const stepImageUrls: Record<string, string> = {};
-    for (const step of data.steps) {
-      if (step.imageFile) {
-        try {
-          const uploadResult = (await uploadFile.mutateAsync({
-            file: step.imageFile,
-            category: 'recipes',
-          })) as UploadFileResponse;
-          stepImageUrls[step.id] = uploadResult.relativePath;
-        } catch (error) {
-          console.error('Failed to upload step image:', error);
-          return;
-        }
-      }
-    }
-
-    const dto = transformToCreateRecipeDto({
-      ...data,
-      thumbnailUrl,
-      headerImgUrl,
-      steps: data.steps.map((step) => ({
-        ...step,
-        imageUrl: step.imageUrl || stepImageUrls[step.id] || undefined,
-      })),
-    });
-
-    try {
-      if (isEditing && initialData) {
-        await updateRecipe.mutateAsync({ id: initialData.id, data: dto });
-        toast.success(t('pages.editor.toast.updateSuccess'));
-      } else {
-        const recipeId = await createRecipe.mutateAsync(dto);
-        toast.success(t('pages.editor.toast.createSuccess'));
-        navigate({
-          to: '/editor/$id',
-          params: { id: recipeId },
-        } as any);
-      }
-    } catch (error) {
-      toast.error(t('pages.editor.toast.error'));
-    }
-  };
+  const formData = useStore(form.store, (state) => state.values) as unknown as RecipeFormData;
+  const fieldMeta = useStore(form.store, (state) => state.fieldMeta);
+  const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
 
   const handleDiscard = () => {
-    reset(defaultValues);
+    form.reset();
   };
 
   const handleImageChange = (file: File | undefined) => {
-    setValue('thumbnailFile', file, { shouldValidate: true });
+    form.setFieldValue('thumbnailFile', file);
   };
 
   const handleHeaderImageChange = (file: File | undefined) => {
-    setValue('headerImgFile', file, { shouldValidate: true });
+    form.setFieldValue('headerImgFile', file);
   };
 
   return (
     <div className="max-w-[1200px] mx-auto px-8 pb-20">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
         <div className="lg:col-span-8">
-          <form className="space-y-16" onSubmit={handleSubmit(onSubmit)}>
+          <form
+            className="space-y-16"
+            onSubmit={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              form.handleSubmit();
+            }}
+          >
             <section className="space-y-8">
               <RecipeTitleInput
                 value={formData.title}
                 onChange={(value) =>
-                  setValue('title', value, { shouldValidate: true })
+                  form.setFieldValue('title', value)
                 }
-                error={errors.title?.message as string | undefined}
+                error={fieldMeta.title?.errors?.[0]?.message as string | undefined}
               />
               <RecipeDescriptionInput
                 value={formData.description}
                 onChange={(value) =>
-                  setValue('description', value, { shouldValidate: true })
+                  form.setFieldValue('description', value)
                 }
               />
               <div className="flex flex-col gap-2">
@@ -357,17 +372,22 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
                 >
                   {t('pages.editor.fields.author.label')}
                 </label>
-                <Input
-                  className={cn(
-                    'bg-transparent border-b border-stone-300 dark:border-stone-700',
-                    'focus:border-orange-700 dark:focus:border-orange-500',
-                    'text-base py-4 outline-none',
-                    'placeholder:text-stone-300 dark:placeholder:text-stone-600',
-                    'text-stone-900 dark:text-stone-100',
+                <form.Field name="author">
+                  {(field: { state: { value: string }; handleChange: (v: string) => void }) => (
+                    <Input
+                      className={cn(
+                        'bg-transparent border-b border-stone-300 dark:border-stone-700',
+                        'focus:border-orange-700 dark:focus:border-orange-500',
+                        'text-base py-4 outline-none',
+                        'placeholder:text-stone-300 dark:placeholder:text-stone-600',
+                        'text-stone-900 dark:text-stone-100',
+                      )}
+                      placeholder={t('pages.editor.fields.author.placeholder')}
+                      value={field.state.value}
+                      onChange={(e) => field.handleChange(e.target.value)}
+                    />
                   )}
-                  placeholder={t('pages.editor.fields.author.placeholder')}
-                  {...register('author')}
-                />
+                </form.Field>
               </div>
             </section>
 
@@ -395,20 +415,20 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
               <IngredientSelector
                 ingredients={formData.ingredients}
                 onChange={(ingredients) =>
-                  setValue('ingredients', ingredients, { shouldValidate: true })
+                  form.setFieldValue('ingredients', ingredients)
                 }
               />
               <KitchenwareSelector
                 kitchenware={formData.kitchenware}
                 onChange={(kitchenware) =>
-                  setValue('kitchenware', kitchenware, { shouldValidate: true })
+                  form.setFieldValue('kitchenware', kitchenware)
                 }
               />
             </section>
             <PreparationSteps
               steps={formData.steps}
               onChange={(steps) =>
-                setValue('steps', steps, { shouldValidate: true })
+                form.setFieldValue('steps', steps)
               }
             />
 
@@ -423,6 +443,7 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
                       router.navigate({
                         to: '/recipe/$id',
                         params: { id: initialData.id },
+                        // eslint-disable-next-line @typescript-eslint/no-explicit-any
                       } as any)
                     }
                   >
@@ -467,20 +488,20 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
               time={formData.time}
               difficulty={formData.difficulty}
               portions={formData.portions}
-              onTimeChange={(time) => setValue('time', time, { shouldValidate: true })}
+              onTimeChange={(time) => form.setFieldValue('time', time)}
               onDifficultyChange={(difficulty) =>
-                setValue('difficulty', difficulty)
+                form.setFieldValue('difficulty', difficulty)
               }
-              onPortionsChange={(portions) => setValue('portions', portions, { shouldValidate: true })}
-              timeError={errors.time?.message as string | undefined}
-              portionsError={errors.portions?.message as string | undefined}
+              onPortionsChange={(portions) => form.setFieldValue('portions', portions)}
+              timeError={fieldMeta.time?.errors?.[0]?.message as string | undefined}
+              portionsError={fieldMeta.portions?.errors?.[0]?.message as string | undefined}
             />
             <CategorySelector
               categories={formData.categories}
               onChange={(categories) =>
-                setValue('categories', categories, { shouldValidate: true })
+                form.setFieldValue('categories', categories)
               }
-              error={errors.categories?.message as string | undefined}
+              error={fieldMeta.categories?.errors?.[0]?.message as string | undefined}
             />
             <EditorialTip />
           </div>
