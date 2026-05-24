@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { Menu as MenuIcon } from "@mui/icons-material";
-import { Button } from "@mui/material";
-import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
+import { Menu as MenuIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
+import { Button } from "@/components/ui/button";
 import Menu from "@/components/common/Menu";
 import { Api } from "@/lib/api";
 import { queryClient } from "@/lib/core/queryClient";
@@ -30,22 +28,22 @@ const HeaderBurgerMenu = () => {
 
   return (
     <>
-      <IconButton aria-label="menu" color="inherit" edge="start" onClick={toggleMenu(true)} sx={{ mr: 2 }}>
-        <MenuIcon />
-      </IconButton>
+      <button aria-label="menu" onClick={toggleMenu(true)} className="p-2 rounded-md hover:bg-stone-100">
+        <MenuIcon className="w-6 h-6" />
+      </button>
       <Menu defaultTab={0} open={open} toggleMenu={toggleMenu}>
-        <Box display="flex" justifyContent="space-evenly" m={2} mt={3}>
+        <div style={{ display: "flex", justifyContent: "space-evenly", margin: "0.5rem 1rem", marginTop: "0.75rem" }}>
           {languages.map(language => (
             <Button
-              color={currentLanguage === language ? "primary" : "darkGrey"}
               key={language}
               onClick={() => onChangeLanguage(language)}
-              sx={{ fontWeight: 600 }}
+              variant={currentLanguage === language ? "default" : "outline"}
+              className="font-semibold"
             >
               {language}
             </Button>
           ))}
-        </Box>
+        </div>
       </Menu>
     </>
   );

@@ -28,7 +28,7 @@ const RecipeImageUpload = ({
 
   useEffect(() => {
     if (thumbnailUrl && !thumbnailFile) {
-      setPreview(composeCdnUrl(config.cdnUrl, thumbnailUrl));
+      setPreview(composeCdnUrl(config.cdnUrl, thumbnailUrl) ?? null);
     }
   }, [thumbnailUrl, thumbnailFile]);
 

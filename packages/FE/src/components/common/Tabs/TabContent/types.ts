@@ -1,3 +1,6 @@
-import { BoxProps } from "@mui/material";
+import { CSSProperties, HTMLAttributes, ReactNode } from "react";
 
-export type TabContentProps = BoxProps & { contentIndex: number };
+export type TabContentProps = HTMLAttributes<HTMLDivElement> & {
+  contentIndex: number;
+  display?: CSSProperties["display"];
+} & Record<string, unknown>;

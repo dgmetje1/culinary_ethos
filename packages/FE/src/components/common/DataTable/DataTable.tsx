@@ -1,5 +1,5 @@
 import { memo, useState } from "react";
-import { Info } from "@mui/icons-material";
+import { Info } from "lucide-react";
 import { flexRender, getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from "@tanstack/react-table";
 
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -21,7 +21,7 @@ const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValu
   });
 
   return (
-    <Table className="bg-white rounded-md">
+    <Table className="bg-white rounded-xl">
       <TableHeader>
         {table.getHeaderGroups().map(headerGroup => (
           <TableRow key={headerGroup.id}>

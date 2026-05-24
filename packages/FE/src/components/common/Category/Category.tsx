@@ -1,5 +1,4 @@
 import { memo } from "react";
-import { Box, Typography } from "@mui/material";
 
 import { useGetRecipes } from "@/queries/recipes";
 
@@ -12,18 +11,18 @@ const Category = memo(({ title, id }: CategoryProps) => {
 
   if (isLoading) return null;
   return (
-    <Box>
+    <div>
       {!!title && (
-        <Typography color="#333" fontWeight="bold" gutterBottom variant="h4">
+        <h4 style={{ color: "#333", fontWeight: "bold", marginBottom: "0.35em" }}>
           {title}
-        </Typography>
+        </h4>
       )}
       <StyledCategory>
         {data.map(value => (
           <RecipeCard key={value.id} {...value} />
         ))}
       </StyledCategory>
-    </Box>
+    </div>
   );
 });
 

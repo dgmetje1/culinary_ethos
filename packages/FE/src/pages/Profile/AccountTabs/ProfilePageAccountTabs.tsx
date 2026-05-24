@@ -1,4 +1,3 @@
-import { Divider } from "@mui/material";
 import { t } from "i18next";
 
 import Tabs, { Tab, TabContent, TabsHeader } from "@/components/common/Tabs";
@@ -12,7 +11,7 @@ const ProfilePageAccountTabs = () => {
         <Tab label={t("pages.profile.tabs.details")} />
         <Tab label={t("pages.profile.tabs.recipes")} />
       </TabsHeader>
-      <Divider />
+      <div className="h-px bg-stone-200 dark:bg-stone-800 my-1" />
       <TabContent contentIndex={0}>
         <ProfilePageAccountTabsDetailsTab />
       </TabContent>

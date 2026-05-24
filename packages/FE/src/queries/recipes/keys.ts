@@ -24,3 +24,11 @@ export const getRecipeKeys = (id: string) => {
 
   return { key, queryKey };
 };
+
+export const getAdminRecipesKeys = (status?: string) => {
+  const baseQueryKey = [API_ACTION_BASE, "getAdminRecipes"];
+  const key = baseQueryKey.join("/");
+  const queryKey = status ? [...baseQueryKey, status] : baseQueryKey;
+
+  return { key, queryKey };
+};

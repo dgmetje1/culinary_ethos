@@ -50,8 +50,8 @@ async function bootstrap() {
   app.useGlobalInterceptors(new LanguageInterceptor());
 
   const config = new DocumentBuilder()
-    .setTitle('RCP and Plan API')
-    .setDescription('API for RCP and Plan application')
+    .setTitle('Culinary Ethos API')
+    .setDescription('API for Culinary Ethos application')
     .setVersion('1.0')
     .addBearerAuth()
     .build();

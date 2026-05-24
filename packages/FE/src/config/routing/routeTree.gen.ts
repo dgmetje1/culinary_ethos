@@ -21,12 +21,19 @@ import { Route as MainLayoutEditorIdRouteImport } from './routes/_mainLayout/edi
 
 const ManagementIndexLazyRouteImport = createFileRoute('/management/')()
 const MainLayoutIndexLazyRouteImport = createFileRoute('/_mainLayout/')()
+const ManagementUsersLazyRouteImport = createFileRoute('/management/users')()
 const ManagementUnitsLazyRouteImport = createFileRoute('/management/units')()
+const ManagementRecipesLazyRouteImport = createFileRoute(
+  '/management/recipes',
+)()
 const ManagementKitchenwareLazyRouteImport = createFileRoute(
   '/management/kitchenware',
 )()
 const ManagementIngredientsLazyRouteImport = createFileRoute(
   '/management/ingredients',
+)()
+const ManagementCategoriesLazyRouteImport = createFileRoute(
+  '/management/categories',
 )()
 const MainLayoutPlansLazyRouteImport = createFileRoute('/_mainLayout/plans')()
 const MainLayoutEditorIndexLazyRouteImport = createFileRoute(
@@ -61,12 +68,26 @@ const MainLayoutIndexLazyRoute = MainLayoutIndexLazyRouteImport.update({
 } as any).lazy(() =>
   import('./routes/_mainLayout/index.lazy').then((d) => d.Route),
 )
+const ManagementUsersLazyRoute = ManagementUsersLazyRouteImport.update({
+  id: '/users',
+  path: '/users',
+  getParentRoute: () => ManagementRoute,
+} as any).lazy(() =>
+  import('./routes/management/users.lazy').then((d) => d.Route),
+)
 const ManagementUnitsLazyRoute = ManagementUnitsLazyRouteImport.update({
   id: '/units',
   path: '/units',
   getParentRoute: () => ManagementRoute,
 } as any).lazy(() =>
   import('./routes/management/units.lazy').then((d) => d.Route),
+)
+const ManagementRecipesLazyRoute = ManagementRecipesLazyRouteImport.update({
+  id: '/recipes',
+  path: '/recipes',
+  getParentRoute: () => ManagementRoute,
+} as any).lazy(() =>
+  import('./routes/management/recipes.lazy').then((d) => d.Route),
 )
 const ManagementKitchenwareLazyRoute =
   ManagementKitchenwareLazyRouteImport.update({
@@ -83,6 +104,14 @@ const ManagementIngredientsLazyRoute =
     getParentRoute: () => ManagementRoute,
   } as any).lazy(() =>
     import('./routes/management/ingredients.lazy').then((d) => d.Route),
+  )
+const ManagementCategoriesLazyRoute =
+  ManagementCategoriesLazyRouteImport.update({
+    id: '/categories',
+    path: '/categories',
+    getParentRoute: () => ManagementRoute,
+  } as any).lazy(() =>
+    import('./routes/management/categories.lazy').then((d) => d.Route),
   )
 const MainLayoutPlansLazyRoute = MainLayoutPlansLazyRouteImport.update({
   id: '/plans',
@@ -126,9 +155,12 @@ export interface FileRoutesByFullPath {
   '/management': typeof ManagementRouteWithChildren
   '/profile': typeof MainLayoutProfileRoute
   '/plans': typeof MainLayoutPlansLazyRoute
+  '/management/categories': typeof ManagementCategoriesLazyRoute
   '/management/ingredients': typeof ManagementIngredientsLazyRoute
   '/management/kitchenware': typeof ManagementKitchenwareLazyRoute
+  '/management/recipes': typeof ManagementRecipesLazyRoute
   '/management/units': typeof ManagementUnitsLazyRoute
+  '/management/users': typeof ManagementUsersLazyRoute
   '/management/': typeof ManagementIndexLazyRoute
   '/editor/$id': typeof MainLayoutEditorIdRoute
   '/recipe/$id': typeof MainLayoutRecipeIdRoute
@@ -139,9 +171,12 @@ export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/profile': typeof MainLayoutProfileRoute
   '/plans': typeof MainLayoutPlansLazyRoute
+  '/management/categories': typeof ManagementCategoriesLazyRoute
   '/management/ingredients': typeof ManagementIngredientsLazyRoute
   '/management/kitchenware': typeof ManagementKitchenwareLazyRoute
+  '/management/recipes': typeof ManagementRecipesLazyRoute
   '/management/units': typeof ManagementUnitsLazyRoute
+  '/management/users': typeof ManagementUsersLazyRoute
   '/': typeof MainLayoutIndexLazyRoute
   '/management': typeof ManagementIndexLazyRoute
   '/editor/$id': typeof MainLayoutEditorIdRoute
@@ -156,9 +191,12 @@ export interface FileRoutesById {
   '/management': typeof ManagementRouteWithChildren
   '/_mainLayout/profile': typeof MainLayoutProfileRoute
   '/_mainLayout/plans': typeof MainLayoutPlansLazyRoute
+  '/management/categories': typeof ManagementCategoriesLazyRoute
   '/management/ingredients': typeof ManagementIngredientsLazyRoute
   '/management/kitchenware': typeof ManagementKitchenwareLazyRoute
+  '/management/recipes': typeof ManagementRecipesLazyRoute
   '/management/units': typeof ManagementUnitsLazyRoute
+  '/management/users': typeof ManagementUsersLazyRoute
   '/_mainLayout/': typeof MainLayoutIndexLazyRoute
   '/management/': typeof ManagementIndexLazyRoute
   '/_mainLayout/editor/$id': typeof MainLayoutEditorIdRoute
@@ -174,9 +212,12 @@ export interface FileRouteTypes {
     | '/management'
     | '/profile'
     | '/plans'
+    | '/management/categories'
     | '/management/ingredients'
     | '/management/kitchenware'
+    | '/management/recipes'
     | '/management/units'
+    | '/management/users'
     | '/management/'
     | '/editor/$id'
     | '/recipe/$id'
@@ -187,9 +228,12 @@ export interface FileRouteTypes {
     | '/login'
     | '/profile'
     | '/plans'
+    | '/management/categories'
     | '/management/ingredients'
     | '/management/kitchenware'
+    | '/management/recipes'
     | '/management/units'
+    | '/management/users'
     | '/'
     | '/management'
     | '/editor/$id'
@@ -203,9 +247,12 @@ export interface FileRouteTypes {
     | '/management'
     | '/_mainLayout/profile'
     | '/_mainLayout/plans'
+    | '/management/categories'
     | '/management/ingredients'
     | '/management/kitchenware'
+    | '/management/recipes'
     | '/management/units'
+    | '/management/users'
     | '/_mainLayout/'
     | '/management/'
     | '/_mainLayout/editor/$id'
@@ -257,11 +304,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainLayoutIndexLazyRouteImport
       parentRoute: typeof MainLayoutRoute
     }
+    '/management/users': {
+      id: '/management/users'
+      path: '/users'
+      fullPath: '/management/users'
+      preLoaderRoute: typeof ManagementUsersLazyRouteImport
+      parentRoute: typeof ManagementRoute
+    }
     '/management/units': {
       id: '/management/units'
       path: '/units'
       fullPath: '/management/units'
       preLoaderRoute: typeof ManagementUnitsLazyRouteImport
+      parentRoute: typeof ManagementRoute
+    }
+    '/management/recipes': {
+      id: '/management/recipes'
+      path: '/recipes'
+      fullPath: '/management/recipes'
+      preLoaderRoute: typeof ManagementRecipesLazyRouteImport
       parentRoute: typeof ManagementRoute
     }
     '/management/kitchenware': {
@@ -276,6 +337,13 @@ declare module '@tanstack/react-router' {
       path: '/ingredients'
       fullPath: '/management/ingredients'
       preLoaderRoute: typeof ManagementIngredientsLazyRouteImport
+      parentRoute: typeof ManagementRoute
+    }
+    '/management/categories': {
+      id: '/management/categories'
+      path: '/categories'
+      fullPath: '/management/categories'
+      preLoaderRoute: typeof ManagementCategoriesLazyRouteImport
       parentRoute: typeof ManagementRoute
     }
     '/_mainLayout/plans': {
@@ -348,16 +416,22 @@ const MainLayoutRouteWithChildren = MainLayoutRoute._addFileChildren(
 )
 
 interface ManagementRouteChildren {
+  ManagementCategoriesLazyRoute: typeof ManagementCategoriesLazyRoute
   ManagementIngredientsLazyRoute: typeof ManagementIngredientsLazyRoute
   ManagementKitchenwareLazyRoute: typeof ManagementKitchenwareLazyRoute
+  ManagementRecipesLazyRoute: typeof ManagementRecipesLazyRoute
   ManagementUnitsLazyRoute: typeof ManagementUnitsLazyRoute
+  ManagementUsersLazyRoute: typeof ManagementUsersLazyRoute
   ManagementIndexLazyRoute: typeof ManagementIndexLazyRoute
 }
 
 const ManagementRouteChildren: ManagementRouteChildren = {
+  ManagementCategoriesLazyRoute: ManagementCategoriesLazyRoute,
   ManagementIngredientsLazyRoute: ManagementIngredientsLazyRoute,
   ManagementKitchenwareLazyRoute: ManagementKitchenwareLazyRoute,
+  ManagementRecipesLazyRoute: ManagementRecipesLazyRoute,
   ManagementUnitsLazyRoute: ManagementUnitsLazyRoute,
+  ManagementUsersLazyRoute: ManagementUsersLazyRoute,
   ManagementIndexLazyRoute: ManagementIndexLazyRoute,
 }
 

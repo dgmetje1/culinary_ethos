@@ -1,5 +1,4 @@
 import { memo } from "react";
-import { Typography } from "@mui/material";
 import { Link } from "@tanstack/react-router";
 
 import config from "@/config";
@@ -16,20 +15,20 @@ const RecipeCard = memo(({ id, title, thumbnailUrl }: RecipeCardProps) => {
           src={composeCdnUrl(config.cdnUrl, thumbnailUrl)}
           width="100%"
           loading="lazy"
+          style={{ objectFit: "cover", borderRadius: "var(--radius)" }}
         />
-        <StyledRecipeCardOverlay className="overlay">
-          <Typography
-            sx={{
+        <StyledRecipeCardOverlay>
+          <p
+            style={{
               overflow: "hidden",
               textOverflow: "ellipsis",
               display: "-webkit-box",
-              WebkitLineClamp: "1",
+              WebkitLineClamp: 1,
               WebkitBoxOrient: "vertical",
             }}
-            variant="body2"
           >
             {title}
-          </Typography>
+          </p>
         </StyledRecipeCardOverlay>
       </Link>
     </StyledRecipeCard>

@@ -53,4 +53,13 @@ export class Recipe {
 
   @Column({ type: 'simple-array', nullable: true })
   categoryIds: string[];
+
+  @Column({ type: 'varchar', default: 'published' })
+  status: string;
+
+  @Column({ type: 'varchar', nullable: true })
+  reviewedBy: string | null;
+
+  @Column({ type: 'timestamp', nullable: true })
+  reviewedAt: Date | null;
 }

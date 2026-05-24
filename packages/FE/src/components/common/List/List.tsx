@@ -1,24 +1,22 @@
 import { memo } from "react";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 
 import { ListItem, ListProps } from "./types";
 
 const List = <T extends ListItem>({ items, renderItem, title, shouldSeeMoreBeShown }: ListProps<T>) => (
   <>
     {title}
-    <Box component="ul" display="flex" flexDirection="column">
+    <ul style={{ display: "flex", flexDirection: "column" }}>
       {items.map(item => (
-        <Box component="li" key={item.id}>
-          <Typography>{renderItem(item)}</Typography>
-        </Box>
+        <li key={item.id}>
+          <span>{renderItem(item)}</span>
+        </li>
       ))}
       {shouldSeeMoreBeShown && (
-        <Box component="li">
-          <Typography fontWeight={600}>...</Typography>
-        </Box>
+        <li>
+          <span style={{ fontWeight: 600 }}>...</span>
+        </li>
       )}
-    </Box>
+    </ul>
   </>
 );
 

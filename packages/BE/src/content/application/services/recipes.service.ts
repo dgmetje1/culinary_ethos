@@ -1,4 +1,4 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, ForbiddenException } from '@nestjs/common';
 import { EntityNotFoundError, InvalidParameterError } from '../../../common/exceptions';
 import {
   CreateRecipeDto,
@@ -6,6 +6,7 @@ import {
   RecipeListItemResponseDto,
   RecipeDailyResponseDto,
 } from '../dto';
+import { RecipeAttributes } from '../../domain/models/recipe.types';
 import { RECIPE_REPOSITORY, IRecipeRepository, CreateRecipeInput } from '../repositories/recipe.repository';
 import { CATEGORY_REPOSITORY, ICategoryRepository } from '../repositories/category.repository';
 import { INGREDIENT_REPOSITORY, IIngredientRepository } from '../repositories/ingredient.repository';
@@ -67,7 +68,59 @@ export class RecipesService {
     }));
   }
 
-  async getById(
+  async getAllAdmin(
+    status?: string,
+    language: string = 'en',
+  ): Promise<RecipeResponseDto[]> {
+    const recipes = await this.recipeRepository.findAllAdmin(status);
+    return Promise.all(
+      recipes.map((r) => this.mapToFullResponse(r, language)),
+    );
+  }
+
+  async approve(
+    id: string,
+    reviewedBy: string = 'admin',
+    language: string = 'en',
+  ): Promise<RecipeResponseDto> {
+    const recipe = await this.recipeRepository.findById(id);
+    if (!recipe) {
+      throw new EntityNotFoundError('Recipe not found', 'Recipe', [{ id }]);
+    }
+    if (recipe.status !== 'flagged') {
+      throw new InvalidParameterError('Only flagged recipes can be approved', 'Recipe');
+    }
+    await this.recipeRepository.update(id, {
+      status: 'approved',
+      reviewedBy,
+      reviewedAt: new Date(),
+    });
+    const updated = await this.recipeRepository.findById(id);
+    return this.mapToFullResponse(updated!, language);
+  }
+
+  async reject(
+    id: string,
+    reviewedBy: string = 'admin',
+    language: string = 'en',
+  ): Promise<RecipeResponseDto> {
+    const recipe = await this.recipeRepository.findById(id);
+    if (!recipe) {
+      throw new EntityNotFoundError('Recipe not found', 'Recipe', [{ id }]);
+    }
+    if (recipe.status !== 'flagged') {
+      throw new InvalidParameterError('Only flagged recipes can be rejected', 'Recipe');
+    }
+    await this.recipeRepository.update(id, {
+      status: 'banned',
+      reviewedBy,
+      reviewedAt: new Date(),
+    });
+    const updated = await this.recipeRepository.findById(id);
+    return this.mapToFullResponse(updated!, language);
+  }
+
+  async flag(
     id: string,
     language: string = 'en',
   ): Promise<RecipeResponseDto> {
@@ -75,7 +128,20 @@ export class RecipesService {
     if (!recipe) {
       throw new EntityNotFoundError('Recipe not found', 'Recipe', [{ id }]);
     }
+    if (recipe.status !== 'published') {
+      throw new InvalidParameterError('Only published recipes can be flagged', 'Recipe');
+    }
+    await this.recipeRepository.update(id, {
+      status: 'flagged',
+    });
+    const updated = await this.recipeRepository.findById(id);
+    return this.mapToFullResponse(updated!, language);
+  }
 
+  private async mapToFullResponse(
+    recipe: RecipeAttributes,
+    language: string,
+  ): Promise<RecipeResponseDto> {
     const [categoryMap, ingredientMap, kitchenwareMap] =
       await this.getRelatedEntitiesMaps(recipe);
 
@@ -106,7 +172,21 @@ export class RecipesService {
         language,
       ),
       steps: this.mapSteps(recipe.steps, language),
+      status: recipe.status,
+      reviewedBy: recipe.reviewedBy,
+      reviewedAt: recipe.reviewedAt,
     };
+  }
+
+  async getById(
+    id: string,
+    language: string = 'en',
+  ): Promise<RecipeResponseDto> {
+    const recipe = await this.recipeRepository.findById(id);
+    if (!recipe) {
+      throw new EntityNotFoundError('Recipe not found', 'Recipe', [{ id }]);
+    }
+    return this.mapToFullResponse(recipe, language);
   }
 
   private async getRelatedEntitiesMaps(recipe: {
@@ -271,9 +351,13 @@ export class RecipesService {
   }
 
   async update(id: string, dto: CreateRecipeDto): Promise<string> {
-    const exists = await this.recipeRepository.exists(id);
-    if (!exists) {
+    const recipe = await this.recipeRepository.findById(id);
+    if (!recipe) {
       throw new EntityNotFoundError('Recipe not found', 'Recipe', [{ id }]);
+    }
+
+    if (recipe.status === 'banned') {
+      throw new ForbiddenException('Cannot edit a banned recipe');
     }
 
     const input: Partial<CreateRecipeInput> = {
@@ -289,10 +373,19 @@ export class RecipesService {
       steps: dto.steps || [],
       thumbnailUrl: dto.thumbnailUrl,
       headerImg: dto.headerImg,
+      status: recipe.status === 'approved' || recipe.status === 'flagged' ? 'published' : recipe.status,
     };
 
     await this.recipeRepository.update(id, input);
     return id;
+  }
+
+  async delete(id: string): Promise<void> {
+    const recipe = await this.recipeRepository.findById(id);
+    if (!recipe) {
+      throw new EntityNotFoundError('Recipe not found', 'Recipe', [{ id }]);
+    }
+    await this.recipeRepository.delete(id);
   }
 
   async addIngredients(

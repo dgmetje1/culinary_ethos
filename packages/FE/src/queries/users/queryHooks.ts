@@ -3,9 +3,15 @@ import { UndefinedInitialDataOptions } from "@tanstack/react-query";
 import { useApiQuery, useSuspenseApiQuery } from "@/middleware/api";
 import { User } from "@/types/user";
 
-import { getAccountKeys, getUserKeys, getUserSummaryKeys } from "./keys";
+import { getAccountKeys, getAllUsersKeys, getUserKeys, getUserSummaryKeys } from "./keys";
 import { getUserOptions, getUserSummaryOptions } from "./options";
-import { getAccount } from "./queries";
+import { getAccount, getAllUsers } from "./queries";
+
+export const useGetAllUsers = () => {
+  const { key, queryKey } = getAllUsersKeys();
+
+  return useApiQuery(key, queryKey, () => getAllUsers());
+};
 
 export const useGetAccount = (enabled?: UndefinedInitialDataOptions<User>["enabled"]) => {
   const { key, queryKey } = getAccountKeys();

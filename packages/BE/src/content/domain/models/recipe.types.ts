@@ -42,6 +42,9 @@ export interface RecipeAttributes {
   ingredients: RecipeIngredient[];
   kitchenware: RecipeKitchenware[];
   categoryIds: string[];
+  status: string;
+  reviewedBy: string | null;
+  reviewedAt: Date | null;
 }
 
 export interface CreateRecipeInput {
@@ -57,4 +60,7 @@ export interface CreateRecipeInput {
   steps: RecipeStep[];
   thumbnailUrl?: string;
   headerImg?: string;
+  status?: string;
+  reviewedBy?: string | null;
+  reviewedAt?: Date | null;
 }

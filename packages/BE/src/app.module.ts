@@ -5,6 +5,7 @@ import { ContentModule } from './content/content.module';
 import { SocialModule } from './social/social.module';
 import { CommonModule } from './common/common.module';
 import { FilesModule } from './files/files.module';
+import { BackofficeModule } from './backoffice/backoffice.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { FilesModule } from './files/files.module';
     ContentModule,
     SocialModule,
     FilesModule,
+    BackofficeModule,
   ],
 })
 export class AppModule {}

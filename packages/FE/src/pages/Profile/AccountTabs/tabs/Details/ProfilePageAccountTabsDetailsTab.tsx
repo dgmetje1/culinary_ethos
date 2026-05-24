@@ -1,7 +1,5 @@
-import Box from "@mui/material/Box";
-
 const ProfilePageAccountTabsDetailsTab = () => {
-  return <Box>Details Tab</Box>;
+  return <div>Details Tab</div>;
 };
 
 export default ProfilePageAccountTabsDetailsTab;

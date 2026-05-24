@@ -310,7 +310,7 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
         navigate({
           to: '/editor/$id',
           params: { id: recipeId },
-        });
+        } as any);
       }
     } catch (error) {
       toast.error(t('pages.editor.toast.error'));
@@ -423,7 +423,7 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
                       router.navigate({
                         to: '/recipe/$id',
                         params: { id: initialData.id },
-                      })
+                      } as any)
                     }
                   >
                     <Eye className="w-4 h-4 mr-2" />
