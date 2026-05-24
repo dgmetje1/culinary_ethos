@@ -74,6 +74,12 @@
         "name": "Nom",
         "singularName": "Nom singular"
       },
+      "validation": {
+        "titleRequired": "El títol és obligatori",
+        "categoriesMin": "Com a mínim una categoria és obligatòria",
+        "timeMin": "El temps ha de ser superior a 0",
+        "portionsMin": "Les porcions han de ser almenys 1"
+      },
       "kitchenware": {
         "createNew": "Crear \"{{name}}\"",
         "create": "Crear",

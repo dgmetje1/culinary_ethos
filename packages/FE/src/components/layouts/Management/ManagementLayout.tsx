@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from "@tanstack/react-router";
-import { LayoutDashboard, UtensilsCrossed, Package, Ruler, Tags, ChefHat, Users } from "lucide-react";
+import { LayoutDashboard, UtensilsCrossed, Package, Ruler, Tags, ChefHat, Users, ArrowLeft } from "lucide-react";
 
 const NAV_ITEMS = [
   { to: "/management", label: "Dashboard", icon: LayoutDashboard, exact: true },
@@ -54,19 +54,28 @@ const ManagementLayout = () => {
             })}
           </ul>
         </nav>
-        <div className="p-6 border-t border-stone-200/50 flex items-center gap-3">
-          <div className="h-10 w-10 rounded-full bg-stone-200 flex items-center justify-center overflow-hidden">
-            <div className="h-full w-full bg-stone-300 flex items-center justify-center text-stone-500 text-sm font-medium">
-              A
+        <div className="p-6 border-t border-stone-200/50">
+          <Link
+            to="/"
+            className="flex items-center gap-2 text-xs uppercase tracking-wider text-stone-400 hover:text-stone-900 transition-colors mb-4"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" />
+            Back to Site
+          </Link>
+          <div className="flex items-center gap-3">
+            <div className="h-10 w-10 rounded-full bg-stone-200 flex items-center justify-center overflow-hidden">
+              <div className="h-full w-full bg-stone-300 flex items-center justify-center text-stone-500 text-sm font-medium">
+                A
+              </div>
             </div>
-          </div>
-          <div>
-            <p className="font-sans text-xs font-bold text-stone-900">
-              Admin User
-            </p>
-            <p className="font-sans text-[10px] text-stone-500 uppercase tracking-tighter">
-              Administrator
-            </p>
+            <div>
+              <p className="font-sans text-xs font-bold text-stone-900">
+                Admin User
+              </p>
+              <p className="font-sans text-[10px] text-stone-500 uppercase tracking-tighter">
+                Administrator
+              </p>
+            </div>
           </div>
         </div>
       </aside>

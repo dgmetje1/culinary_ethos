@@ -288,6 +288,12 @@
         "singularName": "Singular name"
       },
       "select_category": "Select a category...",
+      "validation": {
+        "titleRequired": "Title is required",
+        "categoriesMin": "At least one category is required",
+        "timeMin": "Time must be greater than 0",
+        "portionsMin": "Portions must be at least 1"
+      },
       "toast": {
         "createSuccess": "Recipe created successfully!",
         "updateSuccess": "Recipe updated successfully!",

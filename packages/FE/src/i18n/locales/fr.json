@@ -74,6 +74,12 @@
         "name": "Nom",
         "singularName": "Nom singulier"
       },
+      "validation": {
+        "titleRequired": "Le titre est obligatoire",
+        "categoriesMin": "Au moins une catégorie est requise",
+        "timeMin": "Le temps doit être supérieur à 0",
+        "portionsMin": "Les portions doivent être au moins 1"
+      },
       "kitchenware": {
         "createNew": "Créer \"{{name}}\"",
         "create": "Créer",

@@ -1,3 +1,1 @@
-import { UseControllerProps } from "react-hook-form";
-
-export type FormCheckboxProps = { label: string } & UseControllerProps;
+export type FormCheckboxProps = { label: string; name: string };

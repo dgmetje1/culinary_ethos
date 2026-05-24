@@ -1,55 +1,45 @@
-import { FormEvent, PropsWithChildren, useCallback, useMemo } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { FormProvider, useForm } from "react-hook-form";
-import { z } from "zod";
+import { FormEvent, PropsWithChildren, useCallback } from "react";
+import { useForm } from "@tanstack/react-form";
 
 import { FormProps } from "./types";
+import { FormContextProvider } from "./FormContext";
 
 const Form = <FormValues extends object>({
   children,
   defaultValues,
   onFormSubmit,
-  onFormSubmitError,
   validationSchema,
   ref,
   ...rest
 }: PropsWithChildren<FormProps<FormValues>>) => {
-  const formProps = useMemo(
-    () => ({
+  const form = useForm({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    defaultValues: defaultValues as any,
+    validators: {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      defaultValues: defaultValues as any,
-      resolver: zodResolver(validationSchema),
-    }),
-    [defaultValues, validationSchema],
-  );
-
-  type Schema = z.infer<typeof validationSchema>;
-  const methods = useForm<Schema>(formProps);
-  const { handleSubmit, reset } = methods;
-
-  const onFormSubmitValid = useCallback<typeof onFormSubmit>(
-    (values: FormValues) => {
-      onFormSubmit(values);
-      reset();
+      onSubmit: validationSchema as any,
     },
-    [onFormSubmit, reset],
-  );
+    onSubmit: async ({ value }) => {
+      onFormSubmit(value as FormValues);
+      form.reset();
+    },
+  });
 
   const onSubmitted = useCallback(
     async (e: FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
       e.stopPropagation();
-
-      await handleSubmit(onFormSubmitValid, onFormSubmitError)(e);
+      await form.handleSubmit();
     },
-    [handleSubmit, onFormSubmitError, onFormSubmitValid],
+    [form],
   );
 
   return (
-    <FormProvider {...methods}>
+    <FormContextProvider value={form}>
       <form {...rest} onSubmit={onSubmitted} ref={ref}>
         {children}
       </form>
-    </FormProvider>
+    </FormContextProvider>
   );
 };
 
