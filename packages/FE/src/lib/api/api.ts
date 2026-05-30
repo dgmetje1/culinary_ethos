@@ -104,7 +104,7 @@ export class Api {
       const requestConfig = { ...defaultConfig, ...config };
       const headers: Record<string, string> = {};
 
-      if (false && requestConfig.withAuth) {
+      if (requestConfig.withAuth) {
         if (!Api._accessToken)
           throw new ApiException('missing-user-token', 'Missing user token');
         headers.Authorization = `Bearer ${Api._accessToken}`;

@@ -1,11 +1,12 @@
 import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from '@tanstack/react-router';
-import { Search, Bell, User } from 'lucide-react';
+import { Search, Bell } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useSearch } from '@/context/Search';
+import HeaderProfileMenu from '@/components/common/Header/ProfileMenu/HeaderProfileMenu';
 
 const Header = () => {
   const { t } = useTranslation();
@@ -127,9 +128,7 @@ const Header = () => {
             <Button variant="ghost" size="icon" className="rounded-full">
               <Bell className="w-5 h-5 text-stone-900 dark:text-stone-100" />
             </Button>
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <User className="w-5 h-5 text-stone-900 dark:text-stone-100" />
-            </Button>
+            <HeaderProfileMenu />
           </div>
         </div>
       </div>

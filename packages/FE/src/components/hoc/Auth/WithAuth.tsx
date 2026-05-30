@@ -1,6 +1,5 @@
-import { memo, Suspense, useEffect, useMemo, useState } from "react";
+import { memo, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
-import { Navigate } from "@tanstack/react-router";
 
 import Loader from "@/components/common/Loader";
 import AuthContext from "@/context/Auth/AuthContext";
@@ -14,6 +13,7 @@ const withAuth = (Component: React.FC) => {
       accessToken: "",
       isAccessTokenLoading: false,
     });
+    const redirectedRef = useRef(false);
 
     const { data: account, isLoading: isAccountLoading } = useGetAccount(!!accessToken && !isAccessTokenLoading);
 
@@ -34,13 +34,20 @@ const withAuth = (Component: React.FC) => {
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAuthenticated, isLoading]);
 
+    useEffect(() => {
+      if (accessToken && !account && !isAccountLoading && !redirectedRef.current) {
+        redirectedRef.current = true;
+        window.location.href = "/login";
+      }
+    }, [accessToken, account, isAccountLoading]);
+
     const contextValue = useMemo(
       () => ({ account, isAccountLoading, accessToken, isAccessTokenLoading }),
       [accessToken, account, isAccessTokenLoading, isAccountLoading],
     );
 
     if (isLoading || isAccountLoading) return <Loader />;
-    if (accessToken && !account) return <Navigate to="register" />;
+    if (accessToken && !account) return null;
     return (
       <AuthContext value={contextValue}>
         <Suspense fallback={<Loader />}>
