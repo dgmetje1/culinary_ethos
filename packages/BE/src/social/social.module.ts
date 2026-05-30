@@ -16,6 +16,6 @@ import { USER_REPOSITORY } from './application/repositories/i-user.repository';
     },
     UserQueriesService,
   ],
-  exports: [UserQueriesService],
+  exports: [UserQueriesService, USER_REPOSITORY],
 })
 export class SocialModule {}

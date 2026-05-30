@@ -6,6 +6,7 @@ import { SocialModule } from './social/social.module';
 import { CommonModule } from './common/common.module';
 import { FilesModule } from './files/files.module';
 import { BackofficeModule } from './backoffice/backoffice.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { BackofficeModule } from './backoffice/backoffice.module';
         synchronize: true, // Only for development! Use migrations for production.
       }),
     }),
+    AuthModule,
     CommonModule,
     ContentModule,
     SocialModule,
