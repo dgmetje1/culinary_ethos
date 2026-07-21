@@ -1,8 +1,13 @@
-import { Controller, Get, HttpCode, HttpStatus } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiResponse } from '@nestjs/swagger';
+import { Controller, Get, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
+import { ApiOperation, ApiTags, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { Roles } from '../../../auth/decorators/roles.decorator';
+import { RolesGuard } from '../../../auth/guards/roles.guard';
 import { BackofficeService } from '../../application/services/backoffice.service';
 import { DashboardStatsDto } from '../../application/dto/responses/dashboard-stats.dto';
 
+@ApiBearerAuth()
+@UseGuards(RolesGuard)
+@Roles('admin')
 @ApiTags('Backoffice')
 @Controller('backoffice')
 export class BackofficeController {

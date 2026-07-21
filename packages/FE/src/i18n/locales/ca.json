@@ -6,6 +6,7 @@
     "by": "Per",
     "saving": "Guardant...",
     "error": "Error",
+    "save": "Guardar",
     "cancel": "Cancel·lar"
   },
   "layout": {
@@ -87,6 +88,20 @@
         "createError": "Error al crear l'utensili",
         "name": "Nom",
         "singularName": "Nom singular"
+      }
+    },
+    "profile": {
+      "editProfile": "Editar Perfil",
+      "tabs": {
+        "details": "Detalls",
+        "recipes": "Receptes"
+      },
+      "fields": {
+        "nickName": "Sobrenom",
+        "name": "Nom",
+        "lastName": "Cognoms",
+        "email": "Correu electrònic",
+        "language": "Idioma"
       }
     }
   }

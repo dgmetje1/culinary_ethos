@@ -9,10 +9,11 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { CategoriesService } from '../../application/services';
 import { CreateCategoryDto, UpdateCategoryDto, CategoryResponseDto } from '../../application/dto';
 
+@ApiBearerAuth()
 @ApiTags('Categories')
 @Controller('categories')
 export class CategoriesController {

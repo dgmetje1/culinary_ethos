@@ -9,10 +9,11 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { UnitsService } from '../../application/services';
 import { CreateUnitDto, UpdateUnitDto, UnitResponseDto } from '../../application/dto';
 
+@ApiBearerAuth()
 @ApiTags('Units')
 @Controller('units')
 export class UnitsController {

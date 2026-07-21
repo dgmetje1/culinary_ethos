@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import RecipePreviewDialog from "@/components/common/RecipePreviewDialog";
+import AuthorName from "@/components/common/AuthorName/AuthorName";
 import { useGetAdminRecipes } from "@/queries/recipes/queryHooks";
 import { useApproveRecipe, useFlagRecipe, useBanRecipe, useDeleteRecipe } from "@/queries/recipes/mutations";
 import type { AdminRecipe } from "@/queries/recipes/queries";
@@ -129,7 +130,7 @@ const RecipesSection = () => {
                     </TooltipProvider>
                   </TableCell>
                   <TableCell className="px-6 py-4 font-medium">{recipe.title}</TableCell>
-                  <TableCell className="px-6 py-4 text-sm text-stone-500">{recipe.author}</TableCell>
+                  <TableCell className="px-6 py-4 text-sm text-stone-500"><AuthorName authorId={recipe.author} /></TableCell>
                   <TableCell className="px-6 py-4">
                     <span className={`flex items-center text-xs ${STATUS_COLORS[recipe.status ?? "published"]}`}>
                       <span className={`w-2 h-2 rounded-full ${STATUS_DOTS[recipe.status ?? "published"]} mr-2`} />

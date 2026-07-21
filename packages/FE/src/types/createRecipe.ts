@@ -35,7 +35,7 @@ export interface CreateRecipeDTO {
   time: number;
   portions: number;
   visibility: number;
-  author: string;
+  author?: string;
   thumbnailUrl?: string;
   headerImg?: string;
   publications: RecipePublicationDTO[];

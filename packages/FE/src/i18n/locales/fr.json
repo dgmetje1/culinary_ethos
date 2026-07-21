@@ -6,6 +6,7 @@
     "by": "Par",
     "saving": "Enregistrement...",
     "error": "Erreur",
+    "save": "Enregistrer",
     "cancel": "Annuler"
   },
   "layout": {
@@ -87,6 +88,20 @@
         "createError": "Erreur lors de la création de l'ustensile",
         "name": "Nom",
         "singularName": "Nom singulier"
+      }
+    },
+    "profile": {
+      "editProfile": "Modifier le Profil",
+      "tabs": {
+        "details": "Détails",
+        "recipes": "Recettes"
+      },
+      "fields": {
+        "nickName": "Surnom",
+        "name": "Nom",
+        "lastName": "Nom de famille",
+        "email": "E-mail",
+        "language": "Langue"
       }
     }
   }

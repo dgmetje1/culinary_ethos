@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useForm, useStore } from '@tanstack/react-form';
 import { z } from 'zod';
@@ -6,7 +5,6 @@ import { useNavigate, useRouter } from '@tanstack/react-router';
 import { Eye } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import { cn } from '@/lib/utils';
 import { sanitizeHtml } from '@/lib/sanitizeHtml';
@@ -29,7 +27,6 @@ import EditorialTip from '../EditorialTip';
 const recipeFormSchema = z.object({
   title: z.string().min(1, i18n.t('pages.editor.validation.titleRequired')),
   description: z.string().optional(),
-  author: z.string().optional(),
   ingredients: z.array(
     z.object({
       ingredientId: z.string(),
@@ -53,7 +50,10 @@ const recipeFormSchema = z.object({
         name: z.string(),
       }),
     )
-    .min(1, i18n.t('pages.editor.validation.categoriesMin')),
+    .refine((val) => val.length > 0, {
+      message: i18n.t('pages.editor.validation.categoriesMin'),
+      path: ['categories'],
+    }),
   steps: z.array(
     z.object({
       id: z.string(),
@@ -95,7 +95,6 @@ const transformToCreateRecipeDto = (data: RecipeFormData): CreateRecipeDTO => {
     time: data.time,
     portions: data.portions,
     visibility: 1,
-    author: data.author || 'anonymous',
     thumbnailUrl: data.thumbnailUrl,
     publications: [
       {
@@ -138,7 +137,6 @@ const transformToCreateRecipeDto = (data: RecipeFormData): CreateRecipeDTO => {
 const defaultValues: RecipeFormData = {
   title: '',
   description: '',
-  author: '',
   ingredients: [],
   kitchenware: [],
   categories: [],
@@ -184,7 +182,6 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
     return {
       title: initialData.title,
       description: initialData.description,
-      author: initialData.author,
       ingredients: initialData.ingredients.map((ing) => ({
         ingredientId: ing.id,
         unitId: ing.unit?.id || null,
@@ -224,7 +221,7 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
   };
 
   const form = useForm({
-    defaultValues: defaultValues,
+    defaultValues: initialData ? getInitialValues() : defaultValues,
     validators: {
       onSubmit: ({ value }: { value: RecipeFormData }) => {
         const result = recipeFormSchema.safeParse(value);
@@ -236,7 +233,7 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
             fieldErrors[path] = issue.message;
           }
         }
-        return fieldErrors;
+        return { fields: fieldErrors };
       },
     },
     onSubmit: async ({ value }) => {
@@ -315,13 +312,10 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
     },
   });
 
-  useEffect(() => {
-    if (initialData) {
-      form.reset(getInitialValues());
-    }
-  }, [initialData]);
-
-  const formData = useStore(form.store, (state) => state.values) as unknown as RecipeFormData;
+  const formData = useStore(
+    form.store,
+    (state) => state.values,
+  ) as unknown as RecipeFormData;
   const fieldMeta = useStore(form.store, (state) => state.fieldMeta);
   const isSubmitting = useStore(form.store, (state) => state.isSubmitting);
 
@@ -352,43 +346,15 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
             <section className="space-y-8">
               <RecipeTitleInput
                 value={formData.title}
-                onChange={(value) =>
-                  form.setFieldValue('title', value)
+                onChange={(value) => form.setFieldValue('title', value)}
+                error={
+                  fieldMeta.title?.errors?.[0]?.message as string | undefined
                 }
-                error={fieldMeta.title?.errors?.[0]?.message as string | undefined}
               />
               <RecipeDescriptionInput
                 value={formData.description}
-                onChange={(value) =>
-                  form.setFieldValue('description', value)
-                }
+                onChange={(value) => form.setFieldValue('description', value)}
               />
-              <div className="flex flex-col gap-2">
-                <label
-                  className={cn(
-                    'text-xs font-semibold uppercase tracking-[0.1em]',
-                    'text-stone-500 dark:text-stone-400',
-                  )}
-                >
-                  {t('pages.editor.fields.author.label')}
-                </label>
-                <form.Field name="author">
-                  {(field: { state: { value: string }; handleChange: (v: string) => void }) => (
-                    <Input
-                      className={cn(
-                        'bg-transparent border-b border-stone-300 dark:border-stone-700',
-                        'focus:border-orange-700 dark:focus:border-orange-500',
-                        'text-base py-4 outline-none',
-                        'placeholder:text-stone-300 dark:placeholder:text-stone-600',
-                        'text-stone-900 dark:text-stone-100',
-                      )}
-                      placeholder={t('pages.editor.fields.author.placeholder')}
-                      value={field.state.value}
-                      onChange={(e) => field.handleChange(e.target.value)}
-                    />
-                  )}
-                </form.Field>
-              </div>
             </section>
 
             <section>
@@ -427,9 +393,7 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
             </section>
             <PreparationSteps
               steps={formData.steps}
-              onChange={(steps) =>
-                form.setFieldValue('steps', steps)
-              }
+              onChange={(steps) => form.setFieldValue('steps', steps)}
             />
 
             <footer className="flex justify-between gap-6 pt-12">
@@ -492,16 +456,24 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
               onDifficultyChange={(difficulty) =>
                 form.setFieldValue('difficulty', difficulty)
               }
-              onPortionsChange={(portions) => form.setFieldValue('portions', portions)}
-              timeError={fieldMeta.time?.errors?.[0]?.message as string | undefined}
-              portionsError={fieldMeta.portions?.errors?.[0]?.message as string | undefined}
+              onPortionsChange={(portions) =>
+                form.setFieldValue('portions', portions)
+              }
+              timeError={
+                fieldMeta.time?.errors?.[0]?.message as string | undefined
+              }
+              portionsError={
+                fieldMeta.portions?.errors?.[0]?.message as string | undefined
+              }
             />
             <CategorySelector
               categories={formData.categories}
               onChange={(categories) =>
                 form.setFieldValue('categories', categories)
               }
-              error={fieldMeta.categories?.errors?.[0]?.message as string | undefined}
+              error={
+                fieldMeta.categories?.errors?.[0]?.message as string | undefined
+              }
             />
             <EditorialTip />
           </div>

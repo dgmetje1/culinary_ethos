@@ -62,7 +62,7 @@ const RecipePreviewDialog = ({ recipe, onClose }: RecipePreviewDialogProps) => {
                       time={recipe.time}
                       portions={recipe.portions}
                     />
-                    <RecipeDetailPageAuthorCard author={recipe.author} />
+                    <RecipeDetailPageAuthorCard authorId={recipe.author} />
                   </aside>
 
                   <article className="md:col-span-8 space-y-14">

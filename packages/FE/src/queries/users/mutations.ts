@@ -2,8 +2,18 @@ import { useQueryClient } from '@tanstack/react-query';
 
 import { Api } from '@/lib/api';
 import { useApiMutation } from '@/middleware/api';
+import type { User } from '@/types/user';
 
-import { getAllUsersKeys } from './keys';
+import { getAllUsersKeys, getUserKeys } from './keys';
+
+export type ProfileUpdateData = {
+  nickName?: string;
+  name?: string;
+  lastName?: string;
+  email?: string;
+  language?: User['language'];
+  profilePicture?: string;
+};
 
 export const useSuspendUser = () => {
   const queryClient = useQueryClient();
@@ -28,6 +38,27 @@ export const useActivateUser = () => {
   }, {
     onSuccess: () => {
       const { queryKey } = getAllUsersKeys();
+      queryClient.invalidateQueries({ queryKey });
+    },
+  });
+};
+
+export const useUpdateProfile = () => {
+  const queryClient = useQueryClient();
+
+  return useApiMutation('', async ({ id, data }: { id: string; data: ProfileUpdateData }) => {
+    const api = new Api();
+    return api.put(`users/${id}`, {
+      nick_name: data.nickName,
+      name: data.name,
+      last_name: data.lastName,
+      email: data.email,
+      language: data.language,
+      profile_picture: data.profilePicture,
+    });
+  }, {
+    onSuccess: () => {
+      const { queryKey } = getUserKeys();
       queryClient.invalidateQueries({ queryKey });
     },
   });

@@ -102,10 +102,6 @@ export class CreateRecipeDto {
   @Max(2)
   visibility: number;
 
-  @ApiProperty()
-  @IsString()
-  author: string;
-
   @ApiProperty({ type: [RecipePublicationDto] })
   @IsArray()
   @ValidateNested({ each: true })

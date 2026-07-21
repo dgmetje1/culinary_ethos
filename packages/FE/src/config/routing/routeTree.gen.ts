@@ -15,7 +15,9 @@ import { Route as ManagementRouteImport } from './routes/management'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as MainLayoutRouteImport } from './routes/_mainLayout'
 import { Route as MainLayoutProfileRouteImport } from './routes/_mainLayout/profile'
+import { Route as MainLayoutPlansRouteImport } from './routes/_mainLayout/plans'
 import { Route as MainLayoutRecipeIndexRouteImport } from './routes/_mainLayout/recipe/index'
+import { Route as MainLayoutEditorIndexRouteImport } from './routes/_mainLayout/editor/index'
 import { Route as MainLayoutRecipeIdRouteImport } from './routes/_mainLayout/recipe/$id'
 import { Route as MainLayoutEditorIdRouteImport } from './routes/_mainLayout/editor/$id'
 
@@ -34,10 +36,6 @@ const ManagementIngredientsLazyRouteImport = createFileRoute(
 )()
 const ManagementCategoriesLazyRouteImport = createFileRoute(
   '/management/categories',
-)()
-const MainLayoutPlansLazyRouteImport = createFileRoute('/_mainLayout/plans')()
-const MainLayoutEditorIndexLazyRouteImport = createFileRoute(
-  '/_mainLayout/editor/',
 )()
 
 const ManagementRoute = ManagementRouteImport.update({
@@ -113,29 +111,24 @@ const ManagementCategoriesLazyRoute =
   } as any).lazy(() =>
     import('./routes/management/categories.lazy').then((d) => d.Route),
   )
-const MainLayoutPlansLazyRoute = MainLayoutPlansLazyRouteImport.update({
-  id: '/plans',
-  path: '/plans',
-  getParentRoute: () => MainLayoutRoute,
-} as any).lazy(() =>
-  import('./routes/_mainLayout/plans.lazy').then((d) => d.Route),
-)
 const MainLayoutProfileRoute = MainLayoutProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
   getParentRoute: () => MainLayoutRoute,
 } as any)
-const MainLayoutEditorIndexLazyRoute =
-  MainLayoutEditorIndexLazyRouteImport.update({
-    id: '/editor/',
-    path: '/editor/',
-    getParentRoute: () => MainLayoutRoute,
-  } as any).lazy(() =>
-    import('./routes/_mainLayout/editor/index.lazy').then((d) => d.Route),
-  )
+const MainLayoutPlansRoute = MainLayoutPlansRouteImport.update({
+  id: '/plans',
+  path: '/plans',
+  getParentRoute: () => MainLayoutRoute,
+} as any)
 const MainLayoutRecipeIndexRoute = MainLayoutRecipeIndexRouteImport.update({
   id: '/recipe/',
   path: '/recipe/',
+  getParentRoute: () => MainLayoutRoute,
+} as any)
+const MainLayoutEditorIndexRoute = MainLayoutEditorIndexRouteImport.update({
+  id: '/editor/',
+  path: '/editor/',
   getParentRoute: () => MainLayoutRoute,
 } as any)
 const MainLayoutRecipeIdRoute = MainLayoutRecipeIdRouteImport.update({
@@ -153,8 +146,8 @@ export interface FileRoutesByFullPath {
   '/': typeof MainLayoutIndexLazyRoute
   '/login': typeof LoginRoute
   '/management': typeof ManagementRouteWithChildren
+  '/plans': typeof MainLayoutPlansRoute
   '/profile': typeof MainLayoutProfileRoute
-  '/plans': typeof MainLayoutPlansLazyRoute
   '/management/categories': typeof ManagementCategoriesLazyRoute
   '/management/ingredients': typeof ManagementIngredientsLazyRoute
   '/management/kitchenware': typeof ManagementKitchenwareLazyRoute
@@ -164,13 +157,13 @@ export interface FileRoutesByFullPath {
   '/management/': typeof ManagementIndexLazyRoute
   '/editor/$id': typeof MainLayoutEditorIdRoute
   '/recipe/$id': typeof MainLayoutRecipeIdRoute
+  '/editor/': typeof MainLayoutEditorIndexRoute
   '/recipe/': typeof MainLayoutRecipeIndexRoute
-  '/editor/': typeof MainLayoutEditorIndexLazyRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
+  '/plans': typeof MainLayoutPlansRoute
   '/profile': typeof MainLayoutProfileRoute
-  '/plans': typeof MainLayoutPlansLazyRoute
   '/management/categories': typeof ManagementCategoriesLazyRoute
   '/management/ingredients': typeof ManagementIngredientsLazyRoute
   '/management/kitchenware': typeof ManagementKitchenwareLazyRoute
@@ -181,16 +174,16 @@ export interface FileRoutesByTo {
   '/management': typeof ManagementIndexLazyRoute
   '/editor/$id': typeof MainLayoutEditorIdRoute
   '/recipe/$id': typeof MainLayoutRecipeIdRoute
+  '/editor': typeof MainLayoutEditorIndexRoute
   '/recipe': typeof MainLayoutRecipeIndexRoute
-  '/editor': typeof MainLayoutEditorIndexLazyRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_mainLayout': typeof MainLayoutRouteWithChildren
   '/login': typeof LoginRoute
   '/management': typeof ManagementRouteWithChildren
+  '/_mainLayout/plans': typeof MainLayoutPlansRoute
   '/_mainLayout/profile': typeof MainLayoutProfileRoute
-  '/_mainLayout/plans': typeof MainLayoutPlansLazyRoute
   '/management/categories': typeof ManagementCategoriesLazyRoute
   '/management/ingredients': typeof ManagementIngredientsLazyRoute
   '/management/kitchenware': typeof ManagementKitchenwareLazyRoute
@@ -201,8 +194,8 @@ export interface FileRoutesById {
   '/management/': typeof ManagementIndexLazyRoute
   '/_mainLayout/editor/$id': typeof MainLayoutEditorIdRoute
   '/_mainLayout/recipe/$id': typeof MainLayoutRecipeIdRoute
+  '/_mainLayout/editor/': typeof MainLayoutEditorIndexRoute
   '/_mainLayout/recipe/': typeof MainLayoutRecipeIndexRoute
-  '/_mainLayout/editor/': typeof MainLayoutEditorIndexLazyRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -210,8 +203,8 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/management'
-    | '/profile'
     | '/plans'
+    | '/profile'
     | '/management/categories'
     | '/management/ingredients'
     | '/management/kitchenware'
@@ -221,13 +214,13 @@ export interface FileRouteTypes {
     | '/management/'
     | '/editor/$id'
     | '/recipe/$id'
-    | '/recipe/'
     | '/editor/'
+    | '/recipe/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
-    | '/profile'
     | '/plans'
+    | '/profile'
     | '/management/categories'
     | '/management/ingredients'
     | '/management/kitchenware'
@@ -238,15 +231,15 @@ export interface FileRouteTypes {
     | '/management'
     | '/editor/$id'
     | '/recipe/$id'
-    | '/recipe'
     | '/editor'
+    | '/recipe'
   id:
     | '__root__'
     | '/_mainLayout'
     | '/login'
     | '/management'
-    | '/_mainLayout/profile'
     | '/_mainLayout/plans'
+    | '/_mainLayout/profile'
     | '/management/categories'
     | '/management/ingredients'
     | '/management/kitchenware'
@@ -257,8 +250,8 @@ export interface FileRouteTypes {
     | '/management/'
     | '/_mainLayout/editor/$id'
     | '/_mainLayout/recipe/$id'
-    | '/_mainLayout/recipe/'
     | '/_mainLayout/editor/'
+    | '/_mainLayout/recipe/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -346,13 +339,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ManagementCategoriesLazyRouteImport
       parentRoute: typeof ManagementRoute
     }
-    '/_mainLayout/plans': {
-      id: '/_mainLayout/plans'
-      path: '/plans'
-      fullPath: '/plans'
-      preLoaderRoute: typeof MainLayoutPlansLazyRouteImport
-      parentRoute: typeof MainLayoutRoute
-    }
     '/_mainLayout/profile': {
       id: '/_mainLayout/profile'
       path: '/profile'
@@ -360,11 +346,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainLayoutProfileRouteImport
       parentRoute: typeof MainLayoutRoute
     }
-    '/_mainLayout/editor/': {
-      id: '/_mainLayout/editor/'
-      path: '/editor'
-      fullPath: '/editor/'
-      preLoaderRoute: typeof MainLayoutEditorIndexLazyRouteImport
+    '/_mainLayout/plans': {
+      id: '/_mainLayout/plans'
+      path: '/plans'
+      fullPath: '/plans'
+      preLoaderRoute: typeof MainLayoutPlansRouteImport
       parentRoute: typeof MainLayoutRoute
     }
     '/_mainLayout/recipe/': {
@@ -372,6 +358,13 @@ declare module '@tanstack/react-router' {
       path: '/recipe'
       fullPath: '/recipe/'
       preLoaderRoute: typeof MainLayoutRecipeIndexRouteImport
+      parentRoute: typeof MainLayoutRoute
+    }
+    '/_mainLayout/editor/': {
+      id: '/_mainLayout/editor/'
+      path: '/editor'
+      fullPath: '/editor/'
+      preLoaderRoute: typeof MainLayoutEditorIndexRouteImport
       parentRoute: typeof MainLayoutRoute
     }
     '/_mainLayout/recipe/$id': {
@@ -392,23 +385,23 @@ declare module '@tanstack/react-router' {
 }
 
 interface MainLayoutRouteChildren {
+  MainLayoutPlansRoute: typeof MainLayoutPlansRoute
   MainLayoutProfileRoute: typeof MainLayoutProfileRoute
-  MainLayoutPlansLazyRoute: typeof MainLayoutPlansLazyRoute
   MainLayoutIndexLazyRoute: typeof MainLayoutIndexLazyRoute
   MainLayoutEditorIdRoute: typeof MainLayoutEditorIdRoute
   MainLayoutRecipeIdRoute: typeof MainLayoutRecipeIdRoute
+  MainLayoutEditorIndexRoute: typeof MainLayoutEditorIndexRoute
   MainLayoutRecipeIndexRoute: typeof MainLayoutRecipeIndexRoute
-  MainLayoutEditorIndexLazyRoute: typeof MainLayoutEditorIndexLazyRoute
 }
 
 const MainLayoutRouteChildren: MainLayoutRouteChildren = {
+  MainLayoutPlansRoute: MainLayoutPlansRoute,
   MainLayoutProfileRoute: MainLayoutProfileRoute,
-  MainLayoutPlansLazyRoute: MainLayoutPlansLazyRoute,
   MainLayoutIndexLazyRoute: MainLayoutIndexLazyRoute,
   MainLayoutEditorIdRoute: MainLayoutEditorIdRoute,
   MainLayoutRecipeIdRoute: MainLayoutRecipeIdRoute,
+  MainLayoutEditorIndexRoute: MainLayoutEditorIndexRoute,
   MainLayoutRecipeIndexRoute: MainLayoutRecipeIndexRoute,
-  MainLayoutEditorIndexLazyRoute: MainLayoutEditorIndexLazyRoute,
 }
 
 const MainLayoutRouteWithChildren = MainLayoutRoute._addFileChildren(

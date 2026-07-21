@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Link } from '@tanstack/react-router';
 import { Bookmark } from 'lucide-react';
 
+import AuthorName from '@/components/common/AuthorName/AuthorName';
 import { Button } from '@/components/ui/button';
 import { cn, composeCdnUrl } from '@/lib/utils';
 import { useGetRecipes } from '@/queries/recipes';
@@ -105,7 +106,7 @@ const HomePageMasonryGrid = () => {
               'mt-1',
             )}
           >
-            {t('common.by')} {recipe.author}
+            {t('common.by')} <AuthorName authorId={recipe.author} />
           </p>
         </div>
       ))}

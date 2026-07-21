@@ -12,11 +12,13 @@ import {
   ApiResponse,
   ApiConsumes,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { FilesService } from './files.service';
 import { UploadFileDto } from './dto/upload-file.dto';
 import { memoryStorage } from 'multer';
 
+@ApiBearerAuth()
 @ApiTags('files')
 @Controller('files')
 export class FilesController {

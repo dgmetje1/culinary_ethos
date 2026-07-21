@@ -19,6 +19,14 @@ export class RecipeRepository implements IRecipeRepository {
     private readonly repository: Repository<Recipe>,
   ) {}
 
+  async findByAuthor(authorId: string): Promise<RecipeAttributes[]> {
+    const results = await this.repository.find({
+      where: { author: authorId },
+      order: { publicationDate: 'DESC' },
+    });
+    return results.map((r) => this.toAttributes(r));
+  }
+
   async findAll(_categoryId?: number): Promise<RecipeAttributes[]> {
     const results = await this.repository.find({
       where: [

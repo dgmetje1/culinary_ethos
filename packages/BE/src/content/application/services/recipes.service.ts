@@ -41,7 +41,27 @@ export class RecipesService {
 
     const categories = await this.categoryRepository.findAll();
 
-    return recipes.map((r) => ({
+    return recipes.map((r) => this.mapToListItem(r, language, categories));
+  }
+
+  async getByUser(
+    userId: string,
+    language: string = 'en',
+  ): Promise<RecipeListItemResponseDto[]> {
+    const recipes = await this.recipeRepository.findByAuthor(userId);
+
+    const categories = await this.categoryRepository.findAll();
+
+    return recipes.map((r) => this.mapToListItem(r, language, categories));
+  }
+
+  private mapToListItem(
+    r: RecipeAttributes,
+    language: string,
+    allCategories?: CategoryAttributes[],
+  ): RecipeListItemResponseDto {
+    const categories = allCategories ?? [];
+    return {
       id: r.id,
       title: this.getPublicationTitle(r.publications, language),
       categories: r.categoryIds.reduce<{ id: string; name: string }[]>(
@@ -65,7 +85,7 @@ export class RecipesService {
       author: r.author,
       thumbnailUrl: r.thumbnailUrl,
       portions: r.portions,
-    }));
+    };
   }
 
   async getAllAdmin(
@@ -328,7 +348,7 @@ export class RecipesService {
     };
   }
 
-  async create(dto: CreateRecipeDto): Promise<string> {
+  async create(dto: CreateRecipeDto, authorId: string): Promise<string> {
     if (!dto.publications || dto.publications.length === 0) {
       throw new InvalidParameterError('Publications are required', 'Recipe');
     }
@@ -337,7 +357,7 @@ export class RecipesService {
       time: dto.time || 0,
       portions: dto.portions || 0,
       visibility: dto.visibility || 0,
-      author: dto.author,
+      author: authorId,
       publications: dto.publications,
       categoryIds: dto.categories || [],
       ingredients: dto.ingredients || [],
@@ -350,7 +370,7 @@ export class RecipesService {
     return result.id;
   }
 
-  async update(id: string, dto: CreateRecipeDto): Promise<string> {
+  async update(id: string, dto: CreateRecipeDto, userId: string): Promise<string> {
     const recipe = await this.recipeRepository.findById(id);
     if (!recipe) {
       throw new EntityNotFoundError('Recipe not found', 'Recipe', [{ id }]);
@@ -365,7 +385,7 @@ export class RecipesService {
       time: dto.time,
       portions: dto.portions,
       visibility: dto.visibility,
-      author: dto.author,
+      author: userId,
       publications: dto.publications,
       categoryIds: dto.categories || [],
       ingredients: dto.ingredients || [],

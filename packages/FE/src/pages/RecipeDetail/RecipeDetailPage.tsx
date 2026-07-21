@@ -5,6 +5,7 @@ import { useRouter } from '@tanstack/react-router';
 
 import { Button } from '@/components/ui/button';
 import config from '@/config';
+import { useAuthContext } from '@/context/Auth';
 import { cn, composeCdnUrl } from '@/lib/utils';
 import { useSuspenseGetRecipe } from '@/queries/recipes';
 
@@ -21,6 +22,7 @@ const RecipeDetailPage = () => {
   const { id } = route.useParams();
   const { t } = useTranslation();
   const router = useRouter();
+  const { account } = useAuthContext();
   const { data: recipe } = useSuspenseGetRecipe(id);
 
   const categoryName = useMemo(() => {
@@ -74,25 +76,29 @@ const RecipeDetailPage = () => {
             </h1>
           </div>
         </div>
-        <Button
-          className="absolute top-8 right-8 glass p-5 rounded-full shadow-lg text-orange-700"
-          size="icon"
-        >
-          <Bookmark className="w-6 h-6 fill-current" />
-        </Button>
-        <Button
-          className="absolute top-8 right-24 glass p-5 rounded-full shadow-lg text-orange-700"
-          size="icon"
-          onClick={() =>
-            router.navigate({
-              to: '/editor/$id',
-              params: { id: recipe.id },
-              search: {},
-            } as any)
-          }
-        >
-          <Pencil className="w-5 h-5" />
-        </Button>
+        {account?.id !== recipe.author && (
+          <Button
+            className="absolute top-8 right-8 glass p-5 rounded-full shadow-lg text-orange-700"
+            size="icon"
+          >
+            <Bookmark className="w-6 h-6 fill-current" />
+          </Button>
+        )}
+        {account?.id === recipe.author && (
+          <Button
+            className="absolute top-8 right-8 glass p-5 rounded-full shadow-lg text-orange-700"
+            size="icon"
+            onClick={() =>
+              router.navigate({
+                to: '/editor/$id',
+                params: { id: recipe.id },
+                search: {},
+              } as any)
+            }
+          >
+            <Pencil className="w-5 h-5" />
+          </Button>
+        )}
       </section>
 
       {/* Recipe Content Shell */}
@@ -106,7 +112,7 @@ const RecipeDetailPage = () => {
             time={recipe.time}
             portions={recipe.portions}
           />
-          <RecipeDetailPageAuthorCard author={recipe.author} />
+          <RecipeDetailPageAuthorCard authorId={recipe.author} />
         </aside>
 
         {/* Main: Description & Steps */}

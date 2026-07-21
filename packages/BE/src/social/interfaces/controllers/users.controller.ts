@@ -15,6 +15,7 @@ import {
   ApiTags,
   ApiResponse,
   ApiBody,
+  ApiBearerAuth,
 } from '@nestjs/swagger';
 import { UserQueriesService } from '../../application/services';
 import {
@@ -25,6 +26,7 @@ import {
   UpdateUserRequestDto,
 } from '../../application/dto';
 
+@ApiBearerAuth()
 @ApiTags('User')
 @Controller('users')
 export class UsersController {

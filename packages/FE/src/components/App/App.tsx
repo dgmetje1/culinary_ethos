@@ -5,7 +5,7 @@ import { RouterProvider } from '@tanstack/react-router';
 import withAuth from '@/components/hoc/Auth';
 import { Toaster } from 'sonner';
 import getRouter from '@/config/routing';
-import { useAuthContext } from '@/context/Auth';
+import { useAuthContext } from '@/context/Auth/AuthContext';
 import { SearchProvider } from '@/context/Search';
 import i18n from '@/i18n';
 import { Api } from '@/lib/api';
@@ -15,7 +15,7 @@ import { Language } from '@/types/user';
 const router = getRouter(queryClient);
 const App = () => {
   const { isAuthenticated, isLoading: isAuthenticatedLoading } = useAuth0();
-  const { accessToken, isAccessTokenLoading } = useAuthContext();
+  const { accessToken, isAccessTokenLoading, account } = useAuthContext();
 
   useEffect(() => {
     Api.setLanguage(i18n.language as Language);
@@ -27,12 +27,14 @@ const App = () => {
       isAuthenticatedLoading,
       isAccessTokenLoading,
       accessToken,
+      account,
     }),
     [
       accessToken,
       isAccessTokenLoading,
       isAuthenticated,
       isAuthenticatedLoading,
+      account,
     ],
   );
 

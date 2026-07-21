@@ -126,14 +126,14 @@ describe('RecipesController', () => {
         time: 20,
         portions: 2,
         visibility: 1,
-        author: 'chef',
         publications: [{ language: 'en', title: 'New', description: 'Desc' }],
       };
 
-      const result = await controller.create(dto);
+      const mockUser = { id: 'user123' } as any;
+      const result = await controller.create(dto, mockUser);
 
       expect(result).toBe('new123');
-      expect(mockService.create).toHaveBeenCalledWith(dto);
+      expect(mockService.create).toHaveBeenCalledWith(dto, 'user123');
     });
   });
 
@@ -144,13 +144,13 @@ describe('RecipesController', () => {
         time: 20,
         portions: 2,
         visibility: 1,
-        author: 'chef',
         publications: [{ language: 'en', title: 'Updated', description: 'Desc' }],
       };
 
-      await controller.update('rec123', dto);
+      const mockUser = { id: 'user123' } as any;
+      await controller.update('rec123', dto, mockUser);
 
-      expect(mockService.update).toHaveBeenCalledWith('rec123', dto);
+      expect(mockService.update).toHaveBeenCalledWith('rec123', dto, 'user123');
     });
   });
 
