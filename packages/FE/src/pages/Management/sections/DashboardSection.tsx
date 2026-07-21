@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import RecipePreviewDialog from "@/components/common/RecipePreviewDialog";
+import AuthorName from "@/components/common/AuthorName/AuthorName";
 import { useGetDashboardStats } from "@/queries/backoffice/queryHooks";
 import { useGetAdminRecipes } from "@/queries/recipes/queryHooks";
 import { useApproveRecipe, useBanRecipe } from "@/queries/recipes/mutations";
@@ -104,7 +105,7 @@ const DashboardSection = () => {
                     {recipe.title}
                   </h4>
                   <div className="flex justify-between items-center mt-6">
-                    <span className="text-sm text-stone-500">{recipe.author}</span>
+                    <span className="text-sm text-stone-500"><AuthorName authorId={recipe.author} /></span>
                     <div className="flex gap-2">
                       <Button
                         variant="ghost"

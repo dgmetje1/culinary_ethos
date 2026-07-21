@@ -9,7 +9,7 @@ const { Unit } = require('./content/domain/models/unit.entity');
 const { Ingredient } = require('./content/domain/models/ingredient.entity');
 const { Kitchenware } = require('./content/domain/models/kitchenware.entity');
 const { Recipe } = require('./content/domain/models/recipe.entity');
-const { User } = require('./users/user.entity');
+const { User } = require('./social/domain/models/user.entity');
 
 const CAT_BREAKFAST = ulid();
 const CAT_LUNCH = ulid();
@@ -77,6 +77,25 @@ async function seed() {
   await em.clear(Unit);
   await em.clear(Category);
   console.log('Clean complete.');
+
+  console.log('Seeding admin user...');
+  await em.upsert(
+    User,
+    {
+      id: '01KSB2HG9QT802B103JT6E1ZFH',
+      account_id: 'auth0|6a5f5e5d6fcdc3659ab02225',
+      nick_name: 'admin',
+      name: 'Admin',
+      last_name: 'User',
+      email: 'admin@example.com',
+      language: 'en',
+      profile_picture: null,
+      role: 'admin',
+      status: 'active',
+    },
+    ['id'],
+  );
+  console.log('Admin user seeded.');
 
   console.log('Seeding categories...');
   const categories = [

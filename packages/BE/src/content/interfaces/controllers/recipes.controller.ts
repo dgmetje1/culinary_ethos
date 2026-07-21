@@ -10,7 +10,7 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiResponse, ApiQuery } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiResponse, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { RecipesService } from '../../application/services';
 import {
   CreateRecipeDto,
@@ -22,12 +22,16 @@ import {
   RecipeStepDto,
 } from '../../application/dto';
 import { Language } from '../../../common/decorators/language.decorator';
+import { CurrentUser } from '../../../auth/decorators/current-user.decorator';
+import { Public } from '../../../auth/decorators/public.decorator';
+import type { UserAttributes } from '../../../social/domain/models';
 
 @ApiTags('Recipes')
 @Controller('recipes')
 export class RecipesController {
   constructor(private readonly recipesService: RecipesService) {}
 
+  @Public()
   @Get()
   @ApiOperation({ summary: 'Get all recipes' })
   @ApiQuery({ name: 'category', required: false, type: Number })
@@ -39,6 +43,18 @@ export class RecipesController {
     return this.recipesService.getAll(category, language);
   }
 
+  @ApiBearerAuth()
+  @Get('user')
+  @ApiOperation({ summary: 'Get recipes for the authenticated user' })
+  @ApiResponse({ status: 200, type: [RecipeListItemResponseDto] })
+  async getByUser(
+    @CurrentUser() user: UserAttributes,
+    @Language() language?: string,
+  ): Promise<RecipeListItemResponseDto[]> {
+    return this.recipesService.getByUser(user.id, language);
+  }
+
+  @ApiBearerAuth()
   @Get('admin')
   @ApiOperation({ summary: 'Get all recipes for admin (with status filter)' })
   @ApiQuery({ name: 'status', required: false, type: String })
@@ -50,6 +66,7 @@ export class RecipesController {
     return this.recipesService.getAllAdmin(status, language);
   }
 
+  @ApiBearerAuth()
   @Get('daily')
   @ApiOperation({ summary: 'Get daily recipe' })
   @ApiResponse({ status: 200, type: RecipeDailyResponseDto })
@@ -57,6 +74,7 @@ export class RecipesController {
     return this.recipesService.getDaily();
   }
 
+  @Public()
   @Get(':id')
   @ApiOperation({ summary: 'Get recipe by ID' })
   @ApiResponse({ status: 200, type: RecipeResponseDto })
@@ -67,14 +85,19 @@ export class RecipesController {
     return this.recipesService.getById(id, language);
   }
 
+  @ApiBearerAuth()
   @Post()
   @HttpCode(HttpStatus.CREATED)
   @ApiOperation({ summary: 'Create a recipe' })
   @ApiResponse({ status: 201, type: String })
-  async create(@Body() dto: CreateRecipeDto): Promise<string> {
-    return this.recipesService.create(dto);
+  async create(
+    @Body() dto: CreateRecipeDto,
+    @CurrentUser() user: UserAttributes,
+  ): Promise<string> {
+    return this.recipesService.create(dto, user.id);
   }
 
+  @ApiBearerAuth()
   @Put(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Update a recipe' })
@@ -82,10 +105,12 @@ export class RecipesController {
   async update(
     @Param('id') id: string,
     @Body() dto: CreateRecipeDto,
+    @CurrentUser() user: UserAttributes,
   ): Promise<void> {
-    await this.recipesService.update(id, dto);
+    await this.recipesService.update(id, dto, user.id);
   }
 
+  @ApiBearerAuth()
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Delete a recipe' })
@@ -94,6 +119,7 @@ export class RecipesController {
     await this.recipesService.delete(id);
   }
 
+  @ApiBearerAuth()
   @Put(':id/approve')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Approve a flagged recipe' })
@@ -105,6 +131,7 @@ export class RecipesController {
     return this.recipesService.approve(id, 'admin', language);
   }
 
+  @ApiBearerAuth()
   @Put(':id/flag')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Flag a published recipe for review' })
@@ -116,6 +143,7 @@ export class RecipesController {
     return this.recipesService.flag(id, language);
   }
 
+  @ApiBearerAuth()
   @Put(':id/reject')
   @HttpCode(HttpStatus.OK)
   @ApiOperation({ summary: 'Reject a flagged recipe (ban it)' })
@@ -127,6 +155,7 @@ export class RecipesController {
     return this.recipesService.reject(id, 'admin', language);
   }
 
+  @ApiBearerAuth()
   @Put(':id/ingredients')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Add ingredients to recipe' })
@@ -138,6 +167,7 @@ export class RecipesController {
     await this.recipesService.addIngredients(id, ingredients);
   }
 
+  @ApiBearerAuth()
   @Put(':id/kitchenware')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Add kitchenware to recipe' })
@@ -149,6 +179,7 @@ export class RecipesController {
     await this.recipesService.addKitchenware(id, kitchenware);
   }
 
+  @ApiBearerAuth()
   @Put(':id/steps')
   @HttpCode(HttpStatus.NO_CONTENT)
   @ApiOperation({ summary: 'Add steps to recipe' })

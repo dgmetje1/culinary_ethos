@@ -80,6 +80,42 @@ export class FilesService {
     };
   }
 
+  async downloadFile(relativePath: string): Promise<{ buffer: Buffer; contentType: string } | null> {
+    this.init();
+    if (!this.blobServiceClient) return null;
+
+    const containerClient = this.blobServiceClient.getContainerClient(
+      this.containerName,
+    );
+    const blobName = relativePath.startsWith('/')
+      ? relativePath.slice(1)
+      : relativePath;
+    const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+    try {
+      const response = await blockBlobClient.download();
+      const buffer = await this.streamToBuffer(
+        response.readableStreamBody!,
+      );
+      return {
+        buffer,
+        contentType: response.contentType || 'application/octet-stream',
+      };
+    } catch {
+      return null;
+    }
+  }
+
+  private async streamToBuffer(
+    stream: NodeJS.ReadableStream,
+  ): Promise<Buffer> {
+    const chunks: Buffer[] = [];
+    for await (const chunk of stream) {
+      chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+    }
+    return Buffer.concat(chunks);
+  }
+
   private validateCategory(category: string): FileCategory {
     if (!this.allowedCategories.includes(category as FileCategory)) {
       throw new BadRequestException(

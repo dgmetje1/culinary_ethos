@@ -1,23 +1,14 @@
-import bannerImg from "@/assets/banner-profile.jpg";
-
 import ProfilePageAccountDetails from "./AccountDetails";
 import ProfilePageAccountTabs from "./AccountTabs";
 
 const ProfilePage = () => {
   return (
-    <div style={{ display: "flex", flexDirection: "column" }}>
-      <img
-        alt="profile banner with some cooks in a kitchen"
-        height="100%"
-        src={bannerImg}
-        width="100%"
-        style={{ maxHeight: "30vh", objectFit: "cover" }}
-      />
-      <div className="container max-w-5xl mx-auto px-6">
+    <main className="pb-20 max-w-[1200px] mx-auto px-8">
+      <div className="pt-32">
         <ProfilePageAccountDetails />
         <ProfilePageAccountTabs />
       </div>
-    </div>
+    </main>
   );
 };
 

@@ -10,10 +10,11 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiResponse, ApiQuery } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiResponse, ApiQuery, ApiBearerAuth } from '@nestjs/swagger';
 import { MealPlansService } from '../../application/services';
 import { CreateMealPlanDto, UpdateMealPlanDto, MealPlanResponseDto } from '../../application/dto';
 
+@ApiBearerAuth()
 @ApiTags('Meal Plans')
 @Controller('meal-plans')
 export class MealPlansController {

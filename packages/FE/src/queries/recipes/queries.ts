@@ -12,13 +12,16 @@ export type AdminRecipe = Recipe & {
 
 export const getRecipes = ({ categoryId }: RecipeListQueryFilters) => {
   return new Api().get<RecipeList>("recipes", {
+    withAuth: false,
     params: {
       category: categoryId,
     },
   });
 };
-export const getRecipe = (id: string) => new Api().get<Recipe>(`recipes/${id}`);
-export const getDailyRecipe = () => new Api().get<DailyRecipe>("recipes/daily");
+export const getRecipe = (id: string) =>
+  new Api().get<Recipe>(`recipes/${id}`, { withAuth: false });
+export const getDailyRecipe = () =>
+  new Api().get<DailyRecipe>("recipes/daily", { withAuth: false });
 
 export const getAdminRecipes = (status?: string) => {
   return new Api().get<AdminRecipe[]>("recipes/admin", {

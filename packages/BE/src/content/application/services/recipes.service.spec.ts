@@ -136,9 +136,8 @@ describe('RecipesService', () => {
         time: 20,
         portions: 2,
         visibility: 1,
-        author: 'chef',
         publications: [{ language: 'en', title: 'New Recipe', description: 'Desc' }],
-      });
+      }, 'chef');
 
       expect(result).toBe('new123');
       expect(mockRecipeRepository.create).toHaveBeenCalled();
@@ -151,9 +150,8 @@ describe('RecipesService', () => {
           time: 20,
           portions: 2,
           visibility: 1,
-          author: 'chef',
           publications: [],
-        }),
+        }, 'chef'),
       ).rejects.toThrow(InvalidParameterError);
     });
   });

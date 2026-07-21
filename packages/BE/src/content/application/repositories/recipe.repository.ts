@@ -13,6 +13,7 @@ export const RECIPE_REPOSITORY = 'RECIPE_REPOSITORY';
 
 export interface IRecipeRepository {
   findAll(categoryId?: number): Promise<RecipeAttributes[]>;
+  findByAuthor(authorId: string): Promise<RecipeAttributes[]>;
   findAllAdmin(status?: string): Promise<RecipeAttributes[]>;
   findById(id: string): Promise<RecipeAttributes | null>;
   findDaily(): Promise<RecipeAttributes | null>;

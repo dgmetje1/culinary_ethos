@@ -8,6 +8,7 @@
     "saving": "Guardando...",
     "success": "Éxito",
     "error": "Error",
+    "save": "Guardar",
     "cancel": "Cancelar"
   },
   "menu": {
@@ -85,9 +86,17 @@
       }
     },
     "profile": {
+      "editProfile": "Editar Perfil",
       "tabs": {
-        "details": "Details",
-        "recipes": "Recipes"
+        "details": "Detalles",
+        "recipes": "Recetas"
+      },
+      "fields": {
+        "nickName": "Apodo",
+        "name": "Nombre",
+        "lastName": "Apellidos",
+        "email": "Correo electrónico",
+        "language": "Idioma"
       }
     },
     "recipe": {

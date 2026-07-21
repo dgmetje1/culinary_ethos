@@ -1,6 +1,7 @@
 import { Module, OnModuleInit, Logger } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ContentModule } from './content/content.module';
 import { SocialModule } from './social/social.module';
 import { CommonModule } from './common/common.module';
@@ -10,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
+    EventEmitterModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: ['.env'],

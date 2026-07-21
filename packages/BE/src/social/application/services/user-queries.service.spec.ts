@@ -5,6 +5,7 @@ import { EntityNotFoundError } from '../../../common/exceptions';
 describe('UserQueriesService', () => {
   let service: UserQueriesService;
   let mockRepository: any;
+  let mockEventEmitter: any;
 
   const mockUser = {
     id: 'user123',
@@ -26,7 +27,10 @@ describe('UserQueriesService', () => {
       update: vi.fn(),
       delete: vi.fn(),
     };
-    service = new UserQueriesService(mockRepository);
+    mockEventEmitter = {
+      emit: vi.fn(),
+    };
+    service = new UserQueriesService(mockRepository, mockEventEmitter);
   });
 
   describe('getDataById', () => {
@@ -123,18 +127,45 @@ describe('UserQueriesService', () => {
 
   describe('updateUser', () => {
     it('should update and return user', async () => {
+      mockRepository.findById.mockResolvedValue(mockUser);
       mockRepository.update.mockResolvedValue({ ...mockUser, nick_name: 'updated' });
 
       const result = await service.updateUser('user123', { nick_name: 'updated' });
 
       expect(result.nickName).toBe('updated');
+      expect(mockRepository.findById).toHaveBeenCalledWith('user123');
       expect(mockRepository.update).toHaveBeenCalledWith('user123', { nick_name: 'updated' });
+      expect(mockEventEmitter.emit).toHaveBeenCalledWith(
+        'user.updated',
+        expect.objectContaining({
+          accountId: 'acc123',
+          changes: { nickname: 'updated' },
+        }),
+      );
     });
 
-    it('should throw EntityNotFoundError if user not found', async () => {
-      mockRepository.update.mockResolvedValue(null);
+    it('should skip event when nick_name unchanged', async () => {
+      mockRepository.findById.mockResolvedValue(mockUser);
+      mockRepository.update.mockResolvedValue(mockUser);
+
+      const result = await service.updateUser('user123', { name: 'NewName' });
+
+      expect(result.nickName).toBe('testuser');
+      expect(mockEventEmitter.emit).not.toHaveBeenCalled();
+    });
+
+    it('should throw EntityNotFoundError if user not found on findById', async () => {
+      mockRepository.findById.mockResolvedValue(null);
 
       await expect(service.updateUser('invalid', { nick_name: 'updated' })).rejects.toThrow(EntityNotFoundError);
+      expect(mockRepository.update).not.toHaveBeenCalled();
+    });
+
+    it('should throw EntityNotFoundError if update returns null', async () => {
+      mockRepository.findById.mockResolvedValue(mockUser);
+      mockRepository.update.mockResolvedValue(null);
+
+      await expect(service.updateUser('user123', { nick_name: 'updated' })).rejects.toThrow(EntityNotFoundError);
     });
   });
 

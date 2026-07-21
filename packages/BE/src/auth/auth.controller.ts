@@ -14,6 +14,7 @@ import { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { CurrentUser } from './decorators/current-user.decorator';
+import { Public } from './decorators/public.decorator';
 import type { UserAttributes } from '../social/domain/models';
 
 export interface UserProfileResponse {
@@ -25,6 +26,7 @@ export interface UserProfileResponse {
   email: string;
   language: string;
   profilePicture: string | null;
+  role: string;
 }
 
 @ApiTags('auth')
@@ -35,11 +37,13 @@ export class AuthController {
     private readonly configService: ConfigService,
   ) {}
 
+  @Public()
   @Get('login')
   @ApiOperation({ summary: 'Initiate Auth0 login flow' })
   @UseGuards(AuthGuard('auth0'))
   login(): void {}
 
+  @Public()
   @Get('callback')
   @ApiOperation({ summary: 'Auth0 callback handler' })
   @UseGuards(AuthGuard('auth0'))
@@ -50,10 +54,9 @@ export class AuthController {
     );
   }
 
+  @ApiBearerAuth()
   @Get('profile')
   @ApiOperation({ summary: 'Get current user profile' })
-  @ApiBearerAuth()
-  @UseGuards(JwtAuthGuard)
   async getProfile(
     @CurrentUser() user: UserAttributes | null,
   ): Promise<UserProfileResponse> {
@@ -69,12 +72,13 @@ export class AuthController {
       email: user.email,
       language: user.language,
       profilePicture: user.profile_picture,
+      role: user.role,
     };
   }
 
+  @ApiBearerAuth()
   @Get('logout')
   @ApiOperation({ summary: 'Logout user' })
-  @UseGuards(JwtAuthGuard)
   async logout(@Res() res: Response): Promise<void> {
     const domain = this.configService.getOrThrow('AUTH0_DOMAIN');
     const clientId = this.configService.getOrThrow('AUTH0_CLIENT_ID');

@@ -14,6 +14,7 @@
     "saving": "Saving...",
     "success": "Success",
     "error": "Error",
+    "save": "Save",
     "cancel": "Cancel"
   },
   "menu": {
@@ -186,9 +187,17 @@
       }
     },
     "profile": {
+      "editProfile": "Edit Profile",
       "tabs": {
         "details": "Details",
         "recipes": "Recipes"
+      },
+      "fields": {
+        "nickName": "Nickname",
+        "name": "Name",
+        "lastName": "Last Name",
+        "email": "Email",
+        "language": "Language"
       }
     },
     "recipe": {

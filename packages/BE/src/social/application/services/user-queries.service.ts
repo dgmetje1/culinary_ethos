@@ -1,4 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EntityNotFoundError } from '../../../common/exceptions';
 import {
   UserAccountResponseDto,
@@ -8,11 +9,13 @@ import {
   UpdateUserRequestDto,
 } from '../dto';
 import { USER_REPOSITORY, IUserRepository, UpdateUserInput } from '../repositories/i-user.repository';
+import { UserUpdatedEvent } from '../events/user-updated.event';
 
 @Injectable()
 export class UserQueriesService {
   constructor(
     @Inject(USER_REPOSITORY) private readonly userRepository: IUserRepository,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   private mapToAdminResponse(result: {
@@ -103,10 +106,33 @@ export class UserQueriesService {
     id: string,
     data: UpdateUserRequestDto,
   ): Promise<UserAccountResponseDto> {
+    const existing = await this.userRepository.findById(id);
+    if (!existing) {
+      throw new EntityNotFoundError('User not found', 'User', [{ id }]);
+    }
+
     const result = await this.userRepository.update(id, data);
     if (!result) {
       throw new EntityNotFoundError('User not found', 'User', [{ id }]);
     }
+
+    const changes: { nickname?: string; picture?: string } = {};
+    if (data.nick_name !== undefined && data.nick_name !== existing.nick_name) {
+      changes.nickname = data.nick_name;
+    }
+    if (
+      data.profile_picture !== undefined &&
+      data.profile_picture !== existing.profile_picture
+    ) {
+      changes.picture = data.profile_picture;
+    }
+    if (Object.keys(changes).length > 0) {
+      this.eventEmitter.emit(
+        'user.updated',
+        new UserUpdatedEvent(existing.account_id, changes),
+      );
+    }
+
     return this.mapToAccountResponse(result);
   }
 
