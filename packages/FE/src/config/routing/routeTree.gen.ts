@@ -37,6 +37,9 @@ const ManagementIngredientsLazyRouteImport = createFileRoute(
 const ManagementCategoriesLazyRouteImport = createFileRoute(
   '/management/categories',
 )()
+const MainLayoutAuthorUserIdLazyRouteImport = createFileRoute(
+  '/_mainLayout/author/$userId',
+)()
 
 const ManagementRoute = ManagementRouteImport.update({
   id: '/management',
@@ -131,6 +134,14 @@ const MainLayoutEditorIndexRoute = MainLayoutEditorIndexRouteImport.update({
   path: '/editor/',
   getParentRoute: () => MainLayoutRoute,
 } as any)
+const MainLayoutAuthorUserIdLazyRoute =
+  MainLayoutAuthorUserIdLazyRouteImport.update({
+    id: '/author/$userId',
+    path: '/author/$userId',
+    getParentRoute: () => MainLayoutRoute,
+  } as any).lazy(() =>
+    import('./routes/_mainLayout/author.$userId.lazy').then((d) => d.Route),
+  )
 const MainLayoutRecipeIdRoute = MainLayoutRecipeIdRouteImport.update({
   id: '/recipe/$id',
   path: '/recipe/$id',
@@ -157,6 +168,7 @@ export interface FileRoutesByFullPath {
   '/management/': typeof ManagementIndexLazyRoute
   '/editor/$id': typeof MainLayoutEditorIdRoute
   '/recipe/$id': typeof MainLayoutRecipeIdRoute
+  '/author/$userId': typeof MainLayoutAuthorUserIdLazyRoute
   '/editor/': typeof MainLayoutEditorIndexRoute
   '/recipe/': typeof MainLayoutRecipeIndexRoute
 }
@@ -174,6 +186,7 @@ export interface FileRoutesByTo {
   '/management': typeof ManagementIndexLazyRoute
   '/editor/$id': typeof MainLayoutEditorIdRoute
   '/recipe/$id': typeof MainLayoutRecipeIdRoute
+  '/author/$userId': typeof MainLayoutAuthorUserIdLazyRoute
   '/editor': typeof MainLayoutEditorIndexRoute
   '/recipe': typeof MainLayoutRecipeIndexRoute
 }
@@ -194,6 +207,7 @@ export interface FileRoutesById {
   '/management/': typeof ManagementIndexLazyRoute
   '/_mainLayout/editor/$id': typeof MainLayoutEditorIdRoute
   '/_mainLayout/recipe/$id': typeof MainLayoutRecipeIdRoute
+  '/_mainLayout/author/$userId': typeof MainLayoutAuthorUserIdLazyRoute
   '/_mainLayout/editor/': typeof MainLayoutEditorIndexRoute
   '/_mainLayout/recipe/': typeof MainLayoutRecipeIndexRoute
 }
@@ -214,6 +228,7 @@ export interface FileRouteTypes {
     | '/management/'
     | '/editor/$id'
     | '/recipe/$id'
+    | '/author/$userId'
     | '/editor/'
     | '/recipe/'
   fileRoutesByTo: FileRoutesByTo
@@ -231,6 +246,7 @@ export interface FileRouteTypes {
     | '/management'
     | '/editor/$id'
     | '/recipe/$id'
+    | '/author/$userId'
     | '/editor'
     | '/recipe'
   id:
@@ -250,6 +266,7 @@ export interface FileRouteTypes {
     | '/management/'
     | '/_mainLayout/editor/$id'
     | '/_mainLayout/recipe/$id'
+    | '/_mainLayout/author/$userId'
     | '/_mainLayout/editor/'
     | '/_mainLayout/recipe/'
   fileRoutesById: FileRoutesById
@@ -367,6 +384,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MainLayoutEditorIndexRouteImport
       parentRoute: typeof MainLayoutRoute
     }
+    '/_mainLayout/author/$userId': {
+      id: '/_mainLayout/author/$userId'
+      path: '/author/$userId'
+      fullPath: '/author/$userId'
+      preLoaderRoute: typeof MainLayoutAuthorUserIdLazyRouteImport
+      parentRoute: typeof MainLayoutRoute
+    }
     '/_mainLayout/recipe/$id': {
       id: '/_mainLayout/recipe/$id'
       path: '/recipe/$id'
@@ -390,6 +414,7 @@ interface MainLayoutRouteChildren {
   MainLayoutIndexLazyRoute: typeof MainLayoutIndexLazyRoute
   MainLayoutEditorIdRoute: typeof MainLayoutEditorIdRoute
   MainLayoutRecipeIdRoute: typeof MainLayoutRecipeIdRoute
+  MainLayoutAuthorUserIdLazyRoute: typeof MainLayoutAuthorUserIdLazyRoute
   MainLayoutEditorIndexRoute: typeof MainLayoutEditorIndexRoute
   MainLayoutRecipeIndexRoute: typeof MainLayoutRecipeIndexRoute
 }
@@ -400,6 +425,7 @@ const MainLayoutRouteChildren: MainLayoutRouteChildren = {
   MainLayoutIndexLazyRoute: MainLayoutIndexLazyRoute,
   MainLayoutEditorIdRoute: MainLayoutEditorIdRoute,
   MainLayoutRecipeIdRoute: MainLayoutRecipeIdRoute,
+  MainLayoutAuthorUserIdLazyRoute: MainLayoutAuthorUserIdLazyRoute,
   MainLayoutEditorIndexRoute: MainLayoutEditorIndexRoute,
   MainLayoutRecipeIndexRoute: MainLayoutRecipeIndexRoute,
 }

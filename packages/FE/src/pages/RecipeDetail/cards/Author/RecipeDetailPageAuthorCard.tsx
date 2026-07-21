@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { Link } from "@tanstack/react-router";
 import { ChefHat, Loader2 } from "lucide-react";
 
 import { cn, composeCdnUrl } from "@/lib/utils";
@@ -24,12 +25,15 @@ const RecipeDetailPageAuthorCard = ({ authorId }: RecipeDetailPageAuthorCardProp
     : null;
 
   return (
-    <div
+    <Link
+      params={{ userId: authorId }}
+      to="/author/$userId"
       className={cn(
-        "bg-white/70 dark:bg-stone-900/70",
+        "block bg-white/70 dark:bg-stone-900/70",
         "backdrop-blur-xl",
         "p-8 rounded-xl",
         "border border-stone-200/30 dark:border-stone-800/30",
+        "hover:border-stone-400/50 dark:hover:border-stone-600/50 transition-colors",
       )}
     >
       <div className="flex items-center gap-4">
@@ -60,7 +64,7 @@ const RecipeDetailPageAuthorCard = ({ authorId }: RecipeDetailPageAuthorCardProp
           </p>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 
