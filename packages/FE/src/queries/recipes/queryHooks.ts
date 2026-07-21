@@ -1,8 +1,8 @@
 import { useApiQuery, useSuspenseApiQuery } from "@/middleware/api";
 
-import { getAdminRecipesKeys, getDailyRecipeKeys, getRecipeKeys, getRecipesKeys } from "./keys";
+import { getAdminRecipesKeys, getDailyRecipeKeys, getRecipeKeys, getRecipesKeys, getUserPublicRecipesKeys, getUserRecipesKeys } from "./keys";
 import { getRecipeOptions } from "./options";
-import { getAdminRecipes, getDailyRecipe, getRecipe, getRecipes } from "./queries";
+import { getAdminRecipes, getDailyRecipe, getRecipe, getRecipes, getUserPublicRecipes, getUserRecipes } from "./queries";
 import { RecipeListQueryFilters } from "./types";
 
 export const useGetRecipes = (filters: RecipeListQueryFilters = {}) => {
@@ -28,6 +28,18 @@ export const useSuspenseGetRecipe = (id: string) => {
   const { key } = getRecipeKeys(id);
 
   return useSuspenseApiQuery(key, queryOptions);
+};
+
+export const useGetUserRecipes = () => {
+  const { key, queryKey } = getUserRecipesKeys();
+
+  return useApiQuery(key, queryKey, () => getUserRecipes());
+};
+
+export const useGetUserPublicRecipes = (authorId: string) => {
+  const { key, queryKey } = getUserPublicRecipesKeys(authorId);
+
+  return useApiQuery(key, queryKey, () => getUserPublicRecipes(authorId));
 };
 
 export const useGetAdminRecipes = (status?: string) => {

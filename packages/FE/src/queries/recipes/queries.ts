@@ -23,6 +23,14 @@ export const getRecipe = (id: string) =>
 export const getDailyRecipe = () =>
   new Api().get<DailyRecipe>("recipes/daily", { withAuth: false });
 
+export const getUserRecipes = () => {
+  return new Api().get<RecipeList>("recipes/user", { withAuth: true });
+};
+
+export const getUserPublicRecipes = (authorId: string) => {
+  return new Api().get<RecipeList>(`recipes/author/${authorId}`, { withAuth: false });
+};
+
 export const getAdminRecipes = (status?: string) => {
   return new Api().get<AdminRecipe[]>("recipes/admin", {
     params: status ? { status } : undefined,

@@ -25,6 +25,24 @@ export const getRecipeKeys = (id: string) => {
   return { key, queryKey };
 };
 
+export const getUserRecipesKeys = () => {
+  const baseQueryKey = [API_ACTION_BASE, "getUserRecipes"];
+  const key = baseQueryKey.join("/");
+
+  const queryKey = [...baseQueryKey];
+
+  return { key, queryKey };
+};
+
+export const getUserPublicRecipesKeys = (authorId: string) => {
+  const baseQueryKey = [API_ACTION_BASE, "getUserPublicRecipes"];
+  const key = baseQueryKey.join("/");
+
+  const queryKey = [...baseQueryKey, authorId];
+
+  return { key, queryKey };
+};
+
 export const getAdminRecipesKeys = (status?: string) => {
   const baseQueryKey = [API_ACTION_BASE, "getAdminRecipes"];
   const key = baseQueryKey.join("/");

@@ -17,12 +17,14 @@ import { cn, composeCdnUrl } from "@/lib/utils";
 import { useSuspenseGetUser } from "@/queries/users";
 import { useUpdateProfile } from "@/queries/users/mutations";
 import { useUploadFile } from "@/queries/files";
+import { useGetUserRecipes } from "@/queries/recipes";
 import type { UploadFileResponse } from "@/queries/files/types";
 import ProfilePageAccountTabsDetailsTab from "@/pages/Profile/AccountTabs/tabs/Details";
 
 const ProfilePageAccountDetails = () => {
   const { account } = useAuthContext();
   const { data: user } = useSuspenseGetUser();
+  const { data: userRecipes = [] } = useGetUserRecipes();
   const { t } = useTranslation();
   const isOwnProfile = account?.id === user.id;
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -144,7 +146,7 @@ const ProfilePageAccountDetails = () => {
         <div className="flex gap-12 pt-4">
           <div className="flex flex-col">
             <span className="text-[24px] leading-[1.3] font-medium font-serif text-primary">
-              42
+              {userRecipes.length}
             </span>
             <span className="text-[12px] leading-[1.0] tracking-[0.1em] font-semibold text-on-primary-container uppercase">
               Recetas

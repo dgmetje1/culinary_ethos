@@ -54,6 +54,17 @@ export class RecipesController {
     return this.recipesService.getByUser(user.id, language);
   }
 
+  @Public()
+  @Get('author/:authorId')
+  @ApiOperation({ summary: 'Get public recipes by author ID' })
+  @ApiResponse({ status: 200, type: [RecipeListItemResponseDto] })
+  async getByAuthorId(
+    @Param('authorId') authorId: string,
+    @Language() language?: string,
+  ): Promise<RecipeListItemResponseDto[]> {
+    return this.recipesService.getByUser(authorId, language);
+  }
+
   @ApiBearerAuth()
   @Get('admin')
   @ApiOperation({ summary: 'Get all recipes for admin (with status filter)' })
