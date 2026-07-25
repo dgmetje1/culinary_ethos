@@ -17,3 +17,15 @@ export const getFollowingCountKeys = (userId: string) => {
   const key = queryKey.join('/');
   return { key, queryKey };
 };
+
+export const getMyFollowingKeys = () => {
+  const queryKey = [API_ACTION_BASE, 'me', 'following'];
+  const key = queryKey.join('/');
+  return { key, queryKey };
+};
+
+export const getMyFollowersKeys = () => {
+  const queryKey = [API_ACTION_BASE, 'me', 'followers'];
+  const key = queryKey.join('/');
+  return { key, queryKey };
+};
