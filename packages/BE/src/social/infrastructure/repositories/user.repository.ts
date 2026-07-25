@@ -43,6 +43,7 @@ export class UserRepository implements IUserRepository {
           email: '',
           language: '',
           profile_picture: result.profile_picture,
+          description: result.description,
           role: '',
           status: '',
         }
@@ -96,6 +97,7 @@ export class UserRepository implements IUserRepository {
       email: user.email,
       language: user.language,
       profile_picture: user.profile_picture,
+      description: user.description,
       role: user.role,
       status: user.status,
     };

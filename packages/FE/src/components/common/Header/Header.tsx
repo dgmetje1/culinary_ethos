@@ -6,11 +6,13 @@ import { Search, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useSearch } from '@/context/Search';
+import { useAuthContext } from '@/context/Auth';
 import HeaderProfileMenu from '@/components/common/Header/ProfileMenu/HeaderProfileMenu';
 
 const Header = () => {
   const { t } = useTranslation();
   const { search, setSearch, showSearch } = useSearch();
+  const { account } = useAuthContext();
   const [localSearch, setLocalSearch] = useState(search);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | undefined>(
     undefined,
@@ -83,25 +85,26 @@ const Header = () => {
             >
               {t('layout.header.nav.planner')}
             </Link>
-            <Link
-              to="/management"
-              activeProps={{
-                className: cn(
-                  'border-b-2 border-stone-900 dark:border-stone-50',
-                  'text-stone-900 dark:text-stone-50',
-                ),
-              }}
-              className={cn(
-                'font-serif text-lg tracking-tight',
-                'text-stone-500 dark:text-stone-400',
-
-                'pb-1',
-                'hover:text-stone-900 dark:hover:text-stone-50',
-                'transition-colors duration-300',
-              )}
-            >
-              {t('layout.header.nav.backoffice')}
-            </Link>
+            {account?.role === 'admin' && (
+              <Link
+                to="/management"
+                activeProps={{
+                  className: cn(
+                    'border-b-2 border-stone-900 dark:border-stone-50',
+                    'text-stone-900 dark:text-stone-50',
+                  ),
+                }}
+                className={cn(
+                  'font-serif text-lg tracking-tight',
+                  'text-stone-500 dark:text-stone-400',
+                  'pb-1',
+                  'hover:text-stone-900 dark:hover:text-stone-50',
+                  'transition-colors duration-300',
+                )}
+              >
+                {t('layout.header.nav.backoffice')}
+              </Link>
+            )}
           </nav>
         </div>
         <div className="flex items-center gap-6">

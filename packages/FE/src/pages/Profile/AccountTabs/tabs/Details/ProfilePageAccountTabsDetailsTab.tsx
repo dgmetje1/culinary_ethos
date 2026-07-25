@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
@@ -27,6 +28,7 @@ const ProfilePageAccountTabsDetailsTab = ({ onSuccess }: Props) => {
   const [form, setForm] = useState<ProfileUpdateData>({
     nickName: user.nickName,
     language: user.language,
+    description: user.description ?? '',
   });
   const updateProfile = useUpdateProfile();
 
@@ -43,6 +45,7 @@ const ProfilePageAccountTabsDetailsTab = ({ onSuccess }: Props) => {
     setForm({
       nickName: user.nickName,
       language: user.language,
+      description: user.description ?? '',
     });
   };
 
@@ -72,6 +75,14 @@ const ProfilePageAccountTabsDetailsTab = ({ onSuccess }: Props) => {
             ))}
           </SelectContent>
         </Select>
+      </div>
+      <div>
+        <label className="text-sm font-medium text-stone-500">{t('pages.profile.fields.description')}</label>
+        <Textarea
+          value={form.description}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setForm({ ...form, description: e.target.value })}
+          rows={4}
+        />
       </div>
       <div className="flex gap-2 pt-2">
         <Button size="sm" onClick={handleSave} disabled={updateProfile.isPending}>

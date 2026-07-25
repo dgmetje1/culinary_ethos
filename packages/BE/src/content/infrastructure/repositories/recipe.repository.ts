@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
 import { ulid } from 'ulidx';
 import {
   Recipe,
@@ -52,6 +52,14 @@ export class RecipeRepository implements IRecipeRepository {
   async findById(id: string): Promise<RecipeAttributes | null> {
     const result = await this.repository.findOne({ where: { id } });
     return result ? this.toAttributes(result) : null;
+  }
+
+  async findByIds(ids: string[]): Promise<RecipeAttributes[]> {
+    if (!ids.length) return [];
+    const results = await this.repository.find({
+      where: { id: In(ids) },
+    });
+    return results.map((r) => this.toAttributes(r));
   }
 
   async findDaily(): Promise<RecipeAttributes | null> {

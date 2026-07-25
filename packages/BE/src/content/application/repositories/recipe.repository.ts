@@ -16,6 +16,7 @@ export interface IRecipeRepository {
   findByAuthor(authorId: string): Promise<RecipeAttributes[]>;
   findAllAdmin(status?: string): Promise<RecipeAttributes[]>;
   findById(id: string): Promise<RecipeAttributes | null>;
+  findByIds(ids: string[]): Promise<RecipeAttributes[]>;
   findDaily(): Promise<RecipeAttributes | null>;
   exists(id: string): Promise<boolean>;
   create(input: CreateRecipeInput): Promise<RecipeAttributes>;

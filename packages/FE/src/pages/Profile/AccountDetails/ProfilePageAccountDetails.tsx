@@ -138,11 +138,11 @@ const ProfilePageAccountDetails = () => {
             )}
           </div>
         </div>
-        <p className="text-[18px] leading-[1.6] text-on-surface-variant max-w-2xl">
-          Explorador de sabores ancestrales y t&eacute;cnicas modernas. Creo
-          firmemente que la cocina es un acto de intenci&oacute;n, donde cada
-          ingrediente cuenta una historia de tierra y tradici&oacute;n.
-        </p>
+        {user.description && (
+          <p className="text-[18px] leading-[1.6] text-on-surface-variant max-w-2xl">
+            {user.description}
+          </p>
+        )}
         <div className="flex gap-12 pt-4">
           <div className="flex flex-col">
             <span className="text-[24px] leading-[1.3] font-medium font-serif text-primary">

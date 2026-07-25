@@ -25,6 +25,9 @@ export class UserAdminResponseDto {
   @ApiProperty({ nullable: true })
   profilePicture: string | null;
 
+  @ApiProperty({ nullable: true })
+  description: string | null;
+
   @ApiProperty()
   role: string;
 

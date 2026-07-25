@@ -16,9 +16,13 @@ export const getUser = () => {
 };
 
 export const getAllUsers = () => {
-  return new Api().get<(User & { role: string; status: string })[]>('users/all');
+  return new Api().get<(User & { role: string; status: string })[]>(
+    'users/all',
+  );
 };
 
 export const getUserSummary = (userId: string) => {
-  return new Api().get<UserSummaryDTO>(`users/${userId}/summary`);
+  return new Api().get<UserSummaryDTO>(`users/${userId}/summary`, {
+    withAuth: false,
+  });
 };

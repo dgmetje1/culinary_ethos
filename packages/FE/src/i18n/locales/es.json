@@ -200,7 +200,8 @@
         "titleRequired": "El título es obligatorio",
         "categoriesMin": "Se requiere al menos una categoría",
         "timeMin": "El tiempo debe ser mayor que 0",
-        "portionsMin": "Las porciones deben ser al menos 1"
+        "portionsMin": "Las porciones deben ser al menos 1",
+        "errorSummary": "Corrige los errores del formulario antes de enviar"
       },
       "toast": {
         "createSuccess": "¡Receta creada correctamente!",
@@ -220,6 +221,9 @@
       "1": "fácil",
       "2": "medio",
       "3": "difícil"
-    }
+    },
+    "save": "Guardar receta",
+    "saved": "Guardado",
+    "unsave": "Eliminar de guardados"
   }
 }

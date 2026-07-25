@@ -1,6 +1,6 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable, Inject, BadRequestException } from '@nestjs/common';
 import { EventEmitter2 } from '@nestjs/event-emitter';
-import { EntityNotFoundError } from '../../../common/exceptions';
+import { EntityNotFoundError, InvalidParameterError } from '../../../common/exceptions';
 import {
   UserAccountResponseDto,
   UserAdminResponseDto,
@@ -27,6 +27,7 @@ export class UserQueriesService {
     last_name: string;
     language: string;
     profile_picture: string | null;
+    description: string | null;
     role: string;
     status: string;
   }): UserAdminResponseDto {
@@ -39,6 +40,7 @@ export class UserQueriesService {
       lastName: result.last_name,
       language: result.language,
       profilePicture: result.profile_picture,
+      description: result.description,
       role: result.role,
       status: result.status,
     };
@@ -53,6 +55,7 @@ export class UserQueriesService {
     last_name: string;
     language: string;
     profile_picture: string | null;
+    description: string | null;
   }): UserAccountResponseDto {
     return {
       id: result.id,
@@ -63,6 +66,7 @@ export class UserQueriesService {
       lastName: result.last_name,
       language: result.language,
       profilePicture: result.profile_picture,
+      description: result.description,
     };
   }
 
@@ -102,6 +106,10 @@ export class UserQueriesService {
     return this.mapToAccountResponse(result);
   }
 
+  private containsUrl(text: string): boolean {
+    return /https?:\/\/[^\s]+/.test(text);
+  }
+
   async updateUser(
     id: string,
     data: UpdateUserRequestDto,
@@ -109,6 +117,10 @@ export class UserQueriesService {
     const existing = await this.userRepository.findById(id);
     if (!existing) {
       throw new EntityNotFoundError('User not found', 'User', [{ id }]);
+    }
+
+    if (data.description !== undefined && this.containsUrl(data.description)) {
+      throw new InvalidParameterError('Description must not contain links', 'User');
     }
 
     const result = await this.userRepository.update(id, data);
