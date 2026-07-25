@@ -1,6 +1,6 @@
-import { useMemo, useState, useCallback, useEffect } from "react";
+import { useMemo, useState, useCallback, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Plus, ChevronLeft, ChevronRight, ShoppingBag, UtensilsCrossed, Bookmark, Copy, Share2, Check, X, CalendarDays } from "lucide-react";
+import { Plus, ChevronLeft, ChevronRight, ShoppingBag, UtensilsCrossed, Bookmark, Copy, Share2, Check, X, CalendarDays, GripVertical } from "lucide-react";
 import { useQueries } from "@tanstack/react-query";
 import { format } from "date-fns";
 
@@ -158,12 +158,42 @@ interface MealSlotProps {
   onRemove?: (entryId: string) => void;
   onEditPortions?: (entry: MealPlanEntry) => void;
   mealType: string;
+  day: number;
+  onDropRecipe?: (recipeId: string, recipeTitle: string, recipeImageUrl: string | undefined, mealType: string, day: number) => void;
 }
 
-const MealSlot = ({ entries, onAdd, onRemove, onEditPortions, mealType }: MealSlotProps) => {
+const MealSlot = ({ entries, onAdd, onRemove, onEditPortions, mealType, day, onDropRecipe }: MealSlotProps) => {
   const hasEntries = entries.length > 0;
+  const [isDragOver, setIsDragOver] = useState(false);
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+    setIsDragOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    const recipeData = e.dataTransfer.getData('application/x-recipe');
+    if (recipeData && onDropRecipe) {
+      const recipe = JSON.parse(recipeData);
+      onDropRecipe(recipe.id, recipe.title, recipe.imageUrl, mealType, day);
+    }
+  };
+
   return (
-    <div className="rounded-xl min-h-[72px]">
+    <div
+      className={`rounded-xl min-h-[72px] transition-colors ${isDragOver ? 'bg-stone-100/80 ring-2 ring-stone-400 ring-dashed' : ''}`}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
       <div className="flex items-center justify-between mb-2 px-1">
         <span className="text-[10px] font-semibold text-stone-400 uppercase tracking-wider">
           {mealType}
@@ -820,6 +850,40 @@ const PlansPage = () => {
     setCurrentMonday(next);
   };
 
+  const handleDropRecipe = useCallback(async (recipeId: string, recipeTitle: string, recipeImageUrl: string | undefined, mealType: string, day: number) => {
+    const currentEntries = mealPlan?.entries || [];
+
+    if (currentEntries.some((e) => e.day === day && e.mealType === mealType && e.recipeId === recipeId)) {
+      toast.warning("Already planned", { description: `${recipeTitle} is already in this meal slot.` });
+      return;
+    }
+
+    const newEntry: MealPlanEntry = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      day,
+      mealType,
+      recipeId,
+      recipeTitle,
+      recipeImageUrl,
+      portions: 4,
+    };
+
+    if (mealPlan?.id) {
+      await updatePlan({
+        id: mealPlan.id,
+        data: { entries: [...currentEntries, newEntry] },
+      });
+    } else {
+      await createPlan({
+        weekStart,
+        entries: [newEntry],
+      });
+    }
+
+    await refetchPlan();
+    toast.success("Recipe added!", { description: `${recipeTitle} added to ${mealType}.` });
+  }, [mealPlan, updatePlan, createPlan, weekStart, refetchPlan]);
+
   const handleAddMeal = (day: number, mealType: string) => {
     setAddingToDay(day);
     setAddingMealType(mealType);
@@ -892,9 +956,24 @@ const PlansPage = () => {
             <h2 className="text-[24px] font-serif font-medium mb-6 text-stone-900">
               {t("plans.favorites", "My Favorites")}
             </h2>
+            <p className="text-xs text-stone-400 mb-6 -mt-4">
+              Drag recipes onto days in the planner
+            </p>
             <div className="space-y-8">
-              {recipes.slice(0, 3).map((recipe) => (
-                <div key={recipe.id} className="group cursor-pointer">
+              {recipes.slice(0, 5).map((recipe) => (
+                <div
+                  key={recipe.id}
+                  className="group cursor-grab active:cursor-grabbing"
+                  draggable
+                  onDragStart={(e) => {
+                    e.dataTransfer.setData('application/x-recipe', JSON.stringify({
+                      id: recipe.id,
+                      title: recipe.title,
+                      imageUrl: recipe.thumbnailUrl || undefined,
+                    }));
+                    e.dataTransfer.effectAllowed = 'copy';
+                  }}
+                >
                   <div className="relative mb-3 overflow-hidden rounded-xl">
                     {recipe.thumbnailUrl ? (
                       <img
@@ -907,6 +986,9 @@ const PlansPage = () => {
                         <UtensilsCrossed className="w-8 h-8" />
                       </div>
                     )}
+                    <div className="absolute top-2 left-2 opacity-0 group-hover:opacity-100 p-1 bg-white/80 backdrop-blur-sm rounded-full transition-opacity">
+                      <GripVertical className="w-3.5 h-3.5 text-stone-600" />
+                    </div>
                     <div className="absolute top-2 right-2 p-1 bg-white/80 backdrop-blur-sm rounded-full">
                       <Bookmark className="w-3.5 h-3.5 text-stone-600" />
                     </div>
@@ -1032,9 +1114,11 @@ const PlansPage = () => {
                             key={mt.key}
                             entries={entries}
                             mealType={t(`plans.mealTypes.${mt.key}`, mt.label)}
+                            day={dayIndex}
                             onAdd={() => handleAddMeal(dayIndex, mt.key)}
                             onRemove={handleRemoveMeal}
                             onEditPortions={handleEditPortions}
+                            onDropRecipe={handleDropRecipe}
                           />
                         );
                       })}

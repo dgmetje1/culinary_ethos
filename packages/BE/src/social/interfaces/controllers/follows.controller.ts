@@ -53,6 +53,24 @@ export class FollowsController {
     return this.followsService.isFollowing(user.id, userId);
   }
 
+  @Get('me/following')
+  @ApiOperation({ summary: 'Get list of user IDs the current user follows' })
+  @ApiResponse({ status: 200, description: 'Following list' })
+  async getMyFollowing(
+    @CurrentUser() user: UserAttributes,
+  ): Promise<{ followingId: string }[]> {
+    return this.followsService.getFollowingList(user.id);
+  }
+
+  @Get('me/followers')
+  @ApiOperation({ summary: 'Get list of user IDs that follow the current user' })
+  @ApiResponse({ status: 200, description: 'Follower list' })
+  async getMyFollowers(
+    @CurrentUser() user: UserAttributes,
+  ): Promise<{ followerId: string }[]> {
+    return this.followsService.getFollowerList(user.id);
+  }
+
   @Public()
   @Get(':userId/followers')
   @ApiOperation({ summary: 'Get followers count for a user' })

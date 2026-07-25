@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { cn, composeCdnUrl } from '@/lib/utils';
 import { useGetRecipes } from '@/queries/recipes';
 import { useGetSavedRecipeIds, useSaveRecipe, useUnsaveRecipe } from '@/queries/saved-recipes';
+import { useGetMyFollowing } from '@/queries/follows';
 import { useAuthContext } from '@/context/Auth';
 import config from '@/config';
 import { useSearch } from '@/context/Search';
@@ -20,8 +21,14 @@ const HomePageMasonryGrid = () => {
   const { account } = useAuthContext();
   const { data: recipes = [], isLoading } = useGetRecipes({});
   const { data: savedIds } = useGetSavedRecipeIds();
+  const { data: followingList } = useGetMyFollowing();
   const { mutate: saveRecipe, isPending: isSaving } = useSaveRecipe();
   const { mutate: unsaveRecipe, isPending: isUnsaving } = useUnsaveRecipe();
+
+  const followingSet = useMemo(
+    () => new Set(followingList?.map((f) => f.followingId) ?? []),
+    [followingList],
+  );
 
   const savedSet = useMemo(
     () => new Set(savedIds?.map((s) => s.recipeId) ?? []),
@@ -36,9 +43,21 @@ const HomePageMasonryGrid = () => {
     }
   };
 
-  const filteredRecipes = recipes.filter((recipe) =>
-    recipe.title.toLowerCase().includes(search.toLowerCase()),
-  );
+  const sortedRecipes = useMemo(() => {
+    const filtered = recipes.filter((recipe) =>
+      recipe.title.toLowerCase().includes(search.toLowerCase()),
+    );
+
+    if (followingSet.size === 0) return filtered;
+
+    return [...filtered].sort((a, b) => {
+      const aFollowed = followingSet.has(a.author);
+      const bFollowed = followingSet.has(b.author);
+      if (aFollowed && !bFollowed) return -1;
+      if (!aFollowed && bFollowed) return 1;
+      return 0;
+    });
+  }, [recipes, search, followingSet]);
 
   if (isLoading) return null;
 
@@ -50,7 +69,7 @@ const HomePageMasonryGrid = () => {
         'space-y-6',
       )}
     >
-      {filteredRecipes.slice(0, itemsVisible).map((recipe) => {
+      {sortedRecipes.slice(0, itemsVisible).map((recipe) => {
         const isSaved = savedSet.has(recipe.id);
         return (
           <div

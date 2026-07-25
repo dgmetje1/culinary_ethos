@@ -26,6 +26,26 @@ export const getFollowingCount = (userId: string) => {
   });
 };
 
+export type FollowingItem = {
+  followingId: string;
+};
+
+export type FollowerItem = {
+  followerId: string;
+};
+
+export const getMyFollowing = () => {
+  return new Api().get<FollowingItem[]>('follows/me/following', {
+    withAuth: true,
+  });
+};
+
+export const getMyFollowers = () => {
+  return new Api().get<FollowerItem[]>('follows/me/followers', {
+    withAuth: true,
+  });
+};
+
 export const followUser = (userId: string) => {
   return new Api().post<{ id: string }>(`follows/${userId}`, {});
 };
