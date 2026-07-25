@@ -197,7 +197,8 @@
         "name": "Name",
         "lastName": "Last Name",
         "email": "Email",
-        "language": "Language"
+        "language": "Language",
+        "description": "Description"
       }
     },
     "recipe": {
@@ -301,7 +302,8 @@
         "titleRequired": "Title is required",
         "categoriesMin": "At least one category is required",
         "timeMin": "Time must be greater than 0",
-        "portionsMin": "Portions must be at least 1"
+        "portionsMin": "Portions must be at least 1",
+        "errorSummary": "Please fix the form errors before submitting"
       },
       "toast": {
         "createSuccess": "Recipe created successfully!",
@@ -321,6 +323,9 @@
       "1": "easy",
       "2": "medium",
       "3": "hard"
-    }
+    },
+    "save": "Save recipe",
+    "saved": "Saved",
+    "unsave": "Remove from saved"
   }
 }

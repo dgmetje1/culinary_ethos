@@ -8,6 +8,7 @@ import config from '@/config';
 import { useAuthContext } from '@/context/Auth';
 import { cn, composeCdnUrl } from '@/lib/utils';
 import { useSuspenseGetRecipe } from '@/queries/recipes';
+import { useGetIsRecipeSaved, useSaveRecipe, useUnsaveRecipe } from '@/queries/saved-recipes';
 
 import RecipeDetailPageIngredientsCard from './cards/Ingredients';
 import RecipeDetailPageKitchenwareCard from './cards/Kitchenware';
@@ -24,6 +25,20 @@ const RecipeDetailPage = () => {
   const router = useRouter();
   const { account } = useAuthContext();
   const { data: recipe } = useSuspenseGetRecipe(id);
+  const { data: savedStatus } = useGetIsRecipeSaved(id);
+  const { mutate: saveRecipe, isPending: isSaving } = useSaveRecipe();
+  const { mutate: unsaveRecipe, isPending: isUnsaving } = useUnsaveRecipe();
+
+  const isSaved = savedStatus?.saved ?? false;
+  const isSavePending = isSaving || isUnsaving;
+
+  const handleToggleSave = () => {
+    if (isSaved) {
+      unsaveRecipe(id);
+    } else {
+      saveRecipe(id);
+    }
+  };
 
   const categoryName = useMemo(() => {
     if (!recipe.categories?.length) return 'Recipe';
@@ -78,10 +93,21 @@ const RecipeDetailPage = () => {
         </div>
         {account?.id !== recipe.author && (
           <Button
-            className="absolute top-8 right-8 glass p-5 rounded-full shadow-lg text-orange-700"
+            className={cn(
+              'absolute top-8 right-8 p-5 rounded-full shadow-lg',
+              isSaved
+                ? 'bg-orange-500 text-white'
+                : 'glass text-orange-700',
+            )}
             size="icon"
+            onClick={handleToggleSave}
+            disabled={isSavePending}
+            title={t(isSaved ? 'recipe.unsave' : 'recipe.save')}
           >
-            <Bookmark className="w-6 h-6 fill-current" />
+            <Bookmark
+              className="w-6 h-6 transition-all"
+              fill={isSaved ? 'currentColor' : 'none'}
+            />
           </Button>
         )}
         {account?.id === recipe.author && (

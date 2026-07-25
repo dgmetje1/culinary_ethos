@@ -233,6 +233,8 @@ const RecipeEditorForm = ({ initialData }: RecipeEditorFormProps) => {
             fieldErrors[path] = issue.message;
           }
         }
+        console.error('[RecipeEditor] Validation errors:', fieldErrors);
+        toast.error(t('pages.editor.validation.errorSummary'));
         return { fields: fieldErrors };
       },
     },

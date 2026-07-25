@@ -1,9 +1,9 @@
-import { queryOptions } from "@tanstack/react-query";
+import { queryOptions } from '@tanstack/react-query';
 
-import { User } from "@/types/user";
+import { User } from '@/types/user';
 
-import { getUserKeys, getUserSummaryKeys } from "./keys";
-import { getUser, getUserSummary } from "./queries";
+import { getUserKeys, getUserSummaryKeys } from './keys';
+import { getUser, getUserSummary } from './queries';
 
 export const getUserOptions = () => {
   const { queryKey } = getUserKeys();
@@ -13,10 +13,14 @@ export const getUserOptions = () => {
   });
 };
 
-export const getUserSummaryOptions = (userId: User["id"]) => {
+export const getUserSummaryOptions = (userId: User['id']) => {
   const { queryKey } = getUserSummaryKeys(userId);
   return queryOptions({
     queryKey,
     queryFn: () => getUserSummary(userId),
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
+    refetchOnReconnect: false,
+    staleTime: Infinity,
   });
 };

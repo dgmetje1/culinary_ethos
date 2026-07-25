@@ -99,6 +99,9 @@ export class RecipeListItemResponseDto {
 
   @ApiProperty()
   portions: number;
+
+  @ApiProperty({ nullable: true })
+  savedAt?: Date;
 }
 
 export class RecipeIngredientResponseDto {

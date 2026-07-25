@@ -21,4 +21,7 @@ export class CreateUserRequestDto {
 
   @ApiProperty({ nullable: true })
   profile_picture?: string;
+
+  @ApiProperty({ nullable: true })
+  description?: string;
 }

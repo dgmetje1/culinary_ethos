@@ -60,6 +60,8 @@ import { MEAL_PLAN_REPOSITORY } from './application/repositories/meal-plan.repos
     KitchenwareService,
     RecipesService,
     MealPlansService,
+    RECIPE_REPOSITORY,
+    CATEGORY_REPOSITORY,
   ],
 })
 export class ContentModule {}

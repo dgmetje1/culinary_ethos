@@ -10,6 +10,7 @@ export type User = {
   email: string;
   language: Language;
   profilePicture: string | null;
+  description: string | null;
   role: string;
 };
 

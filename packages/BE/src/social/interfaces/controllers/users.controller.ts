@@ -17,6 +17,7 @@ import {
   ApiBody,
   ApiBearerAuth,
 } from '@nestjs/swagger';
+import { Public } from '../../../auth/decorators/public.decorator';
 import { UserQueriesService } from '../../application/services';
 import {
   UserAccountResponseDto,
@@ -73,8 +74,9 @@ export class UsersController {
     return this.userQueriesService.getDataById(id);
   }
 
+  @Public()
   @Get(':id/summary')
-  @ApiOperation({ summary: 'Get user summary by ID' })
+  @ApiOperation({ summary: 'Get public user summary by ID' })
   @ApiParam({ name: 'id', type: String })
   async getUserSummaryById(
     @Param('id') id: string,

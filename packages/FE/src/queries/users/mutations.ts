@@ -4,7 +4,7 @@ import { Api } from '@/lib/api';
 import { useApiMutation } from '@/middleware/api';
 import type { User } from '@/types/user';
 
-import { getAllUsersKeys, getUserKeys } from './keys';
+import { getAccountKeys, getAllUsersKeys, getUserKeys } from './keys';
 
 export type ProfileUpdateData = {
   nickName?: string;
@@ -13,6 +13,7 @@ export type ProfileUpdateData = {
   email?: string;
   language?: User['language'];
   profilePicture?: string;
+  description?: string;
 };
 
 export const useSuspendUser = () => {
@@ -55,11 +56,14 @@ export const useUpdateProfile = () => {
       email: data.email,
       language: data.language,
       profile_picture: data.profilePicture,
+      description: data.description,
     });
   }, {
     onSuccess: () => {
-      const { queryKey } = getUserKeys();
-      queryClient.invalidateQueries({ queryKey });
+      const { queryKey: userKey } = getUserKeys();
+      const { queryKey: accountKey } = getAccountKeys();
+      queryClient.invalidateQueries({ queryKey: userKey });
+      queryClient.invalidateQueries({ queryKey: accountKey });
     },
   });
 };

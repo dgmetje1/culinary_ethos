@@ -20,6 +20,7 @@ export interface UpdateUserInput {
   email?: string;
   language?: string;
   profile_picture?: string;
+  description?: string;
   role?: string;
   status?: string;
 }

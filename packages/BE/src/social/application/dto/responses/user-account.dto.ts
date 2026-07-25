@@ -24,4 +24,7 @@ export class UserAccountResponseDto {
 
   @ApiProperty({ nullable: true })
   profilePicture: string | null;
+
+  @ApiProperty({ nullable: true })
+  description: string | null;
 }
