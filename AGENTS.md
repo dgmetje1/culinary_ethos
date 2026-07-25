@@ -33,9 +33,44 @@ pnpm workspace with 2 packages under `packages/`: `@culinary-ethos/be` (NestJS) 
 
 - Requires PostgreSQL running — use `docker compose -f devops/docker-compose.yml up -d`
 - Copy `.env` from `.env.example` for both packages (no `.env.example` files exist yet; check the README or AGENTS.md for required vars)
-- Required BE vars: `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `AUTH0_*`
-- Required FE vars: `VITE_AUTH0_*`, `VITE_API_URL`
 - BE dev server requires local HTTPS certs at `packages/BE/.cert/key.pem` and `packages/BE/.cert/cert.pem`
+
+### Prerequisites
+
+- **Node.js**: >= 22 (TypeScript 6.x)
+- **pnpm**: Workspace monorepo manager
+- **PostgreSQL**: Running instance (Docker recommended)
+- **HTTPS certs**: Self-signed for local BE dev servers
+
+### Required Environment Variables
+
+**Backend:** `POSTGRES_HOST`, `POSTGRES_PORT`, `POSTGRES_USER`, `POSTGRES_PASSWORD`, `POSTGRES_DB`, `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET`, `AUTH0_AUDIENCE`, `AZURE_STORAGE_CONNECTION_STRING`
+
+**Frontend:** `VITE_AUTH0_DOMAIN`, `VITE_AUTH0_CLIENT_ID`, `VITE_AUTH0_AUDIENCE`, `VITE_API_URL`
+
+### HTTPS Certificates
+
+Generate with mkcert or openssl:
+```bash
+mkdir -p packages/BE/.cert
+openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+  -keyout packages/BE/.cert/key.pem \
+  -out packages/BE/.cert/cert.pem \
+  -subj "/CN=localhost"
+```
+
+### Docker
+
+```yaml
+services:
+  postgres:
+    image: postgres:16
+    ports: ["5432:5432"]
+    environment:
+      POSTGRES_USER: <user>
+      POSTGRES_PASSWORD: <password>
+      POSTGRES_DB: culinary_ethos
+```
 
 ## BE architecture
 
