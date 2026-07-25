@@ -31,6 +31,49 @@
       }
     }
   },
+  "plans": {
+    "favorites": "Els Meus Favorits",
+    "weekly": "Planificador Setmanal",
+    "previous": "Anterior",
+    "next": "Següent",
+    "days": {
+      "monday": "Dl",
+      "tuesday": "Dm",
+      "wednesday": "Dc",
+      "thursday": "Dj",
+      "friday": "Dv",
+      "saturday": "Ds",
+      "sunday": "Dg"
+    },
+    "mealTypes": {
+      "breakfast": "Esmorzar",
+      "lunch": "Dinar",
+      "dinner": "Sopar",
+      "brunch": "Brunch"
+    },
+    "shoppingList": {
+      "title": "Llista de Compra",
+      "ingredients": "{{count}} ingredients detectats per a aquesta setmana.",
+      "viewFull": "Veure Llista Completa"
+    },
+    "toast": {
+      "nothingToCopy": "Res per copiar",
+      "nothingToCopyDayDesc": "Aquest dia no té àpats planificats.",
+      "nothingToCopyWeekDesc": "Aquesta setmana no té àpats planificats.",
+      "alreadyPlanned": "Ja planificat",
+      "alreadyPlannedSlotDesc": "{{recipeTitle}} ja és en aquest espai de menjar.",
+      "alreadyPlannedTargetDesc": "Totes les receptes ja estan al dia destí.",
+      "dayCopied": "¡Dia copiat!",
+      "dayCopiedDesc": "Copiat a {{targetLabel}}.",
+      "dayCopiedDescWithDate": "Copiat a {{targetLabel}} ({{targetDateStr}}).",
+      "sameWeek": "Mateixa setmana",
+      "sameWeekDesc": "Trieu una setmana diferent per copiar.",
+      "weekCopied": "¡Setmana copiada!",
+      "weekCopiedDesc": "Copiat a {{weekRange}}.",
+      "recipeAdded": "Recepta afegida!",
+      "recipeAddedDesc": "{{recipeTitle}} afegida a {{mealType}}."
+    }
+  },
   "pages": {
     "home": {
       "searcher": {

@@ -64,6 +64,23 @@
       "title": "Lista de Compra",
       "ingredients": "{{count}} ingredientes detectados para esta semana.",
       "viewFull": "Ver Lista Completa"
+    },
+    "toast": {
+      "nothingToCopy": "Nada que copiar",
+      "nothingToCopyDayDesc": "Este día no tiene comidas planificadas.",
+      "nothingToCopyWeekDesc": "Esta semana no tiene comidas planificadas.",
+      "alreadyPlanned": "Ya planificado",
+      "alreadyPlannedSlotDesc": "{{recipeTitle}} ya está en este espacio de comida.",
+      "alreadyPlannedTargetDesc": "Todas las recetas ya están en el día destino.",
+      "dayCopied": "¡Día copiado!",
+      "dayCopiedDesc": "Copiado a {{targetLabel}}.",
+      "dayCopiedDescWithDate": "Copiado a {{targetLabel}} ({{targetDateStr}}).",
+      "sameWeek": "Misma semana",
+      "sameWeekDesc": "Elige una semana diferente para copiar.",
+      "weekCopied": "¡Semana copiada!",
+      "weekCopiedDesc": "Copiado a {{weekRange}}.",
+      "recipeAdded": "¡Receta añadida!",
+      "recipeAddedDesc": "{{recipeTitle}} añadida a {{mealType}}."
     }
   },
   "pages": {

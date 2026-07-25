@@ -31,6 +31,49 @@
       }
     }
   },
+  "plans": {
+    "favorites": "Mes Favoris",
+    "weekly": "Planificateur Hebdomadaire",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "days": {
+      "monday": "Lun",
+      "tuesday": "Mar",
+      "wednesday": "Mer",
+      "thursday": "Jeu",
+      "friday": "Ven",
+      "saturday": "Sam",
+      "sunday": "Dim"
+    },
+    "mealTypes": {
+      "breakfast": "Petit-déjeuner",
+      "lunch": "Déjeuner",
+      "dinner": "Dîner",
+      "brunch": "Brunch"
+    },
+    "shoppingList": {
+      "title": "Liste de Courses",
+      "ingredients": "{{count}} ingrédients détectés pour cette semaine.",
+      "viewFull": "Voir la Liste Complète"
+    },
+    "toast": {
+      "nothingToCopy": "Rien à copier",
+      "nothingToCopyDayDesc": "Ce jour n'a pas de repas planifiés.",
+      "nothingToCopyWeekDesc": "Cette semaine n'a pas de repas planifiés.",
+      "alreadyPlanned": "Déjà planifié",
+      "alreadyPlannedSlotDesc": "{{recipeTitle}} est déjà dans ce créneau.",
+      "alreadyPlannedTargetDesc": "Toutes les recettes sont déjà sur le jour cible.",
+      "dayCopied": "Jour copié !",
+      "dayCopiedDesc": "Copié vers {{targetLabel}}.",
+      "dayCopiedDescWithDate": "Copié vers {{targetLabel}} ({{targetDateStr}}).",
+      "sameWeek": "Même semaine",
+      "sameWeekDesc": "Choisissez une semaine différente à copier.",
+      "weekCopied": "Semaine copiée !",
+      "weekCopiedDesc": "Copié vers {{weekRange}}.",
+      "recipeAdded": "Recette ajoutée !",
+      "recipeAddedDesc": "{{recipeTitle}} ajoutée à {{mealType}}."
+    }
+  },
   "pages": {
     "home": {
       "searcher": {
