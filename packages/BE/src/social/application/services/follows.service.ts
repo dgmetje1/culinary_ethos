@@ -1,4 +1,5 @@
 import { Injectable, Inject, ConflictException, NotFoundException, BadRequestException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { FOLLOW_REPOSITORY, IFollowRepository } from '../repositories/i-follow.repository';
 
 @Injectable()
@@ -6,9 +7,10 @@ export class FollowsService {
   constructor(
     @Inject(FOLLOW_REPOSITORY)
     private readonly followRepository: IFollowRepository,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  async follow(followerId: string, followingId: string): Promise<{ id: string }> {
+  async follow(followerId: string, followingId: string, followerName?: string): Promise<{ id: string }> {
     if (followerId === followingId) {
       throw new BadRequestException('Cannot follow yourself');
     }
@@ -17,6 +19,14 @@ export class FollowsService {
       throw new ConflictException('Already following this user');
     }
     const follow = await this.followRepository.create(followerId, followingId);
+
+    this.eventEmitter.emit('follow.created', {
+      followerId,
+      followingId,
+      followId: follow.id,
+      followerName,
+    });
+
     return { id: follow.id };
   }
 

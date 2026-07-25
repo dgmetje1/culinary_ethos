@@ -1,4 +1,5 @@
 import { Injectable, Inject, ForbiddenException } from '@nestjs/common';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 import { EntityNotFoundError, InvalidParameterError } from '../../../common/exceptions';
 import {
   CreateRecipeDto,
@@ -28,6 +29,7 @@ export class RecipesService {
     @Inject(INGREDIENT_REPOSITORY) private readonly ingredientRepository: IIngredientRepository,
     @Inject(KITCHENWARE_REPOSITORY) private readonly kitchenwareRepository: IKitchenwareRepository,
     @Inject(UNIT_REPOSITORY) private readonly unitRepository: IUnitRepository,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
   private getPublicationTitle = LocalizationHelper.getPublicationTitle;
@@ -348,7 +350,7 @@ export class RecipesService {
     };
   }
 
-  async create(dto: CreateRecipeDto, authorId: string): Promise<string> {
+  async create(dto: CreateRecipeDto, authorId: string, authorName?: string): Promise<string> {
     if (!dto.publications || dto.publications.length === 0) {
       throw new InvalidParameterError('Publications are required', 'Recipe');
     }
@@ -367,6 +369,14 @@ export class RecipesService {
       headerImg: dto.headerImg,
     };
     const result = await this.recipeRepository.create(input);
+
+    this.eventEmitter.emit('recipe.created', {
+      recipeId: result.id,
+      recipeTitle: this.getPublicationTitle(result.publications, 'en'),
+      authorId,
+      authorName,
+    });
+
     return result.id;
   }
 
