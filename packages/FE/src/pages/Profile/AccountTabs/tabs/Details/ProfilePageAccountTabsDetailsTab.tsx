@@ -29,6 +29,8 @@ const ProfilePageAccountTabsDetailsTab = ({ onSuccess }: Props) => {
     nickName: user.nickName,
     language: user.language,
     description: user.description ?? '',
+    position: user.position ?? '',
+    location: user.location ?? '',
   });
   const updateProfile = useUpdateProfile();
 
@@ -46,6 +48,8 @@ const ProfilePageAccountTabsDetailsTab = ({ onSuccess }: Props) => {
       nickName: user.nickName,
       language: user.language,
       description: user.description ?? '',
+      position: user.position ?? '',
+      location: user.location ?? '',
     });
   };
 
@@ -82,6 +86,20 @@ const ProfilePageAccountTabsDetailsTab = ({ onSuccess }: Props) => {
           value={form.description}
           onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setForm({ ...form, description: e.target.value })}
           rows={4}
+        />
+      </div>
+      <div>
+        <label className="text-sm font-medium text-stone-500">{t('pages.profile.fields.position')}</label>
+        <Input
+          value={form.position}
+          onChange={(e) => setForm({ ...form, position: e.target.value })}
+        />
+      </div>
+      <div>
+        <label className="text-sm font-medium text-stone-500">{t('pages.profile.fields.location')}</label>
+        <Input
+          value={form.location}
+          onChange={(e) => setForm({ ...form, location: e.target.value })}
         />
       </div>
       <div className="flex gap-2 pt-2">

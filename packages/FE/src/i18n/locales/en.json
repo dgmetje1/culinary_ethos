@@ -198,7 +198,9 @@
         "lastName": "Last Name",
         "email": "Email",
         "language": "Language",
-        "description": "Description"
+        "description": "Description",
+        "position": "Position",
+        "location": "Location"
       }
     },
     "recipe": {

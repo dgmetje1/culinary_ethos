@@ -11,9 +11,11 @@ export type User = {
   language: Language;
   profilePicture: string | null;
   description: string | null;
+  position: string | null;
+  location: string | null;
   role: string;
 };
 
 export type UserAccountDTO = User;
 export type UserDTO = User;
-export type UserSummaryDTO = Pick<User, "id" | "name" | "lastName" | "profilePicture" | "nickName">;
+export type UserSummaryDTO = Pick<User, "id" | "name" | "lastName" | "profilePicture" | "nickName" | "position" | "location">;

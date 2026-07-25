@@ -10,6 +10,8 @@ export interface UserAttributes {
   language: string;
   profile_picture: string | null;
   description: string | null;
+  position: string | null;
+  location: string | null;
   role: string;
   status: string;
 }
@@ -43,6 +45,12 @@ export class User {
 
   @Column({ type: 'text', nullable: true })
   description!: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  position!: string | null;
+
+  @Column({ type: 'varchar', nullable: true })
+  location!: string | null;
 
   @Column({ type: 'varchar', default: 'chef' })
   role!: string;
