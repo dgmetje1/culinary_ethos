@@ -158,13 +158,15 @@ interface MealSlotProps {
   onRemove?: (entryId: string) => void;
   onEditPortions?: (entry: MealPlanEntry) => void;
   mealType: string;
+  mealTypeKey: string;
   day: number;
-  onDropRecipe?: (recipeId: string, recipeTitle: string, recipeImageUrl: string | undefined, mealType: string, day: number) => void;
+  onDropRecipe?: (recipeId: string, recipeTitle: string, recipeImageUrl: string | undefined, mealType: string, day: number, portions?: number) => void;
 }
 
-const MealSlot = ({ entries, onAdd, onRemove, onEditPortions, mealType, day, onDropRecipe }: MealSlotProps) => {
+const MealSlot = ({ entries, onAdd, onRemove, onEditPortions, mealType, mealTypeKey, day, onDropRecipe }: MealSlotProps) => {
   const hasEntries = entries.length > 0;
   const [isDragOver, setIsDragOver] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -183,7 +185,7 @@ const MealSlot = ({ entries, onAdd, onRemove, onEditPortions, mealType, day, onD
     const recipeData = e.dataTransfer.getData('application/x-recipe');
     if (recipeData && onDropRecipe) {
       const recipe = JSON.parse(recipeData);
-      onDropRecipe(recipe.id, recipe.title, recipe.imageUrl, mealType, day);
+      onDropRecipe(recipe.id, recipe.title, recipe.imageUrl, mealTypeKey, day, recipe.portions);
     }
   };
 
@@ -212,8 +214,10 @@ const MealSlot = ({ entries, onAdd, onRemove, onEditPortions, mealType, day, onD
             className="relative bg-white border border-stone-200 rounded-md shadow-sm px-4 py-3 group hover:shadow-md hover:border-stone-300 transition-all"
             style={{
               marginBottom: index < entries.length - 1 ? '-0.375rem' : '0',
-              zIndex: entries.length - index,
+              zIndex: hoveredIndex === index ? 9999 : entries.length - index,
             }}
+            onMouseEnter={() => setHoveredIndex(index)}
+            onMouseLeave={() => setHoveredIndex(null)}
           >
             {onEditPortions && (
               <button
@@ -749,7 +753,7 @@ const PlansPage = () => {
   const handleCopyDay = useCallback(async (sourceDay: number, targetDateStr: string) => {
     const sourceEntries = entriesByDay[sourceDay] || [];
     if (sourceEntries.length === 0) {
-      toast.warning("Nothing to copy", { description: "This day has no planned meals." });
+      toast.warning(t("plans.toast.nothingToCopy"), { description: t("plans.toast.nothingToCopyDayDesc") });
       return;
     }
 
@@ -773,7 +777,7 @@ const PlansPage = () => {
       const filtered = newEntries.filter((e) => !existingKeys.has(`${e.mealType}-${e.recipeId}`));
 
       if (filtered.length === 0) {
-        toast.warning("Already planned", { description: "All recipes are already on the target day." });
+        toast.warning(t("plans.toast.alreadyPlanned"), { description: t("plans.toast.alreadyPlannedTargetDesc") });
         return;
       }
 
@@ -783,8 +787,7 @@ const PlansPage = () => {
       } else {
         await createPlan({ weekStart, entries: updated });
       }
-      await refetchPlan();
-      toast.success("Day copied!", { description: `Copied to ${targetLabel}.` });
+      toast.success(t("plans.toast.dayCopied"), { description: t("plans.toast.dayCopiedDesc", { targetLabel }) });
     } else {
       const targetPlan = await getMealPlanByWeek(targetWeekStart);
       const existingKeys = new Set(
@@ -793,7 +796,7 @@ const PlansPage = () => {
       const filtered = newEntries.filter((e) => !existingKeys.has(`${e.mealType}-${e.recipeId}`));
 
       if (filtered.length === 0) {
-        toast.warning("Already planned", { description: "All recipes are already on the target day." });
+        toast.warning(t("plans.toast.alreadyPlanned"), { description: t("plans.toast.alreadyPlannedTargetDesc") });
         return;
       }
 
@@ -802,14 +805,14 @@ const PlansPage = () => {
       } else {
         await createPlan({ weekStart: targetWeekStart, entries: filtered });
       }
-      toast.success("Day copied!", { description: `Copied to ${targetLabel} (${targetDateStr}).` });
+      toast.success(t("plans.toast.dayCopied"), { description: t("plans.toast.dayCopiedDescWithDate", { targetLabel, targetDateStr }) });
     }
-  }, [entriesByDay, mealPlan, updatePlan, createPlan, weekStart, refetchPlan]);
+  }, [entriesByDay, mealPlan, updatePlan, createPlan, weekStart, refetchPlan, t]);
 
   const handleCopyWeek = useCallback(async (targetDateStr: string) => {
     const currentEntries = mealPlan?.entries || [];
     if (currentEntries.length === 0) {
-      toast.warning("Nothing to copy", { description: "This week has no planned meals." });
+      toast.warning(t("plans.toast.nothingToCopy"), { description: t("plans.toast.nothingToCopyWeekDesc") });
       return;
     }
 
@@ -817,7 +820,7 @@ const PlansPage = () => {
     const targetWeekStart = formatDate(targetMonday);
 
     if (targetWeekStart === weekStart) {
-      toast.warning("Same week", { description: "Choose a different week to copy to." });
+      toast.warning(t("plans.toast.sameWeek"), { description: t("plans.toast.sameWeekDesc") });
       return;
     }
 
@@ -835,8 +838,8 @@ const PlansPage = () => {
     } else {
       await createPlan({ weekStart: targetWeekStart, entries: newEntries });
     }
-    toast.success("Week copied!", { description: `Copied to ${formatWeekRange(targetMonday)}.` });
-  }, [mealPlan, weekStart, updatePlan, createPlan]);
+    toast.success(t("plans.toast.weekCopied"), { description: t("plans.toast.weekCopiedDesc", { weekRange: formatWeekRange(targetMonday) }) });
+  }, [mealPlan, weekStart, updatePlan, createPlan, t]);
 
   const goPreviousWeek = () => {
     const prev = new Date(currentMonday);
@@ -850,11 +853,11 @@ const PlansPage = () => {
     setCurrentMonday(next);
   };
 
-  const handleDropRecipe = useCallback(async (recipeId: string, recipeTitle: string, recipeImageUrl: string | undefined, mealType: string, day: number) => {
+  const handleDropRecipe = useCallback(async (recipeId: string, recipeTitle: string, recipeImageUrl: string | undefined, mealType: string, day: number, portions?: number) => {
     const currentEntries = mealPlan?.entries || [];
 
     if (currentEntries.some((e) => e.day === day && e.mealType === mealType && e.recipeId === recipeId)) {
-      toast.warning("Already planned", { description: `${recipeTitle} is already in this meal slot.` });
+      toast.warning(t("plans.toast.alreadyPlanned"), { description: t("plans.toast.alreadyPlannedSlotDesc", { recipeTitle }) });
       return;
     }
 
@@ -865,7 +868,7 @@ const PlansPage = () => {
       recipeId,
       recipeTitle,
       recipeImageUrl,
-      portions: 4,
+      portions: portions ?? 4,
     };
 
     if (mealPlan?.id) {
@@ -880,9 +883,8 @@ const PlansPage = () => {
       });
     }
 
-    await refetchPlan();
-    toast.success("Recipe added!", { description: `${recipeTitle} added to ${mealType}.` });
-  }, [mealPlan, updatePlan, createPlan, weekStart, refetchPlan]);
+    toast.success(t("plans.toast.recipeAdded"), { description: t("plans.toast.recipeAddedDesc", { recipeTitle, mealType: t(`plans.mealTypes.${mealType}`, mealType) }) });
+  }, [mealPlan, updatePlan, createPlan, weekStart, t]);
 
   const handleAddMeal = (day: number, mealType: string) => {
     setAddingToDay(day);
@@ -900,8 +902,7 @@ const PlansPage = () => {
       e.id === entryId ? { ...e, portions } : e,
     );
     await updatePlan({ id: mealPlan.id, data: { entries: updated } });
-    await refetchPlan();
-  }, [mealPlan, updatePlan]);
+  }, [mealPlan, updatePlan, refetchPlan]);
 
   const handleSelectRecipe = async (recipe: RecipeListItem, mealType: string) => {
     const currentEntries = mealPlan?.entries || [];
@@ -932,7 +933,6 @@ const PlansPage = () => {
       });
     }
 
-    await refetchPlan();
     setDialogOpen(false);
     setAddingToDay(null);
   };
@@ -944,7 +944,6 @@ const PlansPage = () => {
       id: mealPlan.id,
       data: { entries: updated },
     });
-    await refetchPlan();
   };
 
   return (
@@ -970,6 +969,7 @@ const PlansPage = () => {
                       id: recipe.id,
                       title: recipe.title,
                       imageUrl: recipe.thumbnailUrl || undefined,
+                      portions: recipe.portions || 4,
                     }));
                     e.dataTransfer.effectAllowed = 'copy';
                   }}
@@ -1114,6 +1114,7 @@ const PlansPage = () => {
                             key={mt.key}
                             entries={entries}
                             mealType={t(`plans.mealTypes.${mt.key}`, mt.label)}
+                            mealTypeKey={mt.key}
                             day={dayIndex}
                             onAdd={() => handleAddMeal(dayIndex, mt.key)}
                             onRemove={handleRemoveMeal}

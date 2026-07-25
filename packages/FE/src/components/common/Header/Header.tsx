@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Link } from '@tanstack/react-router';
 import { Search } from 'lucide-react';
 
-import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useSearch } from '@/context/Search';
 import { useAuthContext } from '@/context/Auth';

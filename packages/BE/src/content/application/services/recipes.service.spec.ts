@@ -9,6 +9,7 @@ describe('RecipesService', () => {
   let mockIngredientRepository: any;
   let mockKitchenwareRepository: any;
   let mockUnitRepository: any;
+  let mockEventEmitter: any;
 
   const mockRecipe = {
     id: 'rec123',
@@ -59,12 +60,16 @@ describe('RecipesService', () => {
     mockUnitRepository = {
       findById: vi.fn(),
     };
+    mockEventEmitter = {
+      emit: vi.fn(),
+    };
     service = new RecipesService(
       mockRecipeRepository,
       mockCategoryRepository,
       mockIngredientRepository,
       mockKitchenwareRepository,
       mockUnitRepository,
+      mockEventEmitter,
     );
   });
 

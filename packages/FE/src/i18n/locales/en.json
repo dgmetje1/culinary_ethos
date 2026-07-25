@@ -79,6 +79,23 @@
       "title": "Shopping List",
       "ingredients": "{{count}} ingredients detected for this week.",
       "viewFull": "View Full List"
+    },
+    "toast": {
+      "nothingToCopy": "Nothing to copy",
+      "nothingToCopyDayDesc": "This day has no planned meals.",
+      "nothingToCopyWeekDesc": "This week has no planned meals.",
+      "alreadyPlanned": "Already planned",
+      "alreadyPlannedSlotDesc": "{{recipeTitle}} is already in this meal slot.",
+      "alreadyPlannedTargetDesc": "All recipes are already on the target day.",
+      "dayCopied": "Day copied!",
+      "dayCopiedDesc": "Copied to {{targetLabel}}.",
+      "dayCopiedDescWithDate": "Copied to {{targetLabel}} ({{targetDateStr}}).",
+      "sameWeek": "Same week",
+      "sameWeekDesc": "Choose a different week to copy to.",
+      "weekCopied": "Week copied!",
+      "weekCopiedDesc": "Copied to {{weekRange}}.",
+      "recipeAdded": "Recipe added!",
+      "recipeAddedDesc": "{{recipeTitle}} added to {{mealType}}."
     }
   },
   "pages": {
