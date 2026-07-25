@@ -10,6 +10,8 @@ export interface CreateUserInput {
   email: string;
   language: string;
   profile_picture?: string;
+  position?: string;
+  location?: string;
 }
 
 export interface UpdateUserInput {
@@ -21,6 +23,8 @@ export interface UpdateUserInput {
   language?: string;
   profile_picture?: string;
   description?: string;
+  position?: string;
+  location?: string;
   role?: string;
   status?: string;
 }

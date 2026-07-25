@@ -14,6 +14,11 @@ describe('UserRepository', () => {
     email: 'test@example.com',
     language: 'en',
     profile_picture: null,
+    description: null,
+    position: null,
+    location: null,
+    role: 'chef',
+    status: 'active',
   };
 
   const expectedAttributes = {
@@ -25,6 +30,11 @@ describe('UserRepository', () => {
     email: 'test@example.com',
     language: 'en',
     profile_picture: null,
+    description: null,
+    position: null,
+    location: null,
+    role: 'chef',
+    status: 'active',
   };
 
   beforeEach(() => {
@@ -86,6 +96,9 @@ describe('UserRepository', () => {
         email: 'test@example.com',
         language: 'en',
         profile_picture: null,
+        description: null,
+        position: null,
+        location: null,
       };
       mockTypeOrmRepo.findOne.mockResolvedValue(summaryEntity);
 
@@ -100,12 +113,15 @@ describe('UserRepository', () => {
         email: '',
         language: '',
         profile_picture: null,
+        description: null,
+        position: null,
+        location: null,
         role: '',
         status: '',
       });
       expect(mockTypeOrmRepo.findOne).toHaveBeenCalledWith({
         where: { id: 'user123' },
-        select: ['id', 'nick_name', 'name', 'last_name', 'profile_picture'],
+        select: ['id', 'nick_name', 'name', 'last_name', 'profile_picture', 'position', 'location'],
       });
     });
 

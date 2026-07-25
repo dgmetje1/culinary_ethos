@@ -31,7 +31,7 @@ export class UserRepository implements IUserRepository {
   async findByIdWithSummaryFields(id: string): Promise<UserAttributes | null> {
     const result = await this.userRepository.findOne({
       where: { id },
-      select: ['id', 'nick_name', 'name', 'last_name', 'profile_picture'],
+      select: ['id', 'nick_name', 'name', 'last_name', 'profile_picture', 'position', 'location'],
     });
     return result
       ? {
@@ -44,6 +44,8 @@ export class UserRepository implements IUserRepository {
           language: '',
           profile_picture: result.profile_picture,
           description: result.description,
+          position: result.position,
+          location: result.location,
           role: '',
           status: '',
         }
@@ -98,6 +100,8 @@ export class UserRepository implements IUserRepository {
       language: user.language,
       profile_picture: user.profile_picture,
       description: user.description,
+      position: user.position,
+      location: user.location,
       role: user.role,
       status: user.status,
     };

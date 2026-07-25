@@ -18,6 +18,7 @@ import { useSuspenseGetUser } from "@/queries/users";
 import { useUpdateProfile } from "@/queries/users/mutations";
 import { useUploadFile } from "@/queries/files";
 import { useGetUserRecipes } from "@/queries/recipes";
+import { useGetFollowersCount, useGetFollowingCount } from "@/queries/follows";
 import type { UploadFileResponse } from "@/queries/files/types";
 import ProfilePageAccountTabsDetailsTab from "@/pages/Profile/AccountTabs/tabs/Details";
 
@@ -25,6 +26,8 @@ const ProfilePageAccountDetails = () => {
   const { account } = useAuthContext();
   const { data: user } = useSuspenseGetUser();
   const { data: userRecipes = [] } = useGetUserRecipes();
+  const { data: followersCount } = useGetFollowersCount(user.id);
+  const { data: followingCount } = useGetFollowingCount(user.id);
   const { t } = useTranslation();
   const isOwnProfile = account?.id === user.id;
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -110,9 +113,11 @@ const ProfilePageAccountDetails = () => {
             <h1 className="text-[48px] leading-[1.1] tracking-[-0.02em] font-serif text-primary">
               {user.nickName}
             </h1>
-            <p className="text-[12px] leading-[1.0] tracking-[0.2em] font-semibold text-secondary uppercase mt-1">
-              Chef de Cuisine &bull; Madrid
-            </p>
+            {(user.position || user.location) && (
+              <p className="text-[12px] leading-[1.0] tracking-[0.2em] font-semibold text-secondary uppercase mt-1">
+                {[user.position, user.location].filter(Boolean).join(' \u2022 ')}
+              </p>
+            )}
           </div>
           <div className="flex gap-3">
             {isOwnProfile && (
@@ -154,7 +159,7 @@ const ProfilePageAccountDetails = () => {
           </div>
           <div className="flex flex-col">
             <span className="text-[24px] leading-[1.3] font-medium font-serif text-primary">
-              12.8k
+              {followersCount?.count ?? 0}
             </span>
             <span className="text-[12px] leading-[1.0] tracking-[0.1em] font-semibold text-on-primary-container uppercase">
               Seguidores
@@ -162,7 +167,7 @@ const ProfilePageAccountDetails = () => {
           </div>
           <div className="flex flex-col">
             <span className="text-[24px] leading-[1.3] font-medium font-serif text-primary">
-              850
+              {followingCount?.count ?? 0}
             </span>
             <span className="text-[12px] leading-[1.0] tracking-[0.1em] font-semibold text-on-primary-container uppercase">
               Siguiendo

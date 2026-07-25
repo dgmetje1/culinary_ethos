@@ -28,6 +28,8 @@ export class UserQueriesService {
     language: string;
     profile_picture: string | null;
     description: string | null;
+    position: string | null;
+    location: string | null;
     role: string;
     status: string;
   }): UserAdminResponseDto {
@@ -41,6 +43,8 @@ export class UserQueriesService {
       language: result.language,
       profilePicture: result.profile_picture,
       description: result.description,
+      position: result.position,
+      location: result.location,
       role: result.role,
       status: result.status,
     };
@@ -56,6 +60,8 @@ export class UserQueriesService {
     language: string;
     profile_picture: string | null;
     description: string | null;
+    position: string | null;
+    location: string | null;
   }): UserAccountResponseDto {
     return {
       id: result.id,
@@ -67,6 +73,8 @@ export class UserQueriesService {
       language: result.language,
       profilePicture: result.profile_picture,
       description: result.description,
+      position: result.position,
+      location: result.location,
     };
   }
 
@@ -98,6 +106,8 @@ export class UserQueriesService {
       name: result.name,
       lastName: result.last_name,
       profilePicture: result.profile_picture,
+      position: result.position,
+      location: result.location,
     };
   }
 

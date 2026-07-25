@@ -24,4 +24,10 @@ export class CreateUserRequestDto {
 
   @ApiProperty({ nullable: true })
   description?: string;
+
+  @ApiProperty({ nullable: true })
+  position?: string;
+
+  @ApiProperty({ nullable: true })
+  location?: string;
 }

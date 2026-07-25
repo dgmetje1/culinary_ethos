@@ -28,6 +28,12 @@ export class UserAdminResponseDto {
   @ApiProperty({ nullable: true })
   description: string | null;
 
+  @ApiProperty({ nullable: true })
+  position: string | null;
+
+  @ApiProperty({ nullable: true })
+  location: string | null;
+
   @ApiProperty()
   role: string;
 

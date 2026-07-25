@@ -15,4 +15,10 @@ export class UserSummaryResponseDto {
 
   @ApiProperty({ nullable: true })
   profilePicture: string | null;
+
+  @ApiProperty({ nullable: true })
+  position: string | null;
+
+  @ApiProperty({ nullable: true })
+  location: string | null;
 }

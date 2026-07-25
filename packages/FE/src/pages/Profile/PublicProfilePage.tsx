@@ -1,26 +1,43 @@
 import { Link, useParams } from "@tanstack/react-router";
-import { ChefHat, Loader2 } from "lucide-react";
+import { ChefHat, Loader2, UserPlus, UserCheck } from "lucide-react";
 
-import AuthorName from "@/components/common/AuthorName/AuthorName";
 import { composeCdnUrl } from "@/lib/utils";
 import config from "@/config";
 import { useApiQuery } from "@/middleware/api";
 import { getUserSummaryKeys } from "@/queries/users/keys";
 import { getUserSummary } from "@/queries/users/queries";
 import { useGetUserPublicRecipes } from "@/queries/recipes";
+import { useGetIsFollowing, useGetFollowersCount, useGetFollowingCount, useFollowUser, useUnfollowUser } from "@/queries/follows";
+import { useAuthContext } from "@/context/Auth";
+import { Button } from "@/components/ui/button";
 
 const PublicProfilePage = () => {
+  const { account } = useAuthContext();
   const { userId } = useParams({ from: "/_mainLayout/author/$userId" });
   const { key, queryKey } = getUserSummaryKeys(userId);
   const { data: user, isLoading: userLoading } = useApiQuery(key, queryKey, () =>
     getUserSummary(userId),
   );
   const { data: recipes = [], isLoading: recipesLoading } = useGetUserPublicRecipes(userId);
+  const { data: followStatus } = useGetIsFollowing(userId);
+  const { data: followersCount } = useGetFollowersCount(userId);
+  const { data: followingCount } = useGetFollowingCount(userId);
+  const followMutation = useFollowUser(account?.id ?? '');
+  const unfollowMutation = useUnfollowUser(account?.id ?? '');
 
+  const isOwnProfile = account?.id === userId;
   const displayName = user?.nickName || user?.name || userId;
   const avatarUrl = user?.profilePicture
     ? composeCdnUrl(config.cdnUrl, user.profilePicture)
     : null;
+
+  const handleFollowToggle = () => {
+    if (followStatus?.following) {
+      unfollowMutation.mutate(userId);
+    } else {
+      followMutation.mutate(userId);
+    }
+  };
 
   return (
     <main className="pb-20 max-w-[1200px] mx-auto px-8">
@@ -42,10 +59,32 @@ const PublicProfilePage = () => {
             </div>
           </div>
           <div className="flex-1 space-y-6">
-            <div>
-              <h1 className="text-[48px] leading-[1.1] tracking-[-0.02em] font-serif text-primary">
-                {displayName}
-              </h1>
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div>
+                <h1 className="text-[48px] leading-[1.1] tracking-[-0.02em] font-serif text-primary">
+                  {displayName}
+                </h1>
+                {(user?.position || user?.location) && (
+                  <p className="text-[12px] leading-[1.0] tracking-[0.2em] font-semibold text-secondary uppercase mt-1">
+                    {[user?.position, user?.location].filter(Boolean).join(' \u2022 ')}
+                  </p>
+                )}
+              </div>
+              {!isOwnProfile && (
+                <Button
+                  className="px-8 py-3 rounded-xl hover:opacity-90 transition-all active:scale-95"
+                  variant={followStatus?.following ? "outline" : "default"}
+                  onClick={handleFollowToggle}
+                  disabled={followMutation.isPending || unfollowMutation.isPending}
+                >
+                  {followStatus?.following ? (
+                    <UserCheck className="w-4 h-4 mr-2" />
+                  ) : (
+                    <UserPlus className="w-4 h-4 mr-2" />
+                  )}
+                  {followStatus?.following ? "Siguiendo" : "Seguir"}
+                </Button>
+              )}
             </div>
             <div className="flex gap-12 pt-4">
               <div className="flex flex-col">
@@ -54,6 +93,22 @@ const PublicProfilePage = () => {
                 </span>
                 <span className="text-[12px] leading-[1.0] tracking-[0.1em] font-semibold text-on-primary-container uppercase">
                   Recetas
+                </span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[24px] leading-[1.3] font-medium font-serif text-primary">
+                  {followersCount?.count ?? 0}
+                </span>
+                <span className="text-[12px] leading-[1.0] tracking-[0.1em] font-semibold text-on-primary-container uppercase">
+                  Seguidores
+                </span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[24px] leading-[1.3] font-medium font-serif text-primary">
+                  {followingCount?.count ?? 0}
+                </span>
+                <span className="text-[12px] leading-[1.0] tracking-[0.1em] font-semibold text-on-primary-container uppercase">
+                  Siguiendo
                 </span>
               </div>
             </div>

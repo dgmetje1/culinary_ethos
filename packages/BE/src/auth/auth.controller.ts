@@ -27,6 +27,8 @@ export interface UserProfileResponse {
   language: string;
   profilePicture: string | null;
   description: string | null;
+  position: string | null;
+  location: string | null;
   role: string;
 }
 
@@ -74,6 +76,8 @@ export class AuthController {
       language: user.language,
       profilePicture: user.profile_picture,
       description: user.description,
+      position: user.position,
+      location: user.location,
       role: user.role,
     };
   }

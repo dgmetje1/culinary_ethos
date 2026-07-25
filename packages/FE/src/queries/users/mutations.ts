@@ -14,6 +14,8 @@ export type ProfileUpdateData = {
   language?: User['language'];
   profilePicture?: string;
   description?: string;
+  position?: string;
+  location?: string;
 };
 
 export const useSuspendUser = () => {
@@ -57,6 +59,8 @@ export const useUpdateProfile = () => {
       language: data.language,
       profile_picture: data.profilePicture,
       description: data.description,
+      position: data.position,
+      location: data.location,
     });
   }, {
     onSuccess: () => {
