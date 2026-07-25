@@ -1,13 +1,14 @@
 import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from '@tanstack/react-router';
-import { Search, Bell } from 'lucide-react';
+import { Search } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { useSearch } from '@/context/Search';
 import { useAuthContext } from '@/context/Auth';
 import HeaderProfileMenu from '@/components/common/Header/ProfileMenu/HeaderProfileMenu';
+import NotificationsPopover from '@/components/common/Notifications/NotificationsPopover';
 
 const Header = () => {
   const { t } = useTranslation();
@@ -127,10 +128,8 @@ const Header = () => {
               />
             </div>
           )}
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" className="rounded-full">
-              <Bell className="w-5 h-5 text-stone-900 dark:text-stone-100" />
-            </Button>
+          <div className="flex items-center gap-2">
+            {account && <NotificationsPopover />}
             <HeaderProfileMenu />
           </div>
         </div>

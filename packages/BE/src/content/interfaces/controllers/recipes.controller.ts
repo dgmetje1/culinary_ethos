@@ -105,7 +105,8 @@ export class RecipesController {
     @Body() dto: CreateRecipeDto,
     @CurrentUser() user: UserAttributes,
   ): Promise<string> {
-    return this.recipesService.create(dto, user.id);
+    const authorName = user.nick_name || `${user.name} ${user.last_name}` || 'Someone';
+    return this.recipesService.create(dto, user.id, authorName);
   }
 
   @ApiBearerAuth()

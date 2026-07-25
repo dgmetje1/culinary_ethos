@@ -28,7 +28,8 @@ export class FollowsController {
     @Param('userId') userId: string,
     @CurrentUser() user: UserAttributes,
   ): Promise<{ id: string }> {
-    return this.followsService.follow(user.id, userId);
+    const followerName = user.nick_name || `${user.name} ${user.last_name}` || 'Someone';
+    return this.followsService.follow(user.id, userId, followerName);
   }
 
   @Delete(':userId')
