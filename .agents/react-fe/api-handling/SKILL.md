@@ -1,14 +1,14 @@
 ---
 name: fe-api-handling
-description: Use when working on API data fetching, mutations, caching, or the API client layer. Covers TanStack React Query patterns, Axios setup, optimistic updates, infinite queries, and error handling.
+description: Use when working on API data fetching, mutations, caching, or the API client layer. Covers TanStack React Query patterns, native fetch setup, optimistic updates, infinite queries, and error handling.
 ---
 
 # FE API Handling
 
 ## Architecture
 
-- Axios client with interceptors for auth token injection and error normalization
-- TanStack React Query wrapping the Axios layer
+- Native `fetch` wrapped in a thin `Api` class for auth token injection, error normalization, and query-string serialization
+- TanStack React Query wrapping the `Api` layer
 - Separate concerns: query keys, query functions, query hooks, mutations
 
 ## React Query Patterns
@@ -34,8 +34,8 @@ src/
 
 ### Query Functions
 
-- Return the Axios response data directly
-- Handle 401/403 in interceptors, not per-query
+- Return parsed JSON data directly
+- Handle 401/403 centrally in the `Api` class error mapper, not per-query
 - Use `queryFn` context (`queryKey`, `signal`) for cancellation
 
 ### Hooks
@@ -50,12 +50,38 @@ src/
 - `onSettled` to invalidate related queries
 - Roll back on error via `queryClient.setQueryData`
 
-## Axios Setup
+## Fetch Setup (Api class)
 
-- Base URL from env var
-- `withCredentials: true` for cookie-based auth, or Authorization header injection
-- Response interceptor: normalize errors, handle 401 (redirect to login)
-- Request interceptor: attach auth token, content-type
+- All HTTP traffic flows through a single `Api` class at `src/lib/api/api.ts`
+- Base URL from `VITE_API_URL` env var
+- `RequestConfig` shape: `{ withAuth?: boolean; headers?: Record<string, string>; data?: unknown; params?: Record<string, unknown> }`
+  - `withAuth` (default `true`): injects `Authorization: Bearer <token>` header
+  - `params`: serialized via `URLSearchParams` and appended to the URL as a query string
+  - `data`: auto-stringified as JSON when `Content-Type` is `application/json`; passed through as-is for `FormData`
+- `Accept-Language` header injected per request from the current i18n language
+- `credentials: 'same-origin'` for cookie-based auth
+- Response handling:
+  - Non-2xx: map HTTP status to `ApiException` (`bad-request`, `unauthorized`, `forbidden`, `not-found`, `validation-error`, `server-error`, `network-error`)
+  - 204 / empty body: resolve with `undefined`
+  - Otherwise: `await response.text()` then `JSON.parse`
+- Retry: up to 3 attempts with linear backoff for `missing-user-token` errors (token arrives after auth bootstrap)
+
+## Adding New Endpoints
+
+Use the `Api` class — never call `fetch` directly in query/mutation files:
+
+```ts
+// queries/<domain>/queries.ts
+export const getThing = (id: string) =>
+  new Api().get<Thing>(`things/${id}`);
+
+export const listThings = (filters: Filters) =>
+  new Api().get<Thing[]>("things", { params: filters });
+
+// mutations
+export const createThing = (input: ThingInput) =>
+  new Api().post<Thing>("things", input);
+```
 
 ## Caching Strategy
 

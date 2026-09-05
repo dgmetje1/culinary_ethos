@@ -1,6 +1,4 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
-
-import config from '@/config';
+import appConfig from '@/config';
 
 import { ApiException } from './apiException';
 import { RequestConfig } from './types';
@@ -9,69 +7,56 @@ import { Language } from '@/types/user';
 const MAX_RETRIES = 3;
 const defaultConfig: RequestConfig = { withAuth: true };
 
+type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
+
+const isFormData = (value: unknown): value is FormData =>
+  typeof FormData !== 'undefined' && value instanceof FormData;
+
+const buildErrorFromResponse = async (response: Response): Promise<ApiException> => {
+  const status = response.status;
+  let body: { message?: string } = {};
+  try {
+    const text = await response.text();
+    if (text) body = JSON.parse(text);
+  } catch {
+    // ignore parse errors, fall back to default messages
+  }
+
+  if (status === 400) {
+    return new ApiException('bad-request', body.message || 'Invalid request');
+  }
+  if (status === 401) {
+    return new ApiException('unauthorized', 'Authentication required');
+  }
+  if (status === 403) {
+    return new ApiException('forbidden', 'Access denied');
+  }
+  if (status === 404) {
+    return new ApiException('not-found', body.message || 'Resource not found');
+  }
+  if (status === 422) {
+    return new ApiException('validation-error', body.message || 'Validation failed');
+  }
+  if (status >= 500) {
+    return new ApiException('server-error', 'Server error. Please try again later.');
+  }
+  return new ApiException('unknown-error', 'An unexpected error occurred');
+};
+
 export class Api {
   private static _accessToken: string | null;
   private static _lang: Language;
 
-  private _axiosInstance: AxiosInstance;
-
-  constructor() {
-    this._axiosInstance = axios.create({
-      baseURL: config.apiUrl,
-      withCredentials: true,
-    });
-
-    this._axiosInstance.interceptors.request.use((config) => {
-      const language = Api._lang || 'en';
-      config.headers['Accept-Language'] = language;
-      return config;
-    });
-
-    this._axiosInstance.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        const status = error.response?.status;
-        let errorCode = 'unknown-error';
-        let message = 'An unexpected error occurred';
-
-        if (status === 400) {
-          errorCode = 'bad-request';
-          message = error.response?.data?.message || 'Invalid request';
-        } else if (status === 401) {
-          errorCode = 'unauthorized';
-          message = 'Authentication required';
-        } else if (status === 403) {
-          errorCode = 'forbidden';
-          message = 'Access denied';
-        } else if (status === 404) {
-          errorCode = 'not-found';
-          message = error.response?.data?.message || 'Resource not found';
-        } else if (status === 422) {
-          errorCode = 'validation-error';
-          message = error.response?.data?.message || 'Validation failed';
-        } else if (status && status >= 500) {
-          errorCode = 'server-error';
-          message = 'Server error. Please try again later.';
-        } else if (!error.response) {
-          errorCode = 'network-error';
-          message = 'Network error. Please check your connection.';
-        }
-
-        return Promise.reject(new ApiException(errorCode, message));
-      },
-    );
-  }
-
-  public async get<T>(url: string, config?: RequestConfig) {
+  public async get<T>(url: string, config?: RequestConfig): Promise<T> {
     return this.request<T>('GET', url, config);
   }
-  public async post<T>(url: string, data: unknown, config?: RequestConfig) {
+  public async post<T>(url: string, data: unknown, config?: RequestConfig): Promise<T> {
     return this.request<T>('POST', url, { ...config, data });
   }
-  public async put<T>(url: string, data: unknown, config?: RequestConfig) {
+  public async put<T>(url: string, data: unknown, config?: RequestConfig): Promise<T> {
     return this.request<T>('PUT', url, { ...config, data });
   }
-  public async delete<T>(url: string, data: unknown, config?: RequestConfig) {
+  public async delete<T>(url: string, data: unknown, config?: RequestConfig): Promise<T> {
     return this.request<T>('DELETE', url, { ...config, data });
   }
 
@@ -80,7 +65,7 @@ export class Api {
     file: File,
     category: string,
     config?: RequestConfig,
-  ) {
+  ): Promise<T> {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('category', category);
@@ -95,14 +80,14 @@ export class Api {
   }
 
   public async request<T>(
-    method: string,
+    method: Method,
     url: string,
     config?: RequestConfig,
     retry: number = 0,
   ): Promise<T> {
     try {
       const requestConfig = { ...defaultConfig, ...config };
-      const headers: Record<string, string> = {};
+      const headers: Record<string, string> = { ...requestConfig.headers };
 
       if (requestConfig.withAuth) {
         if (!Api._accessToken)
@@ -110,13 +95,61 @@ export class Api {
         headers.Authorization = `Bearer ${Api._accessToken}`;
       }
 
-      const response = await this._axiosInstance.request<T>({
+      headers['Accept-Language'] = Api._lang || 'en';
+
+      let body: BodyInit | undefined;
+      if (requestConfig.data !== undefined) {
+        if (isFormData(requestConfig.data)) {
+          body = requestConfig.data;
+        } else {
+          const hasContentType = Object.keys(headers).some(
+            (k) => k.toLowerCase() === 'content-type',
+          );
+          if (!hasContentType) {
+            headers['Content-Type'] = 'application/json';
+          }
+          if (headers['Content-Type'] === 'application/json') {
+            body = JSON.stringify(requestConfig.data);
+          } else {
+            body = requestConfig.data as BodyInit;
+          }
+        }
+      }
+
+      const fullUrl = (() => {
+        const base = url.startsWith('http') ? url : `${appConfig.apiUrl}${url}`;
+        if (!requestConfig.params) return base;
+        const usp = new URLSearchParams();
+        for (const [key, value] of Object.entries(requestConfig.params)) {
+          if (value === undefined || value === null) continue;
+          usp.append(key, String(value));
+        }
+        const qs = usp.toString();
+        return qs ? `${base}?${qs}` : base;
+      })();
+
+      const fetchInit: RequestInit = {
         method,
-        url,
         headers,
-        ...requestConfig,
-      });
-      return response.data;
+        credentials: 'same-origin',
+      };
+      if (body !== undefined) fetchInit.body = body;
+
+      const response = await fetch(fullUrl, fetchInit);
+
+      if (!response.ok) {
+        throw await buildErrorFromResponse(response);
+      }
+
+      if (response.status === 204) {
+        return undefined as T;
+      }
+
+      const text = await response.text();
+      if (!text) {
+        return undefined as T;
+      }
+      return JSON.parse(text) as T;
     } catch (err: unknown) {
       if (
         err instanceof ApiException &&
@@ -127,9 +160,8 @@ export class Api {
           setTimeout(() => resolve(undefined), (retry + 1) * 1000),
         );
         return this.request<T>(method, url, config, retry + 1);
-      } else {
-        throw err;
       }
+      throw err;
     }
   }
 

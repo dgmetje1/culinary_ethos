@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { optimizeImage } from '@/lib/optimizeImage';
 import { ImagePlus, Upload, X } from 'lucide-react';
 
 import { cn, composeCdnUrl } from '@/lib/utils';
@@ -32,13 +33,14 @@ const RecipeImageUpload = ({
     }
   }, [thumbnailUrl, thumbnailFile]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      onChange(file);
+      const optimized = await optimizeImage(file).catch(() => file);
+      onChange(optimized);
       const reader = new FileReader();
       reader.onload = () => setPreview(reader.result as string);
-      reader.readAsDataURL(file);
+      reader.readAsDataURL(optimized);
     }
   };
 

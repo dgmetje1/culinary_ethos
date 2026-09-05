@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { Camera, Pencil, User } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { optimizeImage } from "@/lib/optimizeImage";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -48,8 +49,12 @@ const ProfilePageAccountDetails = () => {
 
     setUploading(true);
     try {
+      const optimized = await optimizeImage(file, {
+        maxWidth: 400,
+        maxHeight: 400,
+      }).catch(() => file);
       const result = (await uploadFile.mutateAsync({
-        file,
+        file: optimized,
         category: "profile",
       })) as UploadFileResponse;
 
