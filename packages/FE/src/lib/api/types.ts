@@ -1,3 +1,6 @@
-import { AxiosRequestConfig } from "axios";
-
-export type RequestConfig = AxiosRequestConfig & { withAuth?: boolean };
+export type RequestConfig = {
+  withAuth?: boolean;
+  headers?: Record<string, string>;
+  data?: unknown;
+  params?: Record<string, unknown>;
+};
