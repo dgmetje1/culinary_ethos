@@ -23,9 +23,9 @@ const RecipeDetailPage = () => {
   const { id } = route.useParams();
   const { t } = useTranslation();
   const router = useRouter();
-  const { account } = useAuthContext();
+  const { account, isAuthenticated } = useAuthContext();
   const { data: recipe } = useSuspenseGetRecipe(id);
-  const { data: savedStatus } = useGetIsRecipeSaved(id);
+  const { data: savedStatus } = useGetIsRecipeSaved(id, { enabled: isAuthenticated });
   const { mutate: saveRecipe, isPending: isSaving } = useSaveRecipe();
   const { mutate: unsaveRecipe, isPending: isUnsaving } = useUnsaveRecipe();
 

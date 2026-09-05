@@ -5,4 +5,6 @@ export type AuthContextValues = {
   isAccountLoading: boolean;
   accessToken: string;
   isAccessTokenLoading: boolean;
+  isAuthenticated: boolean;
+  isAuthenticatedLoading: boolean;
 };

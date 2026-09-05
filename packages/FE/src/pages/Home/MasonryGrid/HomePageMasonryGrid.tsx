@@ -18,10 +18,10 @@ const HomePageMasonryGrid = () => {
   const { t } = useTranslation();
   const { search } = useSearch();
   const { itemsVisible } = useHomePageContext();
-  const { account } = useAuthContext();
+  const { account, isAuthenticated } = useAuthContext();
   const { data: recipes = [], isLoading } = useGetRecipes({});
-  const { data: savedIds } = useGetSavedRecipeIds();
-  const { data: followingList } = useGetMyFollowing();
+  const { data: savedIds } = useGetSavedRecipeIds({ enabled: isAuthenticated });
+  const { data: followingList } = useGetMyFollowing({ enabled: isAuthenticated });
   const { mutate: saveRecipe, isPending: isSaving } = useSaveRecipe();
   const { mutate: unsaveRecipe, isPending: isUnsaving } = useUnsaveRecipe();
 

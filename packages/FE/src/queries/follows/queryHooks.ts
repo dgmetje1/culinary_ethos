@@ -1,7 +1,20 @@
-import { useApiQuery } from '@/middleware/api';
+import { useApiQuery, UseApiQueryConfig } from '@/middleware/api';
 
-import { getIsFollowingKeys, getFollowersCountKeys, getFollowingCountKeys, getMyFollowingKeys, getMyFollowersKeys } from './keys';
-import { getIsFollowing, getFollowersCount, getFollowingCount, getMyFollowing, getMyFollowers } from './queries';
+import {
+  getIsFollowingKeys,
+  getFollowersCountKeys,
+  getFollowingCountKeys,
+  getMyFollowingKeys,
+  getMyFollowersKeys,
+} from './keys';
+import {
+  getIsFollowing,
+  getFollowersCount,
+  getFollowingCount,
+  getMyFollowing,
+  getMyFollowers,
+  FollowingItem,
+} from './queries';
 
 export const useGetIsFollowing = (userId: string) => {
   const { key, queryKey } = getIsFollowingKeys(userId);
@@ -18,9 +31,11 @@ export const useGetFollowingCount = (userId: string) => {
   return useApiQuery(key, queryKey, () => getFollowingCount(userId));
 };
 
-export const useGetMyFollowing = () => {
+export const useGetMyFollowing = (
+  queryConfig?: Pick<UseApiQueryConfig<FollowingItem[]>, 'enabled'>,
+) => {
   const { key, queryKey } = getMyFollowingKeys();
-  return useApiQuery(key, queryKey, () => getMyFollowing());
+  return useApiQuery(key, queryKey, () => getMyFollowing(), queryConfig);
 };
 
 export const useGetMyFollowers = () => {

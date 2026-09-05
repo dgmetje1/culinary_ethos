@@ -42,8 +42,15 @@ const withAuth = (Component: React.FC) => {
     }, [accessToken, account, isAccountLoading]);
 
     const contextValue = useMemo(
-      () => ({ account, isAccountLoading, accessToken, isAccessTokenLoading }),
-      [accessToken, account, isAccessTokenLoading, isAccountLoading],
+      () => ({
+        account,
+        isAccountLoading,
+        accessToken,
+        isAccessTokenLoading,
+        isAuthenticated,
+        isAuthenticatedLoading: isLoading,
+      }),
+      [accessToken, account, isAccessTokenLoading, isAccountLoading, isAuthenticated, isLoading],
     );
 
     if (isLoading || isAccountLoading) return <Loader />;

@@ -13,11 +13,13 @@ import {
 const DEFAULT_RETRY = 3;
 const DEFAULT_RETRY_DELAY = 1000;
 
+export type UseApiQueryConfig<T> = Omit<UndefinedInitialDataOptions<T>, 'queryKey'>;
+
 export const useApiQuery = <T,>(
   actionKey: string,
   queryKey: QueryKey,
   queryFn: QueryFunction<T>,
-  queryConfig?: Omit<UndefinedInitialDataOptions<T>, 'queryKey'>,
+  queryConfig?: UseApiQueryConfig<T>,
 ) => {
   return useQuery({
     queryKey,

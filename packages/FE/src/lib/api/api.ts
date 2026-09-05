@@ -12,7 +12,9 @@ type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 const isFormData = (value: unknown): value is FormData =>
   typeof FormData !== 'undefined' && value instanceof FormData;
 
-const buildErrorFromResponse = async (response: Response): Promise<ApiException> => {
+const buildErrorFromResponse = async (
+  response: Response,
+): Promise<ApiException> => {
   const status = response.status;
   let body: { message?: string } = {};
   try {
@@ -35,10 +37,16 @@ const buildErrorFromResponse = async (response: Response): Promise<ApiException>
     return new ApiException('not-found', body.message || 'Resource not found');
   }
   if (status === 422) {
-    return new ApiException('validation-error', body.message || 'Validation failed');
+    return new ApiException(
+      'validation-error',
+      body.message || 'Validation failed',
+    );
   }
   if (status >= 500) {
-    return new ApiException('server-error', 'Server error. Please try again later.');
+    return new ApiException(
+      'server-error',
+      'Server error. Please try again later.',
+    );
   }
   return new ApiException('unknown-error', 'An unexpected error occurred');
 };
@@ -50,13 +58,25 @@ export class Api {
   public async get<T>(url: string, config?: RequestConfig): Promise<T> {
     return this.request<T>('GET', url, config);
   }
-  public async post<T>(url: string, data: unknown, config?: RequestConfig): Promise<T> {
+  public async post<T>(
+    url: string,
+    data: unknown,
+    config?: RequestConfig,
+  ): Promise<T> {
     return this.request<T>('POST', url, { ...config, data });
   }
-  public async put<T>(url: string, data: unknown, config?: RequestConfig): Promise<T> {
+  public async put<T>(
+    url: string,
+    data: unknown,
+    config?: RequestConfig,
+  ): Promise<T> {
     return this.request<T>('PUT', url, { ...config, data });
   }
-  public async delete<T>(url: string, data: unknown, config?: RequestConfig): Promise<T> {
+  public async delete<T>(
+    url: string,
+    data: unknown,
+    config?: RequestConfig,
+  ): Promise<T> {
     return this.request<T>('DELETE', url, { ...config, data });
   }
 
@@ -117,7 +137,12 @@ export class Api {
       }
 
       const fullUrl = (() => {
-        const base = url.startsWith('http') ? url : `${appConfig.apiUrl}${url}`;
+        const apiUrl = appConfig.apiUrl.endsWith('/')
+          ? appConfig.apiUrl.slice(0, -1)
+          : appConfig.apiUrl;
+        const urlPath = url.startsWith('/') ? url : `/${url}`;
+
+        const base = url.startsWith('http') ? url : `${apiUrl}${urlPath}`;
         if (!requestConfig.params) return base;
         const usp = new URLSearchParams();
         for (const [key, value] of Object.entries(requestConfig.params)) {
@@ -135,6 +160,7 @@ export class Api {
       };
       if (body !== undefined) fetchInit.body = body;
 
+      console.log(`API Request: ${method} ${fullUrl}`, fetchInit);
       const response = await fetch(fullUrl, fetchInit);
 
       if (!response.ok) {
