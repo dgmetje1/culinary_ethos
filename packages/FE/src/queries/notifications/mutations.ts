@@ -1,7 +1,7 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { markNotificationRead, markAllNotificationsRead } from './queries';
-import { getNotificationsKeys, getUnreadCountKeys } from './keys';
+import { markNotificationRead, markAllNotificationsRead } from "./queries";
+import { getNotificationsKeys, getUnreadCountKeys } from "./keys";
 
 export const useMarkNotificationRead = () => {
   const queryClient = useQueryClient();

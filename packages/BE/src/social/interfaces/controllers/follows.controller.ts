@@ -1,94 +1,78 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Delete,
-  Param,
-  HttpCode,
-  HttpStatus,
-} from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { CurrentUser } from '../../../auth/decorators/current-user.decorator';
-import { FollowsService } from '../../application/services/follows.service';
-import { Public } from '../../../auth/decorators/public.decorator';
-import type { UserAttributes } from '../../../social/domain/models';
+import { Controller, Get, Post, Delete, Param, HttpCode, HttpStatus } from "@nestjs/common";
+import { ApiOperation, ApiTags, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
+import { CurrentUser } from "../../../auth/decorators/current-user.decorator";
+import { FollowsService } from "../../application/services/follows.service";
+import { Public } from "../../../auth/decorators/public.decorator";
+import type { UserAttributes } from "../../../social/domain/models";
 
 @ApiBearerAuth()
-@ApiTags('Follows')
-@Controller('follows')
+@ApiTags("Follows")
+@Controller("follows")
 export class FollowsController {
   constructor(private readonly followsService: FollowsService) {}
 
-  @Post(':userId')
+  @Post(":userId")
   @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Follow a user' })
-  @ApiResponse({ status: 201, description: 'Followed successfully' })
-  @ApiResponse({ status: 409, description: 'Already following' })
+  @ApiOperation({ summary: "Follow a user" })
+  @ApiResponse({ status: 201, description: "Followed successfully" })
+  @ApiResponse({ status: 409, description: "Already following" })
   async follow(
-    @Param('userId') userId: string,
+    @Param("userId") userId: string,
     @CurrentUser() user: UserAttributes,
   ): Promise<{ id: string }> {
-    const followerName = user.nick_name || `${user.name} ${user.last_name}` || 'Someone';
+    const followerName = user.nick_name || `${user.name} ${user.last_name}` || "Someone";
     return this.followsService.follow(user.id, userId, followerName);
   }
 
-  @Delete(':userId')
+  @Delete(":userId")
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Unfollow a user' })
-  @ApiResponse({ status: 204, description: 'Unfollowed successfully' })
-  @ApiResponse({ status: 404, description: 'Follow not found' })
+  @ApiOperation({ summary: "Unfollow a user" })
+  @ApiResponse({ status: 204, description: "Unfollowed successfully" })
+  @ApiResponse({ status: 404, description: "Follow not found" })
   async unfollow(
-    @Param('userId') userId: string,
+    @Param("userId") userId: string,
     @CurrentUser() user: UserAttributes,
   ): Promise<void> {
     await this.followsService.unfollow(user.id, userId);
   }
 
-  @Get(':userId/status')
-  @ApiOperation({ summary: 'Check if current user follows a user' })
-  @ApiResponse({ status: 200, description: 'Follow status' })
+  @Get(":userId/status")
+  @ApiOperation({ summary: "Check if current user follows a user" })
+  @ApiResponse({ status: 200, description: "Follow status" })
   async isFollowing(
-    @Param('userId') userId: string,
+    @Param("userId") userId: string,
     @CurrentUser() user: UserAttributes,
   ): Promise<{ following: boolean }> {
     return this.followsService.isFollowing(user.id, userId);
   }
 
-  @Get('me/following')
-  @ApiOperation({ summary: 'Get list of user IDs the current user follows' })
-  @ApiResponse({ status: 200, description: 'Following list' })
-  async getMyFollowing(
-    @CurrentUser() user: UserAttributes,
-  ): Promise<{ followingId: string }[]> {
+  @Get("me/following")
+  @ApiOperation({ summary: "Get list of user IDs the current user follows" })
+  @ApiResponse({ status: 200, description: "Following list" })
+  async getMyFollowing(@CurrentUser() user: UserAttributes): Promise<{ followingId: string }[]> {
     return this.followsService.getFollowingList(user.id);
   }
 
-  @Get('me/followers')
-  @ApiOperation({ summary: 'Get list of user IDs that follow the current user' })
-  @ApiResponse({ status: 200, description: 'Follower list' })
-  async getMyFollowers(
-    @CurrentUser() user: UserAttributes,
-  ): Promise<{ followerId: string }[]> {
+  @Get("me/followers")
+  @ApiOperation({ summary: "Get list of user IDs that follow the current user" })
+  @ApiResponse({ status: 200, description: "Follower list" })
+  async getMyFollowers(@CurrentUser() user: UserAttributes): Promise<{ followerId: string }[]> {
     return this.followsService.getFollowerList(user.id);
   }
 
   @Public()
-  @Get(':userId/followers')
-  @ApiOperation({ summary: 'Get followers count for a user' })
-  @ApiResponse({ status: 200, description: 'Followers count' })
-  async getFollowers(
-    @Param('userId') userId: string,
-  ): Promise<{ count: number }> {
+  @Get(":userId/followers")
+  @ApiOperation({ summary: "Get followers count for a user" })
+  @ApiResponse({ status: 200, description: "Followers count" })
+  async getFollowers(@Param("userId") userId: string): Promise<{ count: number }> {
     return this.followsService.getFollowers(userId);
   }
 
   @Public()
-  @Get(':userId/following')
-  @ApiOperation({ summary: 'Get following count for a user' })
-  @ApiResponse({ status: 200, description: 'Following count' })
-  async getFollowing(
-    @Param('userId') userId: string,
-  ): Promise<{ count: number }> {
+  @Get(":userId/following")
+  @ApiOperation({ summary: "Get following count for a user" })
+  @ApiResponse({ status: 200, description: "Following count" })
+  async getFollowing(@Param("userId") userId: string): Promise<{ count: number }> {
     return this.followsService.getFollowing(userId);
   }
 }

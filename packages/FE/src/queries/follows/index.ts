@@ -1,2 +1,2 @@
-export * from './queryHooks';
-export * from './mutations';
+export * from "./queryHooks";
+export * from "./mutations";

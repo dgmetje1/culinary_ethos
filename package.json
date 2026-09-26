@@ -1,24 +1,29 @@
 {
-  "name": "@culinary-ethos/root",
-  "version": "0.0.1",
-  "private": true,
-  "devDependencies": {
-    "@types/node": "^25.6.0",
-    "tsconfig-paths": "^4.2.0",
-    "typescript": "^6.0.3",
-    "vitest": "^4.1.5"
-  },
-  "scripts": {
-    "dev:all": "pnpm -r --parallel run dev",
-    "dev:be": "pnpm --filter @culinary-ethos/be run start:dev",
-    "dev:fe": "pnpm --filter @culinary-ethos/fe run dev",
-    "build:be": "pnpm --filter @culinary-ethos/be run build",
-    "build:fe": "pnpm --filter @culinary-ethos/fe run build",
-    "test": "pnpm --filter @culinary-ethos/be run test",
-    "test:be": "pnpm --filter @culinary-ethos/be run test",
-    "test:fe": "pnpm --filter @culinary-ethos/fe run test",
-    "lint": "pnpm -r run lint",
-    "lint:be": "pnpm --filter @culinary-ethos/be run lint",
-    "lint:fe": "pnpm --filter @culinary-ethos/fe run lint"
-  }
+    "name": "@culinary-ethos/root",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "dev:all": "pnpm -r --parallel run dev",
+        "dev:be": "pnpm --filter @culinary-ethos/be run start:dev",
+        "dev:fe": "pnpm --filter @culinary-ethos/fe run dev",
+        "build:be": "pnpm --filter @culinary-ethos/be run build",
+        "build:fe": "pnpm --filter @culinary-ethos/fe run build",
+        "test": "pnpm --filter @culinary-ethos/be run test",
+        "test:be": "pnpm --filter @culinary-ethos/be run test",
+        "test:fe": "pnpm --filter @culinary-ethos/fe run test",
+        "lint": "oxlint",
+        "lint:fix": "oxlint --fix",
+        "lint:be": "oxlint packages/BE",
+        "lint:fe": "oxlint packages/FE",
+        "format": "oxfmt",
+        "format:check": "oxfmt --check"
+    },
+    "devDependencies": {
+        "@types/node": "^25.6.0",
+        "oxfmt": "^0.66.0",
+        "oxlint": "^1.81.0",
+        "tsconfig-paths": "^4.2.0",
+        "typescript": "^6.0.3",
+        "vitest": "^4.1.5"
+    }
 }

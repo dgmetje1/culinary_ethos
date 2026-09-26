@@ -346,5 +346,47 @@
     "save": "Save recipe",
     "saved": "Saved",
     "unsave": "Remove from saved"
+  },
+  "profile": {
+    "tabs": {
+      "myRecipes": "My Recipes",
+      "savedCollections": "Saved Collections"
+    },
+    "empty": {
+      "noSaved": "No saved collections yet."
+    }
+  },
+  "management": {
+    "ingredients": {
+      "title": "Ingredient Management",
+      "subtitle": "Manage the full ingredient catalog.",
+      "newButton": "New Ingredient",
+      "searchPlaceholder": "Search ingredient...",
+      "table": {
+        "id": "ID",
+        "name": "NAME",
+        "singular": "SINGULAR",
+        "translated": "TRANSLATED",
+        "actions": "ACTIONS",
+        "loading": "Loading ingredients...",
+        "notFound": "No ingredients found.",
+        "empty": "No ingredients.",
+        "complete": "Complete",
+        "edit": "Edit",
+        "delete": "Delete",
+        "loadMore": "LOAD MORE INGREDIENTS"
+      },
+      "dialog": {
+        "editTitle": "Edit Ingredient",
+        "newTitle": "New Ingredient",
+        "fieldName": "Name",
+        "fieldSingular": "Singular",
+        "saving": "Saving...",
+        "save": "Save",
+        "deleteTitle": "Delete Ingredient",
+        "deleteConfirm": "Are you sure you want to delete this ingredient? This action cannot be undone.",
+        "deleting": "Deleting..."
+      }
+    }
   }
 }

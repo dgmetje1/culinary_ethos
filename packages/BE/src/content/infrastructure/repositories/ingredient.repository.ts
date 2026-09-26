@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
-import { ulid } from 'ulidx';
-import { Ingredient, IngredientAttributes, IngredientContent } from '../../domain/models';
-import { IIngredientRepository } from '../../application/repositories/ingredient.repository';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository, In } from "typeorm";
+import { ulid } from "ulidx";
+import { Ingredient, IngredientAttributes, IngredientContent } from "../../domain/models";
+import { IIngredientRepository } from "../../application/repositories/ingredient.repository";
 
 @Injectable()
 export class IngredientRepository implements IIngredientRepository {

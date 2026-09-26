@@ -1,7 +1,13 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { RECIPE_REPOSITORY, IRecipeRepository } from '../../../content/application/repositories/recipe.repository';
-import { USER_REPOSITORY, IUserRepository } from '../../../social/application/repositories/i-user.repository';
-import { DashboardStatsDto } from '../dto/responses/dashboard-stats.dto';
+import { Injectable, Inject } from "@nestjs/common";
+import {
+  RECIPE_REPOSITORY,
+  IRecipeRepository,
+} from "../../../content/application/repositories/recipe.repository";
+import {
+  USER_REPOSITORY,
+  IUserRepository,
+} from "../../../social/application/repositories/i-user.repository";
+import { DashboardStatsDto } from "../dto/responses/dashboard-stats.dto";
 
 @Injectable()
 export class BackofficeService {
@@ -12,7 +18,7 @@ export class BackofficeService {
 
   async getDashboardStats(): Promise<DashboardStatsDto> {
     const [pendingRecipes, totalRecipes, totalUsers, newUsers] = await Promise.all([
-      this.recipeRepository.countByStatus('flagged'),
+      this.recipeRepository.countByStatus("flagged"),
       this.recipeRepository.countAll(),
       this.userRepository.countAll(),
       this.userRepository.countNewThisMonth(),

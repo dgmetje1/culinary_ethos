@@ -1,14 +1,9 @@
-import {
-  Injectable,
-  NestInterceptor,
-  ExecutionContext,
-  CallHandler,
-} from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from "@nestjs/common";
+import { Observable } from "rxjs";
 
-export const LANGUAGE_HEADER = 'accept-language';
+export const LANGUAGE_HEADER = "accept-language";
 
-const SUPPORTED_LANGUAGES = ['en', 'es', 'fr', 'ca'];
+const SUPPORTED_LANGUAGES = ["en", "es", "fr", "ca"];
 
 @Injectable()
 export class LanguageInterceptor implements NestInterceptor {
@@ -22,13 +17,13 @@ export class LanguageInterceptor implements NestInterceptor {
 
   private parseLanguage(header: string | undefined): string {
     if (!header) {
-      return 'en';
+      return "en";
     }
 
-    const firstLanguage = header.split(',')[0].trim();
+    const firstLanguage = header.split(",")[0].trim();
 
-    const isoCode = firstLanguage.split('-')[0].toLowerCase();
+    const isoCode = firstLanguage.split("-")[0].toLowerCase();
 
-    return SUPPORTED_LANGUAGES.includes(isoCode) ? isoCode : 'en';
+    return SUPPORTED_LANGUAGES.includes(isoCode) ? isoCode : "en";
   }
 }

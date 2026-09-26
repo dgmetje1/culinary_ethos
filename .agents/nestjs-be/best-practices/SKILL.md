@@ -61,12 +61,12 @@ module/
 
 ## Guards, Interceptors, Pipes, Filters
 
-| Concern | Mechanism |
-|---|---|
-| Auth / authorization | Guards |
-| Request transformation | Pipes (validation, transformation) |
+| Concern                 | Mechanism                                |
+| ----------------------- | ---------------------------------------- |
+| Auth / authorization    | Guards                                   |
+| Request transformation  | Pipes (validation, transformation)       |
 | Response transformation | Interceptors (logging, mapping, caching) |
-| Error handling | Exception filters |
+| Error handling          | Exception filters                        |
 
 - Guards execute before interceptors, pipes run after guards
 - Use pipes for input validation and transformation

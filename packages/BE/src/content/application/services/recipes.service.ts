@@ -1,33 +1,46 @@
-import { Injectable, Inject, ForbiddenException } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { EntityNotFoundError, InvalidParameterError } from '../../../common/exceptions';
+import { Injectable, Inject, ForbiddenException } from "@nestjs/common";
+import { EventEmitter2 } from "@nestjs/event-emitter";
+import { EntityNotFoundError, InvalidParameterError } from "../../../common/exceptions";
 import {
   CreateRecipeDto,
   RecipeResponseDto,
   RecipeListItemResponseDto,
   RecipeDailyResponseDto,
-} from '../dto';
-import { RecipeAttributes } from '../../domain/models/recipe.types';
-import { RECIPE_REPOSITORY, IRecipeRepository, CreateRecipeInput } from '../repositories/recipe.repository';
-import { CATEGORY_REPOSITORY, ICategoryRepository } from '../repositories/category.repository';
-import { INGREDIENT_REPOSITORY, IIngredientRepository } from '../repositories/ingredient.repository';
-import { KITCHENWARE_REPOSITORY, IKitchenwareRepository } from '../repositories/kitchenware.repository';
-import { UNIT_REPOSITORY, IUnitRepository } from '../repositories/unit.repository';
-import { LocalizationHelper } from '../../../common/utils/localization.util';
+} from "../dto";
+import { RecipeAttributes } from "../../domain/models/recipe.types";
+import {
+  RECIPE_REPOSITORY,
+  IRecipeRepository,
+  CreateRecipeInput,
+} from "../repositories/recipe.repository";
+import { CATEGORY_REPOSITORY, ICategoryRepository } from "../repositories/category.repository";
+import {
+  INGREDIENT_REPOSITORY,
+  IIngredientRepository,
+} from "../repositories/ingredient.repository";
+import {
+  KITCHENWARE_REPOSITORY,
+  IKitchenwareRepository,
+} from "../repositories/kitchenware.repository";
+import { UNIT_REPOSITORY, IUnitRepository } from "../repositories/unit.repository";
+import { LocalizationHelper } from "../../../common/utils/localization.util";
 import {
   CategoryAttributes,
   IngredientAttributes,
   KitchenwareAttributes,
-  UnitAttributes,
-} from '../../domain/models';
+} from "../../domain/models";
 
 @Injectable()
 export class RecipesService {
   constructor(
-    @Inject(RECIPE_REPOSITORY) private readonly recipeRepository: IRecipeRepository,
-    @Inject(CATEGORY_REPOSITORY) private readonly categoryRepository: ICategoryRepository,
-    @Inject(INGREDIENT_REPOSITORY) private readonly ingredientRepository: IIngredientRepository,
-    @Inject(KITCHENWARE_REPOSITORY) private readonly kitchenwareRepository: IKitchenwareRepository,
+    @Inject(RECIPE_REPOSITORY)
+    private readonly recipeRepository: IRecipeRepository,
+    @Inject(CATEGORY_REPOSITORY)
+    private readonly categoryRepository: ICategoryRepository,
+    @Inject(INGREDIENT_REPOSITORY)
+    private readonly ingredientRepository: IIngredientRepository,
+    @Inject(KITCHENWARE_REPOSITORY)
+    private readonly kitchenwareRepository: IKitchenwareRepository,
     @Inject(UNIT_REPOSITORY) private readonly unitRepository: IUnitRepository,
     private readonly eventEmitter: EventEmitter2,
   ) {}
@@ -35,10 +48,7 @@ export class RecipesService {
   private getPublicationTitle = LocalizationHelper.getPublicationTitle;
   private getPublicationDescription = LocalizationHelper.getPublicationDescription;
 
-  async getAll(
-    categoryId?: number,
-    language: string = 'en',
-  ): Promise<RecipeListItemResponseDto[]> {
+  async getAll(categoryId?: number, language: string = "en"): Promise<RecipeListItemResponseDto[]> {
     const recipes = await this.recipeRepository.findAll(categoryId);
 
     const categories = await this.categoryRepository.findAll();
@@ -46,10 +56,7 @@ export class RecipesService {
     return recipes.map((r) => this.mapToListItem(r, language, categories));
   }
 
-  async getByUser(
-    userId: string,
-    language: string = 'en',
-  ): Promise<RecipeListItemResponseDto[]> {
+  async getByUser(userId: string, language: string = "en"): Promise<RecipeListItemResponseDto[]> {
     const recipes = await this.recipeRepository.findByAuthor(userId);
 
     const categories = await this.categoryRepository.findAll();
@@ -66,23 +73,16 @@ export class RecipesService {
     return {
       id: r.id,
       title: this.getPublicationTitle(r.publications, language),
-      categories: r.categoryIds.reduce<{ id: string; name: string }[]>(
-        (acc, catId) => {
-          const cat = categories.find(
-            (c) =>
-              c.id === catId &&
-              c.content.some((content) => content.language === language),
-          );
-          if (cat) {
-            const content =
-              cat.content.find((c) => c.language === language) ||
-              cat.content[0];
-            acc.push({ id: cat.id, name: content?.name || '' });
-          }
-          return acc;
-        },
-        [],
-      ),
+      categories: r.categoryIds.reduce<{ id: string; name: string }[]>((acc, catId) => {
+        const cat = categories.find(
+          (c) => c.id === catId && c.content.some((content) => content.language === language),
+        );
+        if (cat) {
+          const content = cat.content.find((c) => c.language === language) || cat.content[0];
+          acc.push({ id: cat.id, name: content?.name || "" });
+        }
+        return acc;
+      }, []),
       time: r.time,
       author: r.author,
       thumbnailUrl: r.thumbnailUrl,
@@ -90,30 +90,25 @@ export class RecipesService {
     };
   }
 
-  async getAllAdmin(
-    status?: string,
-    language: string = 'en',
-  ): Promise<RecipeResponseDto[]> {
+  async getAllAdmin(status?: string, language: string = "en"): Promise<RecipeResponseDto[]> {
     const recipes = await this.recipeRepository.findAllAdmin(status);
-    return Promise.all(
-      recipes.map((r) => this.mapToFullResponse(r, language)),
-    );
+    return Promise.all(recipes.map((r) => this.mapToFullResponse(r, language)));
   }
 
   async approve(
     id: string,
-    reviewedBy: string = 'admin',
-    language: string = 'en',
+    reviewedBy: string = "admin",
+    language: string = "en",
   ): Promise<RecipeResponseDto> {
     const recipe = await this.recipeRepository.findById(id);
     if (!recipe) {
-      throw new EntityNotFoundError('Recipe not found', 'Recipe', [{ id }]);
+      throw new EntityNotFoundError("Recipe not found", "Recipe", [{ id }]);
     }
-    if (recipe.status !== 'flagged') {
-      throw new InvalidParameterError('Only flagged recipes can be approved', 'Recipe');
+    if (recipe.status !== "flagged") {
+      throw new InvalidParameterError("Only flagged recipes can be approved", "Recipe");
     }
     await this.recipeRepository.update(id, {
-      status: 'approved',
+      status: "approved",
       reviewedBy,
       reviewedAt: new Date(),
     });
@@ -123,18 +118,18 @@ export class RecipesService {
 
   async reject(
     id: string,
-    reviewedBy: string = 'admin',
-    language: string = 'en',
+    reviewedBy: string = "admin",
+    language: string = "en",
   ): Promise<RecipeResponseDto> {
     const recipe = await this.recipeRepository.findById(id);
     if (!recipe) {
-      throw new EntityNotFoundError('Recipe not found', 'Recipe', [{ id }]);
+      throw new EntityNotFoundError("Recipe not found", "Recipe", [{ id }]);
     }
-    if (recipe.status !== 'flagged') {
-      throw new InvalidParameterError('Only flagged recipes can be rejected', 'Recipe');
+    if (recipe.status !== "flagged") {
+      throw new InvalidParameterError("Only flagged recipes can be rejected", "Recipe");
     }
     await this.recipeRepository.update(id, {
-      status: 'banned',
+      status: "banned",
       reviewedBy,
       reviewedAt: new Date(),
     });
@@ -142,19 +137,16 @@ export class RecipesService {
     return this.mapToFullResponse(updated!, language);
   }
 
-  async flag(
-    id: string,
-    language: string = 'en',
-  ): Promise<RecipeResponseDto> {
+  async flag(id: string, language: string = "en"): Promise<RecipeResponseDto> {
     const recipe = await this.recipeRepository.findById(id);
     if (!recipe) {
-      throw new EntityNotFoundError('Recipe not found', 'Recipe', [{ id }]);
+      throw new EntityNotFoundError("Recipe not found", "Recipe", [{ id }]);
     }
-    if (recipe.status !== 'published') {
-      throw new InvalidParameterError('Only published recipes can be flagged', 'Recipe');
+    if (recipe.status !== "published") {
+      throw new InvalidParameterError("Only published recipes can be flagged", "Recipe");
     }
     await this.recipeRepository.update(id, {
-      status: 'flagged',
+      status: "flagged",
     });
     const updated = await this.recipeRepository.findById(id);
     return this.mapToFullResponse(updated!, language);
@@ -164,16 +156,12 @@ export class RecipesService {
     recipe: RecipeAttributes,
     language: string,
   ): Promise<RecipeResponseDto> {
-    const [categoryMap, ingredientMap, kitchenwareMap] =
-      await this.getRelatedEntitiesMaps(recipe);
+    const [categoryMap, ingredientMap, kitchenwareMap] = await this.getRelatedEntitiesMaps(recipe);
 
     return {
       id: recipe.id,
       title: this.getPublicationTitle(recipe.publications, language),
-      description: this.getPublicationDescription(
-        recipe.publications,
-        language,
-      ),
+      description: this.getPublicationDescription(recipe.publications, language),
       thumbnailUrl: recipe.thumbnailUrl,
       headerImg: recipe.headerImg,
       difficulty: recipe.difficulty,
@@ -183,16 +171,8 @@ export class RecipesService {
       author: recipe.author,
       publicationDate: recipe.publicationDate,
       categories: this.mapCategories(recipe.categoryIds, categoryMap, language),
-      ingredients: await this.mapIngredients(
-        recipe.ingredients,
-        ingredientMap,
-        language,
-      ),
-      kitchenware: this.mapKitchenware(
-        recipe.kitchenware,
-        kitchenwareMap,
-        language,
-      ),
+      ingredients: await this.mapIngredients(recipe.ingredients, ingredientMap, language),
+      kitchenware: this.mapKitchenware(recipe.kitchenware, kitchenwareMap, language),
       steps: this.mapSteps(recipe.steps, language),
       status: recipe.status,
       reviewedBy: recipe.reviewedBy,
@@ -200,13 +180,10 @@ export class RecipesService {
     };
   }
 
-  async getById(
-    id: string,
-    language: string = 'en',
-  ): Promise<RecipeResponseDto> {
+  async getById(id: string, language: string = "en"): Promise<RecipeResponseDto> {
     const recipe = await this.recipeRepository.findById(id);
     if (!recipe) {
-      throw new EntityNotFoundError('Recipe not found', 'Recipe', [{ id }]);
+      throw new EntityNotFoundError("Recipe not found", "Recipe", [{ id }]);
     }
     return this.mapToFullResponse(recipe, language);
   }
@@ -227,12 +204,8 @@ export class RecipesService {
 
     return [
       new Map<string, CategoryAttributes>(categories.map((c) => [c.id, c])),
-      new Map<string, IngredientAttributes>(
-        ingredientsData.map((i) => [i.id, i]),
-      ),
-      new Map<string, KitchenwareAttributes>(
-        kitchenwareData.map((k) => [k.id, k]),
-      ),
+      new Map<string, IngredientAttributes>(ingredientsData.map((i) => [i.id, i])),
+      new Map<string, KitchenwareAttributes>(kitchenwareData.map((k) => [k.id, k])),
     ] as const;
   }
 
@@ -246,7 +219,7 @@ export class RecipesService {
       .filter((cat): cat is CategoryAttributes => cat !== undefined)
       .map((cat) => ({
         id: cat.id,
-        name: this.getLocalizedContent(cat.content, 'name', language),
+        name: this.getLocalizedContent(cat.content, "name", language),
       }));
   }
 
@@ -265,12 +238,8 @@ export class RecipesService {
         const ing = ingredientMap.get(ri.id);
         return {
           id: ri.id,
-          name: this.getLocalizedContent(ing?.content, 'name', language),
-          singularName: this.getLocalizedContent(
-            ing?.content,
-            'singularName',
-            language,
-          ),
+          name: this.getLocalizedContent(ing?.content, "name", language),
+          singularName: this.getLocalizedContent(ing?.content, "singularName", language),
           quantity: ri.quantity,
           optional: ri.isOptional,
           unit: await this.getUnitResponse(ri.unitId, language),
@@ -288,12 +257,8 @@ export class RecipesService {
       const kw = kitchenwareMap.get(rk.id);
       return {
         id: rk.id,
-        name: this.getLocalizedContent(kw?.content, 'name', language),
-        singularName: this.getLocalizedContent(
-          kw?.content,
-          'singularName',
-          language,
-        ),
+        name: this.getLocalizedContent(kw?.content, "name", language),
+        singularName: this.getLocalizedContent(kw?.content, "singularName", language),
         quantity: rk.quantity,
       };
     });
@@ -309,10 +274,8 @@ export class RecipesService {
   ) {
     return steps.map((step, index) => ({
       id: String(index + 1),
-      title:
-        this.getLocalizedContent(step.content, 'title', language) ||
-        `Step ${index + 1}`,
-      body: this.getLocalizedContent(step.content, 'body', language),
+      title: this.getLocalizedContent(step.content, "title", language) || `Step ${index + 1}`,
+      body: this.getLocalizedContent(step.content, "body", language),
       number: step.number,
       imageUrl: step.imageUrl,
     }));
@@ -324,8 +287,8 @@ export class RecipesService {
     if (!u) return null;
     return {
       id: u.id,
-      name: this.getLocalizedContent(u.content, 'name', language),
-      shortName: this.getLocalizedContent(u.content, 'shortName', language),
+      name: this.getLocalizedContent(u.content, "name", language),
+      shortName: this.getLocalizedContent(u.content, "shortName", language),
     };
   }
 
@@ -334,11 +297,11 @@ export class RecipesService {
   async getDaily(): Promise<RecipeDailyResponseDto> {
     const recipe = await this.recipeRepository.findDaily();
     if (!recipe) {
-      throw new EntityNotFoundError('Daily recipe not found', 'Recipe');
+      throw new EntityNotFoundError("Daily recipe not found", "Recipe");
     }
     return {
       id: recipe.id,
-      title: this.getPublicationTitle(recipe.publications, 'en'),
+      title: this.getPublicationTitle(recipe.publications, "en"),
       thumbnailUrl: recipe.thumbnailUrl,
       time: recipe.time,
       author: recipe.author,
@@ -352,7 +315,7 @@ export class RecipesService {
 
   async create(dto: CreateRecipeDto, authorId: string, authorName?: string): Promise<string> {
     if (!dto.publications || dto.publications.length === 0) {
-      throw new InvalidParameterError('Publications are required', 'Recipe');
+      throw new InvalidParameterError("Publications are required", "Recipe");
     }
     const input: CreateRecipeInput = {
       difficulty: dto.difficulty || 0,
@@ -370,9 +333,9 @@ export class RecipesService {
     };
     const result = await this.recipeRepository.create(input);
 
-    this.eventEmitter.emit('recipe.created', {
+    this.eventEmitter.emit("recipe.created", {
       recipeId: result.id,
-      recipeTitle: this.getPublicationTitle(result.publications, 'en'),
+      recipeTitle: this.getPublicationTitle(result.publications, "en"),
       authorId,
       authorName,
     });
@@ -383,11 +346,11 @@ export class RecipesService {
   async update(id: string, dto: CreateRecipeDto, userId: string): Promise<string> {
     const recipe = await this.recipeRepository.findById(id);
     if (!recipe) {
-      throw new EntityNotFoundError('Recipe not found', 'Recipe', [{ id }]);
+      throw new EntityNotFoundError("Recipe not found", "Recipe", [{ id }]);
     }
 
-    if (recipe.status === 'banned') {
-      throw new ForbiddenException('Cannot edit a banned recipe');
+    if (recipe.status === "banned") {
+      throw new ForbiddenException("Cannot edit a banned recipe");
     }
 
     const input: Partial<CreateRecipeInput> = {
@@ -403,7 +366,8 @@ export class RecipesService {
       steps: dto.steps || [],
       thumbnailUrl: dto.thumbnailUrl,
       headerImg: dto.headerImg,
-      status: recipe.status === 'approved' || recipe.status === 'flagged' ? 'published' : recipe.status,
+      status:
+        recipe.status === "approved" || recipe.status === "flagged" ? "published" : recipe.status,
     };
 
     await this.recipeRepository.update(id, input);
@@ -413,7 +377,7 @@ export class RecipesService {
   async delete(id: string): Promise<void> {
     const recipe = await this.recipeRepository.findById(id);
     if (!recipe) {
-      throw new EntityNotFoundError('Recipe not found', 'Recipe', [{ id }]);
+      throw new EntityNotFoundError("Recipe not found", "Recipe", [{ id }]);
     }
     await this.recipeRepository.delete(id);
   }
@@ -429,18 +393,15 @@ export class RecipesService {
   ): Promise<void> {
     const recipe = await this.recipeRepository.findById(id);
     if (!recipe) {
-      throw new EntityNotFoundError('Recipe not found', 'Recipe', [{ id }]);
+      throw new EntityNotFoundError("Recipe not found", "Recipe", [{ id }]);
     }
     await this.recipeRepository.addIngredients(id, ingredients);
   }
 
-  async addKitchenware(
-    id: string,
-    kitchenware: { id: string; quantity: number }[],
-  ): Promise<void> {
+  async addKitchenware(id: string, kitchenware: { id: string; quantity: number }[]): Promise<void> {
     const recipe = await this.recipeRepository.findById(id);
     if (!recipe) {
-      throw new EntityNotFoundError('Recipe not found', 'Recipe', [{ id }]);
+      throw new EntityNotFoundError("Recipe not found", "Recipe", [{ id }]);
     }
     await this.recipeRepository.addKitchenware(id, kitchenware);
   }
@@ -454,7 +415,7 @@ export class RecipesService {
   ): Promise<void> {
     const recipe = await this.recipeRepository.findById(id);
     if (!recipe) {
-      throw new EntityNotFoundError('Recipe not found', 'Recipe', [{ id }]);
+      throw new EntityNotFoundError("Recipe not found", "Recipe", [{ id }]);
     }
     await this.recipeRepository.addSteps(id, steps);
   }

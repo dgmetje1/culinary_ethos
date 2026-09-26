@@ -1,6 +1,19 @@
-import { useMemo, useState, useCallback, useEffect, useRef } from "react";
+import { useMemo, useState, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Plus, ChevronLeft, ChevronRight, ShoppingBag, UtensilsCrossed, Bookmark, Copy, Share2, Check, X, CalendarDays, GripVertical } from "lucide-react";
+import {
+  Plus,
+  ChevronLeft,
+  ChevronRight,
+  ShoppingBag,
+  UtensilsCrossed,
+  Bookmark,
+  Copy,
+  Share2,
+  Check,
+  X,
+  CalendarDays,
+  GripVertical,
+} from "lucide-react";
 import { useQueries } from "@tanstack/react-query";
 import { format } from "date-fns";
 
@@ -63,16 +76,21 @@ interface AddMealDialogProps {
   usedRecipeIds?: Set<string>;
 }
 
-const AddMealDialog = ({ open, recipes, onSelect, onClose, defaultMealType, usedRecipeIds }: AddMealDialogProps) => {
+const AddMealDialog = ({
+  open,
+  recipes,
+  onSelect,
+  onClose,
+  defaultMealType,
+  usedRecipeIds,
+}: AddMealDialogProps) => {
   const [selectedMeal, setSelectedMeal] = useState(defaultMealType || MEAL_TYPES[0].key);
   const [search, setSearch] = useState("");
 
   const filtered = useMemo(
     () =>
       recipes.filter(
-        (r) =>
-          r.title.toLowerCase().includes(search.toLowerCase()) &&
-          !usedRecipeIds?.has(r.id),
+        (r) => r.title.toLowerCase().includes(search.toLowerCase()) && !usedRecipeIds?.has(r.id),
       ),
     [recipes, search, usedRecipeIds],
   );
@@ -87,7 +105,10 @@ const AddMealDialog = ({ open, recipes, onSelect, onClose, defaultMealType, used
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+      onClick={onClose}
+    >
       <div
         className="bg-white rounded-2xl shadow-xl border border-stone-200 w-full max-w-lg max-h-[80vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
@@ -129,7 +150,11 @@ const AddMealDialog = ({ open, recipes, onSelect, onClose, defaultMealType, used
               >
                 <div className="w-14 h-14 rounded-lg overflow-hidden bg-stone-100 flex-shrink-0">
                   {recipe.thumbnailUrl ? (
-                    <img src={composeCdnUrl(config.cdnUrl, recipe.thumbnailUrl)} alt="" className="w-full h-full object-cover" />
+                    <img
+                      src={composeCdnUrl(config.cdnUrl, recipe.thumbnailUrl)}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-stone-300">
                       <UtensilsCrossed className="w-5 h-5" />
@@ -140,7 +165,8 @@ const AddMealDialog = ({ open, recipes, onSelect, onClose, defaultMealType, used
                   <p className="text-sm font-medium text-stone-900 truncate">{recipe.title}</p>
                   <p className="text-xs text-stone-400 mt-0.5">
                     {recipe.time} min
-                    {recipe.categories?.length > 0 && ` • ${recipe.categories.map((c) => c.name).join(", ")}`}
+                    {recipe.categories?.length > 0 &&
+                      ` • ${recipe.categories.map((c) => c.name).join(", ")}`}
                   </p>
                 </div>
               </button>
@@ -160,17 +186,33 @@ interface MealSlotProps {
   mealType: string;
   mealTypeKey: string;
   day: number;
-  onDropRecipe?: (recipeId: string, recipeTitle: string, recipeImageUrl: string | undefined, mealType: string, day: number, portions?: number) => void;
+  onDropRecipe?: (
+    recipeId: string,
+    recipeTitle: string,
+    recipeImageUrl: string | undefined,
+    mealType: string,
+    day: number,
+    portions?: number,
+  ) => void;
 }
 
-const MealSlot = ({ entries, onAdd, onRemove, onEditPortions, mealType, mealTypeKey, day, onDropRecipe }: MealSlotProps) => {
+const MealSlot = ({
+  entries,
+  onAdd,
+  onRemove,
+  onEditPortions,
+  mealType,
+  mealTypeKey,
+  day,
+  onDropRecipe,
+}: MealSlotProps) => {
   const hasEntries = entries.length > 0;
   const [isDragOver, setIsDragOver] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
-    e.dataTransfer.dropEffect = 'copy';
+    e.dataTransfer.dropEffect = "copy";
     setIsDragOver(true);
   };
 
@@ -182,7 +224,7 @@ const MealSlot = ({ entries, onAdd, onRemove, onEditPortions, mealType, mealType
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragOver(false);
-    const recipeData = e.dataTransfer.getData('application/x-recipe');
+    const recipeData = e.dataTransfer.getData("application/x-recipe");
     if (recipeData && onDropRecipe) {
       const recipe = JSON.parse(recipeData);
       onDropRecipe(recipe.id, recipe.title, recipe.imageUrl, mealTypeKey, day, recipe.portions);
@@ -191,7 +233,7 @@ const MealSlot = ({ entries, onAdd, onRemove, onEditPortions, mealType, mealType
 
   return (
     <div
-      className={`rounded-xl min-h-[72px] transition-colors ${isDragOver ? 'bg-stone-100/80 ring-2 ring-stone-400 ring-dashed' : ''}`}
+      className={`rounded-xl min-h-[72px] transition-colors ${isDragOver ? "bg-stone-100/80 ring-2 ring-stone-400 ring-dashed" : ""}`}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
@@ -213,7 +255,7 @@ const MealSlot = ({ entries, onAdd, onRemove, onEditPortions, mealType, mealType
             key={entry.id}
             className="relative bg-white border border-stone-200 rounded-md shadow-sm px-4 py-3 group hover:shadow-md hover:border-stone-300 transition-all"
             style={{
-              marginBottom: index < entries.length - 1 ? '-0.375rem' : '0',
+              marginBottom: index < entries.length - 1 ? "-0.375rem" : "0",
               zIndex: hoveredIndex === index ? 9999 : entries.length - index,
             }}
             onMouseEnter={() => setHoveredIndex(index)}
@@ -279,7 +321,7 @@ function aggregateIngredients(entries: MealPlanEntry[], recipes: Recipe[]): Aggr
     const scale = port / recipePortions;
 
     for (const ing of recipe.ingredients) {
-      const compoundKey = `${ing.id}-${ing.unit?.name || 'unit'}`;
+      const compoundKey = `${ing.id}-${ing.unit?.name || "unit"}`;
       const existing = map.get(compoundKey);
       const scaledQty = Math.round(ing.quantity * scale * 100) / 100;
 
@@ -295,7 +337,7 @@ function aggregateIngredients(entries: MealPlanEntry[], recipes: Recipe[]): Aggr
           name: ing.name,
           singularName: ing.singularName,
           quantity: scaledQty,
-          unit: ing.unit?.name || '',
+          unit: ing.unit?.name || "",
           recipes: [recipe.title],
         });
       }
@@ -305,8 +347,15 @@ function aggregateIngredients(entries: MealPlanEntry[], recipes: Recipe[]): Aggr
 }
 
 const FRACTIONS: [number, string][] = [
-  [1/8, '⅛'], [1/4, '¼'], [1/3, '⅓'], [3/8, '⅜'],
-  [1/2, '½'], [5/8, '⅝'], [2/3, '⅔'], [3/4, '¾'], [7/8, '⅞'],
+  [1 / 8, "⅛"],
+  [1 / 4, "¼"],
+  [1 / 3, "⅓"],
+  [3 / 8, "⅜"],
+  [1 / 2, "½"],
+  [5 / 8, "⅝"],
+  [2 / 3, "⅔"],
+  [3 / 4, "¾"],
+  [7 / 8, "⅞"],
 ];
 
 function toFraction(value: number): string {
@@ -339,7 +388,14 @@ interface ShoppingListDialogProps {
   loading: boolean;
 }
 
-const ShoppingListDialog = ({ open, onClose, entries, weekLabel, ingredients, recipes, loading }: ShoppingListDialogProps) => {
+const ShoppingListDialog = ({
+  open,
+  onClose,
+  weekLabel,
+  ingredients,
+  recipes,
+  loading,
+}: ShoppingListDialogProps) => {
   const [checked, setChecked] = useState<Set<string>>(new Set());
   const [copied, setCopied] = useState(false);
 
@@ -360,13 +416,13 @@ const ShoppingListDialog = ({ open, onClose, entries, weekLabel, ingredients, re
   const checkAll = () => setChecked(new Set(ingredients.map((i) => i.compoundKey)));
 
   const buildText = useCallback(() => {
-    const lines = [`Shopping List — ${weekLabel}`, ''];
+    const lines = [`Shopping List — ${weekLabel}`, ""];
     for (const ing of ingredients) {
-      const done = checked.has(ing.compoundKey) ? '[✓]' : '[ ]';
+      const done = checked.has(ing.compoundKey) ? "[✓]" : "[ ]";
       const qty = formatQuantity(ing.quantity, ing.name, ing.singularName);
-      lines.push(`${done} ${qty}${ing.unit ? ` ${ing.unit}` : ''}`);
+      lines.push(`${done} ${qty}${ing.unit ? ` ${ing.unit}` : ""}`);
     }
-    return lines.join('\n');
+    return lines.join("\n");
   }, [ingredients, checked, weekLabel]);
 
   const handleCopy = async () => {
@@ -396,7 +452,10 @@ const ShoppingListDialog = ({ open, onClose, entries, weekLabel, ingredients, re
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/30 backdrop-blur-sm pt-4 sm:pt-16 overflow-y-auto" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-start justify-center bg-black/30 backdrop-blur-sm pt-4 sm:pt-16 overflow-y-auto"
+      onClick={onClose}
+    >
       <div
         className="bg-white rounded-2xl shadow-xl border border-stone-200 w-full max-w-lg max-h-[85vh] flex flex-col mx-4"
         onClick={(e) => e.stopPropagation()}
@@ -408,7 +467,9 @@ const ShoppingListDialog = ({ open, onClose, entries, weekLabel, ingredients, re
               <ShoppingBag className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h2 className="text-base font-semibold text-stone-900 leading-tight">Shopping List</h2>
+              <h2 className="text-base font-semibold text-stone-900 leading-tight">
+                Shopping List
+              </h2>
               <p className="text-xs text-stone-400 leading-tight">{weekLabel}</p>
             </div>
           </div>
@@ -418,7 +479,11 @@ const ShoppingListDialog = ({ open, onClose, entries, weekLabel, ingredients, re
               className="p-2 rounded-lg hover:bg-stone-100 transition-colors text-stone-400 hover:text-stone-600 relative"
               title="Copy to clipboard"
             >
-              {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+              {copied ? (
+                <Check className="w-4 h-4 text-emerald-500" />
+              ) : (
+                <Copy className="w-4 h-4" />
+              )}
             </button>
             <button
               onClick={handleShare}
@@ -439,10 +504,15 @@ const ShoppingListDialog = ({ open, onClose, entries, weekLabel, ingredients, re
         {/* Recipes list */}
         {recipes.length > 0 && (
           <div className="px-6 py-3 border-b border-stone-50 shrink-0">
-            <p className="text-[11px] font-medium text-stone-400 uppercase tracking-wider mb-2">From</p>
+            <p className="text-[11px] font-medium text-stone-400 uppercase tracking-wider mb-2">
+              From
+            </p>
             <div className="flex flex-wrap gap-1.5">
               {recipes.map((r) => (
-                <span key={r.id} className="text-[11px] bg-stone-100 text-stone-600 px-2.5 py-1 rounded-md font-medium">
+                <span
+                  key={r.id}
+                  className="text-[11px] bg-stone-100 text-stone-600 px-2.5 py-1 rounded-md font-medium"
+                >
                   {r.title}
                 </span>
               ))}
@@ -508,25 +578,25 @@ const ShoppingListDialog = ({ open, onClose, entries, weekLabel, ingredients, re
                   <label
                     key={ing.compoundKey}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl cursor-pointer transition-all select-none group ${
-                      isChecked ? 'bg-stone-50' : 'hover:bg-stone-50 active:bg-stone-100'
+                      isChecked ? "bg-stone-50" : "hover:bg-stone-50 active:bg-stone-100"
                     }`}
                   >
                     <div
                       className={`w-5 h-5 rounded-md border-2 flex items-center justify-center shrink-0 transition-all ${
                         isChecked
-                          ? 'bg-stone-900 border-stone-900'
-                          : 'border-stone-300 group-hover:border-stone-400'
+                          ? "bg-stone-900 border-stone-900"
+                          : "border-stone-300 group-hover:border-stone-400"
                       }`}
                     >
                       {isChecked && <Check className="w-3 h-3 text-white" />}
                     </div>
                     <span
                       className={`text-sm flex-1 transition-all ${
-                        isChecked ? 'text-stone-400 line-through' : 'text-stone-800'
+                        isChecked ? "text-stone-400 line-through" : "text-stone-800"
                       }`}
                     >
                       {formatQuantity(ing.quantity, ing.name, ing.singularName)}
-                      {ing.unit ? ` ${ing.unit}` : ''}
+                      {ing.unit ? ` ${ing.unit}` : ""}
                     </span>
                     {ing.recipes.length > 1 && (
                       <span className="text-[10px] text-stone-400 shrink-0 bg-stone-100 px-1.5 py-0.5 rounded font-medium">
@@ -548,7 +618,9 @@ const ShoppingListDialog = ({ open, onClose, entries, weekLabel, ingredients, re
 
         {/* Footer */}
         <div className="px-6 py-4 border-t border-stone-100 shrink-0 flex items-center justify-between">
-          <span className="text-xs text-stone-400">{ingredients.length} ingredient{ingredients.length !== 1 ? 's' : ''}</span>
+          <span className="text-xs text-stone-400">
+            {ingredients.length} ingredient{ingredients.length !== 1 ? "s" : ""}
+          </span>
           <div className="flex gap-2">
             <Button
               variant="outline"
@@ -557,7 +629,7 @@ const ShoppingListDialog = ({ open, onClose, entries, weekLabel, ingredients, re
               className="rounded-lg text-xs h-8 border-stone-200 text-stone-600"
             >
               <Copy className="w-3.5 h-3.5 mr-1.5" />
-              {copied ? 'Copied!' : 'Copy'}
+              {copied ? "Copied!" : "Copy"}
             </Button>
             <Button
               size="sm"
@@ -591,7 +663,10 @@ const PortionsDialog = ({ entry, onSave, onClose }: PortionsDialogProps) => {
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+      onClick={onClose}
+    >
       <div
         className="bg-white rounded-2xl shadow-xl border border-stone-200 w-full max-w-xs p-6"
         onClick={(e) => e.stopPropagation()}
@@ -629,7 +704,10 @@ const PortionsDialog = ({ entry, onSave, onClose }: PortionsDialogProps) => {
           <Button
             size="sm"
             className="flex-1 rounded-xl text-xs bg-stone-900 text-white hover:bg-stone-800"
-            onClick={() => { onSave(entry.id, portions); onClose(); }}
+            onClick={() => {
+              onSave(entry.id, portions);
+              onClose();
+            }}
           >
             Save
           </Button>
@@ -641,11 +719,20 @@ const PortionsDialog = ({ entry, onSave, onClose }: PortionsDialogProps) => {
 
 type CopyDayFn = (source: number, targetDateStr: string) => void;
 
-const CopyDayButton = ({ dayIndex, hasEntries, onCopy }: { dayIndex: number; hasEntries: boolean; onCopy: CopyDayFn }) => {
+const CopyDayButton = ({
+  dayIndex,
+  hasEntries,
+  onCopy,
+}: {
+  dayIndex: number;
+  hasEntries: boolean;
+  onCopy: CopyDayFn;
+}) => {
   const [open, setOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
 
-  const sourceLabel = DAYS_OF_WEEK[dayIndex].charAt(0).toUpperCase() + DAYS_OF_WEEK[dayIndex].slice(1);
+  const sourceLabel =
+    DAYS_OF_WEEK[dayIndex].charAt(0).toUpperCase() + DAYS_OF_WEEK[dayIndex].slice(1);
 
   const handleCopy = () => {
     if (selectedDate) {
@@ -656,11 +743,19 @@ const CopyDayButton = ({ dayIndex, hasEntries, onCopy }: { dayIndex: number; has
   };
 
   return (
-    <Popover open={open} onOpenChange={(o) => { setOpen(o); if (!o) setSelectedDate(undefined); }}>
+    <Popover
+      open={open}
+      onOpenChange={(o) => {
+        setOpen(o);
+        if (!o) setSelectedDate(undefined);
+      }}
+    >
       <PopoverTrigger asChild>
         <button
           className={`p-1 rounded transition-colors ${
-            hasEntries ? 'text-stone-400 hover:text-stone-600 hover:bg-stone-100' : 'text-stone-200 cursor-not-allowed'
+            hasEntries
+              ? "text-stone-400 hover:text-stone-600 hover:bg-stone-100"
+              : "text-stone-200 cursor-not-allowed"
           }`}
           disabled={!hasEntries}
           title="Copy this day to a date"
@@ -672,12 +767,7 @@ const CopyDayButton = ({ dayIndex, hasEntries, onCopy }: { dayIndex: number; has
         <p className="text-xs font-semibold text-stone-500 mb-2 uppercase tracking-widest">
           Copy {sourceLabel} to...
         </p>
-        <Calendar
-          mode="single"
-          selected={selectedDate}
-          onSelect={setSelectedDate}
-          initialFocus
-        />
+        <Calendar mode="single" selected={selectedDate} onSelect={setSelectedDate} initialFocus />
         <Button
           size="sm"
           disabled={!selectedDate}
@@ -728,7 +818,10 @@ const PlansPage = () => {
     [recipeResults],
   );
 
-  const ingredients = useMemo(() => aggregateIngredients(mealPlan?.entries || [], fetchedRecipes), [mealPlan?.entries, fetchedRecipes]);
+  const ingredients = useMemo(
+    () => aggregateIngredients(mealPlan?.entries || [], fetchedRecipes),
+    [mealPlan?.entries, fetchedRecipes],
+  );
   const totalIngredients = ingredients.length;
   const ingredientsLoading = recipeResults.some((r) => r.isLoading);
 
@@ -750,96 +843,135 @@ const PlansPage = () => {
     [entriesByDay],
   );
 
-  const handleCopyDay = useCallback(async (sourceDay: number, targetDateStr: string) => {
-    const sourceEntries = entriesByDay[sourceDay] || [];
-    if (sourceEntries.length === 0) {
-      toast.warning(t("plans.toast.nothingToCopy"), { description: t("plans.toast.nothingToCopyDayDesc") });
-      return;
-    }
+  const handleCopyDay = useCallback(
+    async (sourceDay: number, targetDateStr: string) => {
+      const sourceEntries = entriesByDay[sourceDay] || [];
+      if (sourceEntries.length === 0) {
+        toast.warning(t("plans.toast.nothingToCopy"), {
+          description: t("plans.toast.nothingToCopyDayDesc"),
+        });
+        return;
+      }
 
-    const targetDate = new Date(targetDateStr + "T00:00:00");
-    const targetDay = (targetDate.getDay() + 6) % 7;
-    const targetMonday = getMondayOfWeek(targetDate);
-    const targetWeekStart = formatDate(targetMonday);
-    const targetLabel = DAYS_OF_WEEK[targetDay].charAt(0).toUpperCase() + DAYS_OF_WEEK[targetDay].slice(1);
+      const targetDate = new Date(targetDateStr + "T00:00:00");
+      const targetDay = (targetDate.getDay() + 6) % 7;
+      const targetMonday = getMondayOfWeek(targetDate);
+      const targetWeekStart = formatDate(targetMonday);
+      const targetLabel =
+        DAYS_OF_WEEK[targetDay].charAt(0).toUpperCase() + DAYS_OF_WEEK[targetDay].slice(1);
 
-    const newEntries = sourceEntries.map((e) => ({
-      ...e,
-      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      day: targetDay,
-    }));
+      const newEntries = sourceEntries.map((e) => ({
+        ...e,
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        day: targetDay,
+      }));
 
-    if (targetWeekStart === weekStart) {
+      if (targetWeekStart === weekStart) {
+        const currentEntries = mealPlan?.entries || [];
+        const existingKeys = new Set(
+          currentEntries
+            .filter((e) => e.day === targetDay)
+            .map((e) => `${e.mealType}-${e.recipeId}`),
+        );
+        const filtered = newEntries.filter((e) => !existingKeys.has(`${e.mealType}-${e.recipeId}`));
+
+        if (filtered.length === 0) {
+          toast.warning(t("plans.toast.alreadyPlanned"), {
+            description: t("plans.toast.alreadyPlannedTargetDesc"),
+          });
+          return;
+        }
+
+        const updated = [...currentEntries, ...filtered];
+        if (mealPlan?.id) {
+          await updatePlan({ id: mealPlan.id, data: { entries: updated } });
+        } else {
+          await createPlan({ weekStart, entries: updated });
+        }
+        toast.success(t("plans.toast.dayCopied"), {
+          description: t("plans.toast.dayCopiedDesc", { targetLabel }),
+        });
+      } else {
+        const targetPlan = await getMealPlanByWeek(targetWeekStart);
+        const existingKeys = new Set(
+          (targetPlan?.entries || [])
+            .filter((e) => e.day === targetDay)
+            .map((e) => `${e.mealType}-${e.recipeId}`),
+        );
+        const filtered = newEntries.filter((e) => !existingKeys.has(`${e.mealType}-${e.recipeId}`));
+
+        if (filtered.length === 0) {
+          toast.warning(t("plans.toast.alreadyPlanned"), {
+            description: t("plans.toast.alreadyPlannedTargetDesc"),
+          });
+          return;
+        }
+
+        if (targetPlan && targetPlan.id) {
+          await updatePlan({
+            id: targetPlan.id,
+            data: { entries: [...targetPlan.entries, ...filtered] },
+          });
+        } else {
+          await createPlan({ weekStart: targetWeekStart, entries: filtered });
+        }
+        toast.success(t("plans.toast.dayCopied"), {
+          description: t("plans.toast.dayCopiedDescWithDate", {
+            targetLabel,
+            targetDateStr,
+          }),
+        });
+      }
+    },
+    [entriesByDay, mealPlan, updatePlan, createPlan, weekStart, refetchPlan, t],
+  );
+
+  const handleCopyWeek = useCallback(
+    async (targetDateStr: string) => {
       const currentEntries = mealPlan?.entries || [];
-      const existingKeys = new Set(
-        currentEntries.filter((e) => e.day === targetDay).map((e) => `${e.mealType}-${e.recipeId}`),
-      );
-      const filtered = newEntries.filter((e) => !existingKeys.has(`${e.mealType}-${e.recipeId}`));
-
-      if (filtered.length === 0) {
-        toast.warning(t("plans.toast.alreadyPlanned"), { description: t("plans.toast.alreadyPlannedTargetDesc") });
+      if (currentEntries.length === 0) {
+        toast.warning(t("plans.toast.nothingToCopy"), {
+          description: t("plans.toast.nothingToCopyWeekDesc"),
+        });
         return;
       }
 
-      const updated = [...currentEntries, ...filtered];
-      if (mealPlan?.id) {
-        await updatePlan({ id: mealPlan.id, data: { entries: updated } });
-      } else {
-        await createPlan({ weekStart, entries: updated });
+      const targetMonday = getMondayOfWeek(new Date(targetDateStr + "T00:00:00"));
+      const targetWeekStart = formatDate(targetMonday);
+
+      if (targetWeekStart === weekStart) {
+        toast.warning(t("plans.toast.sameWeek"), {
+          description: t("plans.toast.sameWeekDesc"),
+        });
+        return;
       }
-      toast.success(t("plans.toast.dayCopied"), { description: t("plans.toast.dayCopiedDesc", { targetLabel }) });
-    } else {
+
+      const newEntries = currentEntries.map((e) => ({
+        ...e,
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      }));
+
       const targetPlan = await getMealPlanByWeek(targetWeekStart);
-      const existingKeys = new Set(
-        (targetPlan?.entries || []).filter((e) => e.day === targetDay).map((e) => `${e.mealType}-${e.recipeId}`),
-      );
-      const filtered = newEntries.filter((e) => !existingKeys.has(`${e.mealType}-${e.recipeId}`));
-
-      if (filtered.length === 0) {
-        toast.warning(t("plans.toast.alreadyPlanned"), { description: t("plans.toast.alreadyPlannedTargetDesc") });
-        return;
-      }
-
       if (targetPlan && targetPlan.id) {
-        await updatePlan({ id: targetPlan.id, data: { entries: [...targetPlan.entries, ...filtered] } });
+        const existingKeys = new Set(
+          targetPlan.entries.map((e) => `${e.day}-${e.mealType}-${e.recipeId}`),
+        );
+        const toAdd = newEntries.filter(
+          (e) => !existingKeys.has(`${e.day}-${e.mealType}-${e.recipeId}`),
+        );
+        const merged = [...targetPlan.entries, ...toAdd];
+        await updatePlan({ id: targetPlan.id, data: { entries: merged } });
       } else {
-        await createPlan({ weekStart: targetWeekStart, entries: filtered });
+        await createPlan({ weekStart: targetWeekStart, entries: newEntries });
       }
-      toast.success(t("plans.toast.dayCopied"), { description: t("plans.toast.dayCopiedDescWithDate", { targetLabel, targetDateStr }) });
-    }
-  }, [entriesByDay, mealPlan, updatePlan, createPlan, weekStart, refetchPlan, t]);
-
-  const handleCopyWeek = useCallback(async (targetDateStr: string) => {
-    const currentEntries = mealPlan?.entries || [];
-    if (currentEntries.length === 0) {
-      toast.warning(t("plans.toast.nothingToCopy"), { description: t("plans.toast.nothingToCopyWeekDesc") });
-      return;
-    }
-
-    const targetMonday = getMondayOfWeek(new Date(targetDateStr + "T00:00:00"));
-    const targetWeekStart = formatDate(targetMonday);
-
-    if (targetWeekStart === weekStart) {
-      toast.warning(t("plans.toast.sameWeek"), { description: t("plans.toast.sameWeekDesc") });
-      return;
-    }
-
-    const newEntries = currentEntries.map((e) => ({
-      ...e,
-      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-    }));
-
-    const targetPlan = await getMealPlanByWeek(targetWeekStart);
-    if (targetPlan && targetPlan.id) {
-      const existingKeys = new Set(targetPlan.entries.map((e) => `${e.day}-${e.mealType}-${e.recipeId}`));
-      const toAdd = newEntries.filter((e) => !existingKeys.has(`${e.day}-${e.mealType}-${e.recipeId}`));
-      const merged = [...targetPlan.entries, ...toAdd];
-      await updatePlan({ id: targetPlan.id, data: { entries: merged } });
-    } else {
-      await createPlan({ weekStart: targetWeekStart, entries: newEntries });
-    }
-    toast.success(t("plans.toast.weekCopied"), { description: t("plans.toast.weekCopiedDesc", { weekRange: formatWeekRange(targetMonday) }) });
-  }, [mealPlan, weekStart, updatePlan, createPlan, t]);
+      toast.success(t("plans.toast.weekCopied"), {
+        description: t("plans.toast.weekCopiedDesc", {
+          weekRange: formatWeekRange(targetMonday),
+        }),
+      });
+    },
+    [mealPlan, weekStart, updatePlan, createPlan, t],
+  );
 
   const goPreviousWeek = () => {
     const prev = new Date(currentMonday);
@@ -853,38 +985,59 @@ const PlansPage = () => {
     setCurrentMonday(next);
   };
 
-  const handleDropRecipe = useCallback(async (recipeId: string, recipeTitle: string, recipeImageUrl: string | undefined, mealType: string, day: number, portions?: number) => {
-    const currentEntries = mealPlan?.entries || [];
+  const handleDropRecipe = useCallback(
+    async (
+      recipeId: string,
+      recipeTitle: string,
+      recipeImageUrl: string | undefined,
+      mealType: string,
+      day: number,
+      portions?: number,
+    ) => {
+      const currentEntries = mealPlan?.entries || [];
 
-    if (currentEntries.some((e) => e.day === day && e.mealType === mealType && e.recipeId === recipeId)) {
-      toast.warning(t("plans.toast.alreadyPlanned"), { description: t("plans.toast.alreadyPlannedSlotDesc", { recipeTitle }) });
-      return;
-    }
+      if (
+        currentEntries.some(
+          (e) => e.day === day && e.mealType === mealType && e.recipeId === recipeId,
+        )
+      ) {
+        toast.warning(t("plans.toast.alreadyPlanned"), {
+          description: t("plans.toast.alreadyPlannedSlotDesc", { recipeTitle }),
+        });
+        return;
+      }
 
-    const newEntry: MealPlanEntry = {
-      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
-      day,
-      mealType,
-      recipeId,
-      recipeTitle,
-      recipeImageUrl,
-      portions: portions ?? 4,
-    };
+      const newEntry: MealPlanEntry = {
+        id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        day,
+        mealType,
+        recipeId,
+        recipeTitle,
+        recipeImageUrl,
+        portions: portions ?? 4,
+      };
 
-    if (mealPlan?.id) {
-      await updatePlan({
-        id: mealPlan.id,
-        data: { entries: [...currentEntries, newEntry] },
+      if (mealPlan?.id) {
+        await updatePlan({
+          id: mealPlan.id,
+          data: { entries: [...currentEntries, newEntry] },
+        });
+      } else {
+        await createPlan({
+          weekStart,
+          entries: [newEntry],
+        });
+      }
+
+      toast.success(t("plans.toast.recipeAdded"), {
+        description: t("plans.toast.recipeAddedDesc", {
+          recipeTitle,
+          mealType: t(`plans.mealTypes.${mealType}`, mealType),
+        }),
       });
-    } else {
-      await createPlan({
-        weekStart,
-        entries: [newEntry],
-      });
-    }
-
-    toast.success(t("plans.toast.recipeAdded"), { description: t("plans.toast.recipeAddedDesc", { recipeTitle, mealType: t(`plans.mealTypes.${mealType}`, mealType) }) });
-  }, [mealPlan, updatePlan, createPlan, weekStart, t]);
+    },
+    [mealPlan, updatePlan, createPlan, weekStart, t],
+  );
 
   const handleAddMeal = (day: number, mealType: string) => {
     setAddingToDay(day);
@@ -896,18 +1049,25 @@ const PlansPage = () => {
     setEditingPortionsEntry(entry);
   }, []);
 
-  const handleSavePortions = useCallback(async (entryId: string, portions: number) => {
-    if (!mealPlan?.id) return;
-    const updated = (mealPlan.entries || []).map((e) =>
-      e.id === entryId ? { ...e, portions } : e,
-    );
-    await updatePlan({ id: mealPlan.id, data: { entries: updated } });
-  }, [mealPlan, updatePlan, refetchPlan]);
+  const handleSavePortions = useCallback(
+    async (entryId: string, portions: number) => {
+      if (!mealPlan?.id) return;
+      const updated = (mealPlan.entries || []).map((e) =>
+        e.id === entryId ? { ...e, portions } : e,
+      );
+      await updatePlan({ id: mealPlan.id, data: { entries: updated } });
+    },
+    [mealPlan, updatePlan, refetchPlan],
+  );
 
   const handleSelectRecipe = async (recipe: RecipeListItem, mealType: string) => {
     const currentEntries = mealPlan?.entries || [];
 
-    if (currentEntries.some((e) => e.day === addingToDay && e.mealType === mealType && e.recipeId === recipe.id)) {
+    if (
+      currentEntries.some(
+        (e) => e.day === addingToDay && e.mealType === mealType && e.recipeId === recipe.id,
+      )
+    ) {
       return;
     }
 
@@ -965,13 +1125,16 @@ const PlansPage = () => {
                   className="group cursor-grab active:cursor-grabbing"
                   draggable
                   onDragStart={(e) => {
-                    e.dataTransfer.setData('application/x-recipe', JSON.stringify({
-                      id: recipe.id,
-                      title: recipe.title,
-                      imageUrl: recipe.thumbnailUrl || undefined,
-                      portions: recipe.portions || 4,
-                    }));
-                    e.dataTransfer.effectAllowed = 'copy';
+                    e.dataTransfer.setData(
+                      "application/x-recipe",
+                      JSON.stringify({
+                        id: recipe.id,
+                        title: recipe.title,
+                        imageUrl: recipe.thumbnailUrl || undefined,
+                        portions: recipe.portions || 4,
+                      }),
+                    );
+                    e.dataTransfer.effectAllowed = "copy";
                   }}
                 >
                   <div className="relative mb-3 overflow-hidden rounded-xl">
@@ -1019,7 +1182,11 @@ const PlansPage = () => {
                 </h1>
               </div>
               <div className="flex items-center gap-2 self-end">
-                <Popover onOpenChange={(open) => { if (open) setCopyWeekDate(""); }}>
+                <Popover
+                  onOpenChange={(open) => {
+                    if (open) setCopyWeekDate("");
+                  }}
+                >
                   <PopoverTrigger asChild>
                     <Button
                       variant="outline"
@@ -1031,7 +1198,9 @@ const PlansPage = () => {
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-72 p-4" side="bottom" align="end">
-                    <p className="text-xs font-semibold text-stone-500 mb-3 uppercase tracking-widest">Copy week to...</p>
+                    <p className="text-xs font-semibold text-stone-500 mb-3 uppercase tracking-widest">
+                      Copy week to...
+                    </p>
                     <select
                       value={copyWeekDate}
                       onChange={(e) => setCopyWeekDate(e.target.value)}
@@ -1044,14 +1213,23 @@ const PlansPage = () => {
                       }}
                       className="w-full rounded-lg border border-stone-200 bg-white px-3 py-2 text-sm text-stone-900 focus:outline-none focus:ring-2 focus:ring-stone-400 focus:border-transparent"
                     >
-                      <option value="" disabled>Select a week...</option>
+                      <option value="" disabled>
+                        Select a week...
+                      </option>
                       {[-4, -3, -2, -1, 1, 2, 3, 4].map((offset) => {
                         const d = new Date(currentMonday);
                         d.setDate(d.getDate() + offset * 7);
                         const val = formatDate(d);
-                        const label = offset === -1 ? "Previous week" : offset === 1 ? "Next week" : `${Math.abs(offset)} weeks ${offset < 0 ? "ago" : "ahead"}`;
+                        const label =
+                          offset === -1
+                            ? "Previous week"
+                            : offset === 1
+                              ? "Next week"
+                              : `${Math.abs(offset)} weeks ${offset < 0 ? "ago" : "ahead"}`;
                         return (
-                          <option key={val} value={val}>{label} — {formatWeekRange(d)}</option>
+                          <option key={val} value={val}>
+                            {label} — {formatWeekRange(d)}
+                          </option>
                         );
                       })}
                     </select>
@@ -1059,7 +1237,12 @@ const PlansPage = () => {
                       size="sm"
                       disabled={!copyWeekDate}
                       className="w-full mt-2 rounded-xl text-xs bg-stone-900 text-white hover:bg-stone-800 disabled:opacity-40 disabled:cursor-not-allowed"
-                      onClick={() => { if (copyWeekDate) { handleCopyWeek(copyWeekDate); setCopyWeekDate(""); } }}
+                      onClick={() => {
+                        if (copyWeekDate) {
+                          handleCopyWeek(copyWeekDate);
+                          setCopyWeekDate("");
+                        }
+                      }}
                     >
                       <CalendarDays className="w-3.5 h-3.5 mr-1.5" />
                       Copy
@@ -1095,7 +1278,10 @@ const PlansPage = () => {
                   <div key={dayName} className="flex flex-col min-h-[300px] sm:min-h-[400px]">
                     <div className="mb-3 sm:mb-4 text-center pb-2 border-b border-stone-200 relative">
                       <span className="text-[11px] font-semibold text-stone-400 block uppercase tracking-widest">
-                        {t(`plans.days.${dayName}`, dayName.charAt(0).toUpperCase() + dayName.slice(1, 3))}
+                        {t(
+                          `plans.days.${dayName}`,
+                          dayName.charAt(0).toUpperCase() + dayName.slice(1, 3),
+                        )}
                       </span>
                       <span className="text-[20px] sm:text-[24px] font-serif font-medium text-stone-900">
                         {dayDate.getDate()}
@@ -1139,9 +1325,13 @@ const PlansPage = () => {
                   <p className="text-base text-stone-500 mt-1">
                     {ingredientsLoading && mealPlan?.entries?.length
                       ? "Loading ingredients..."
-                      : t("plans.shoppingList.ingredients", "{{count}} ingredients detected for this week.", {
-                          count: totalIngredients,
-                        })}
+                      : t(
+                          "plans.shoppingList.ingredients",
+                          "{{count}} ingredients detected for this week.",
+                          {
+                            count: totalIngredients,
+                          },
+                        )}
                   </p>
                 </div>
                 <Button

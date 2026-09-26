@@ -1,15 +1,14 @@
 import {
   RecipeAttributes,
-  RecipePublication,
   RecipeStep,
   RecipeIngredient,
   RecipeKitchenware,
   CreateRecipeInput,
-} from '../../domain/models';
+} from "../../domain/models";
 
 export type { CreateRecipeInput };
 
-export const RECIPE_REPOSITORY = 'RECIPE_REPOSITORY';
+export const RECIPE_REPOSITORY = "RECIPE_REPOSITORY";
 
 export interface IRecipeRepository {
   findAll(categoryId?: number): Promise<RecipeAttributes[]>;

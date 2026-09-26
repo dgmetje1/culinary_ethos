@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { ulid } from 'ulidx';
-import { Notification, NotificationAttributes } from '../../domain/models/notification.entity';
-import { INotificationRepository } from '../../application/repositories/i-notification.repository';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { ulid } from "ulidx";
+import { Notification, NotificationAttributes } from "../../domain/models/notification.entity";
+import { INotificationRepository } from "../../application/repositories/i-notification.repository";
 
 @Injectable()
 export class NotificationRepository implements INotificationRepository {
@@ -15,7 +15,7 @@ export class NotificationRepository implements INotificationRepository {
   async findByUser(userId: string, limit = 50, offset = 0): Promise<NotificationAttributes[]> {
     const results = await this.repository.find({
       where: { userId },
-      order: { createdAt: 'DESC' },
+      order: { createdAt: "DESC" },
       take: limit,
       skip: offset,
     });
@@ -25,7 +25,7 @@ export class NotificationRepository implements INotificationRepository {
   async findUnreadByUser(userId: string): Promise<NotificationAttributes[]> {
     const results = await this.repository.find({
       where: { userId, read: false },
-      order: { createdAt: 'DESC' },
+      order: { createdAt: "DESC" },
     });
     return results.map((r) => this.toAttributes(r));
   }
@@ -50,10 +50,7 @@ export class NotificationRepository implements INotificationRepository {
   }
 
   async markAllAsRead(userId: string): Promise<boolean> {
-    const result = await this.repository.update(
-      { userId, read: false },
-      { read: true },
-    );
+    const result = await this.repository.update({ userId, read: false }, { read: true });
     return (result.affected ?? 0) > 0;
   }
 

@@ -1,11 +1,8 @@
 import { FC, HTMLAttributes } from "react";
 
-export const StyledManagementLayout: FC<HTMLAttributes<HTMLElement> & { open?: boolean; menuWidth?: number }> = ({
-  open,
-  menuWidth = 240,
-  style,
-  ...props
-}) => (
+export const StyledManagementLayout: FC<
+  HTMLAttributes<HTMLElement> & { open?: boolean; menuWidth?: number }
+> = ({ open, menuWidth = 240, style, ...props }) => (
   <main
     style={{
       display: "flex",

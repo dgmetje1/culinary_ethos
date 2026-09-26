@@ -2,7 +2,10 @@ import { Auth0ContextInterface } from "@auth0/auth0-react";
 
 import { AuthContextValues } from "@/context/Auth/types";
 
-export type AuthRouterContextValues = Pick<AuthContextValues, "accessToken" | "isAccessTokenLoading" | "account"> &
+export type AuthRouterContextValues = Pick<
+  AuthContextValues,
+  "accessToken" | "isAccessTokenLoading" | "account"
+> &
   Pick<Auth0ContextInterface, "isAuthenticated"> & {
     isAuthenticatedLoading: Auth0ContextInterface["isLoading"];
   };

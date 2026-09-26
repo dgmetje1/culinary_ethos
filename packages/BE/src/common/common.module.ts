@@ -1,8 +1,8 @@
-import { Module, Global } from '@nestjs/common';
-import { APP_INTERCEPTOR, APP_FILTER } from '@nestjs/core';
-import { LoggingInterceptor } from './interceptors';
-import { AllExceptionsFilter } from './filters';
-import { RedisModule } from './redis/redis.module';
+import { Module, Global } from "@nestjs/common";
+import { APP_INTERCEPTOR, APP_FILTER } from "@nestjs/core";
+import { LoggingInterceptor } from "./interceptors";
+import { AllExceptionsFilter } from "./filters";
+import { RedisModule } from "./redis/redis.module";
 
 @Global()
 @Module({

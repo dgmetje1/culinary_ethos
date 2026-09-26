@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty } from "@nestjs/swagger";
 
 export class CategoryContentResponseDto {
   @ApiProperty()
@@ -200,7 +200,7 @@ export class RecipeResponseDto {
   @ApiProperty({ type: RecipeStepResponseDto, isArray: true })
   steps: RecipeStepResponseDto[];
 
-  @ApiProperty({ default: 'published' })
+  @ApiProperty({ default: "published" })
   status?: string;
 
   @ApiProperty({ nullable: true })

@@ -1,46 +1,46 @@
 services:
-  postgres:
-    image: postgres:15-alpine
-    container_name: culinary_ethos_postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: ${POSTGRES_USER:-culinary_user}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-culinary_password}
-      POSTGRES_DB: ${POSTGRES_DB:-culinary_ethos_db}
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    postgres:
+        image: postgres:15-alpine
+        container_name: culinary_ethos_postgres
+        restart: unless-stopped
+        environment:
+            POSTGRES_USER: ${POSTGRES_USER:-culinary_user}
+            POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-culinary_password}
+            POSTGRES_DB: ${POSTGRES_DB:-culinary_ethos_db}
+        ports:
+            - '5432:5432'
+        volumes:
+            - postgres_data:/var/lib/postgresql/data
+            - ./init.sql:/docker-entrypoint-initdb.d/init.sql
 
-  azurite:
-    image: mcr.microsoft.com/azure-storage/azurite
-    restart: always
-    command: "azurite --loose --blobHost 0.0.0.0 --blobPort 10000 --queueHost 0.0.0.0 --queuePort 10001 --location /workspace --debug /workspace/debug.log"
-    ports:
-      - 10000:10000
-      - 10001:10001
-      - 10002:10002
-    volumes:
-      - ./azurite:/workspace
+    azurite:
+        image: mcr.microsoft.com/azure-storage/azurite
+        restart: always
+        command: 'azurite --loose --blobHost 0.0.0.0 --blobPort 10000 --queueHost 0.0.0.0 --queuePort 10001 --location /workspace --debug /workspace/debug.log'
+        ports:
+            - 10000:10000
+            - 10001:10001
+            - 10002:10002
+        volumes:
+            - ./azurite:/workspace
 
-  cache:
-    image: redis:6.2-alpine
-    restart: always
-    ports:
-      - 6379:6379
-    networks:
-      - redis
-    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
-    volumes:
-      - cache:/data
+    cache:
+        image: redis:6.2-alpine
+        restart: always
+        ports:
+            - 6379:6379
+        networks:
+            - redis
+        command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+        volumes:
+            - cache:/data
 
 volumes:
-  postgres_data:
-  cache:
-    driver: local
+    postgres_data:
+    cache:
+        driver: local
 
 networks:
-  redis:
-    name: redis
-    driver: bridge
+    redis:
+        name: redis
+        driver: bridge

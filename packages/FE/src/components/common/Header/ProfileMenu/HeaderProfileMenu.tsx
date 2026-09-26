@@ -1,20 +1,19 @@
-import React from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
-import { User } from 'lucide-react';
-import { useRouter } from '@tanstack/react-router';
+import React from "react";
+import { useAuth0 } from "@auth0/auth0-react";
+import { User } from "lucide-react";
+import { useRouter } from "@tanstack/react-router";
 
-import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import config from '@/config';
-import { composeCdnUrl } from '@/lib/utils';
-import { useAuthContext } from '@/context/Auth';
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import config from "@/config";
+import { composeCdnUrl } from "@/lib/utils";
+import { useAuthContext } from "@/context/Auth";
 
 const HeaderProfileMenu = () => {
   const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
   const { account } = useAuthContext();
   const router = useRouter();
 
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [open, setOpen] = React.useState(false);
 
   const handleMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -39,7 +38,7 @@ const HeaderProfileMenu = () => {
 
   const handleGoToProfile = React.useCallback(() => {
     handleClose();
-    router.navigate({ to: '/profile' as never });
+    router.navigate({ to: "/profile" as never });
   }, [router]);
 
   return (

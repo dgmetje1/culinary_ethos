@@ -1,14 +1,14 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
-import { UnitContent } from './unit.types';
+import { Entity, Column, PrimaryColumn } from "typeorm";
+import { UnitContent } from "./unit.types";
 
-@Entity({ name: 'units' })
+@Entity({ name: "units" })
 export class Unit {
-  @PrimaryColumn({ type: 'varchar' })
+  @PrimaryColumn({ type: "varchar" })
   id: string;
 
-  @Column({ type: 'boolean', default: true })
+  @Column({ type: "boolean", default: true })
   isVisible: boolean;
 
-  @Column({ type: 'jsonb', default: [] })
+  @Column({ type: "jsonb", default: [] })
   content: UnitContent[];
 }

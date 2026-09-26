@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { ulid } from 'ulidx';
-import { SavedRecipe, SavedRecipeAttributes } from '../../domain/models/saved-recipe.entity';
-import { ISavedRecipeRepository } from '../../application/repositories/i-saved-recipe.repository';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { ulid } from "ulidx";
+import { SavedRecipe, SavedRecipeAttributes } from "../../domain/models/saved-recipe.entity";
+import { ISavedRecipeRepository } from "../../application/repositories/i-saved-recipe.repository";
 
 @Injectable()
 export class SavedRecipeRepository implements ISavedRecipeRepository {
@@ -15,7 +15,7 @@ export class SavedRecipeRepository implements ISavedRecipeRepository {
   async findByUser(userId: string): Promise<SavedRecipeAttributes[]> {
     const results = await this.repository.find({
       where: { userId },
-      order: { createdAt: 'DESC' },
+      order: { createdAt: "DESC" },
     });
     return results.map((r) => this.toAttributes(r));
   }

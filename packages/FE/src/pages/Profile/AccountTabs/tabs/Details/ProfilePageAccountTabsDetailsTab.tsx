@@ -28,9 +28,9 @@ const ProfilePageAccountTabsDetailsTab = ({ onSuccess }: Props) => {
   const [form, setForm] = useState<ProfileUpdateData>({
     nickName: user.nickName,
     language: user.language,
-    description: user.description ?? '',
-    position: user.position ?? '',
-    location: user.location ?? '',
+    description: user.description ?? "",
+    position: user.position ?? "",
+    location: user.location ?? "",
   });
   const updateProfile = useUpdateProfile();
 
@@ -47,26 +47,32 @@ const ProfilePageAccountTabsDetailsTab = ({ onSuccess }: Props) => {
     setForm({
       nickName: user.nickName,
       language: user.language,
-      description: user.description ?? '',
-      position: user.position ?? '',
-      location: user.location ?? '',
+      description: user.description ?? "",
+      position: user.position ?? "",
+      location: user.location ?? "",
     });
   };
 
   return (
     <div className="space-y-4">
       <div>
-        <label className="text-sm font-medium text-stone-500">{t("pages.profile.fields.nickName")}</label>
+        <label className="text-sm font-medium text-stone-500">
+          {t("pages.profile.fields.nickName")}
+        </label>
         <Input
           value={form.nickName}
           onChange={(e) => setForm({ ...form, nickName: e.target.value })}
         />
       </div>
       <div>
-        <label className="text-sm font-medium text-stone-500">{t("pages.profile.fields.language")}</label>
+        <label className="text-sm font-medium text-stone-500">
+          {t("pages.profile.fields.language")}
+        </label>
         <Select
           value={form.language}
-          onValueChange={(value) => setForm({ ...form, language: value as ProfileUpdateData["language"] })}
+          onValueChange={(value) =>
+            setForm({ ...form, language: value as ProfileUpdateData["language"] })
+          }
         >
           <SelectTrigger>
             <SelectValue />
@@ -81,22 +87,30 @@ const ProfilePageAccountTabsDetailsTab = ({ onSuccess }: Props) => {
         </Select>
       </div>
       <div>
-        <label className="text-sm font-medium text-stone-500">{t('pages.profile.fields.description')}</label>
+        <label className="text-sm font-medium text-stone-500">
+          {t("pages.profile.fields.description")}
+        </label>
         <Textarea
           value={form.description}
-          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setForm({ ...form, description: e.target.value })}
+          onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+            setForm({ ...form, description: e.target.value })
+          }
           rows={4}
         />
       </div>
       <div>
-        <label className="text-sm font-medium text-stone-500">{t('pages.profile.fields.position')}</label>
+        <label className="text-sm font-medium text-stone-500">
+          {t("pages.profile.fields.position")}
+        </label>
         <Input
           value={form.position}
           onChange={(e) => setForm({ ...form, position: e.target.value })}
         />
       </div>
       <div>
-        <label className="text-sm font-medium text-stone-500">{t('pages.profile.fields.location')}</label>
+        <label className="text-sm font-medium text-stone-500">
+          {t("pages.profile.fields.location")}
+        </label>
         <Input
           value={form.location}
           onChange={(e) => setForm({ ...form, location: e.target.value })}

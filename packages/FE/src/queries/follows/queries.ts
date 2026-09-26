@@ -1,4 +1,4 @@
-import { Api } from '@/lib/api';
+import { Api } from "@/lib/api";
 
 export type FollowStatus = {
   following: boolean;
@@ -35,13 +35,13 @@ export type FollowerItem = {
 };
 
 export const getMyFollowing = () => {
-  return new Api().get<FollowingItem[]>('follows/me/following', {
+  return new Api().get<FollowingItem[]>("follows/me/following", {
     withAuth: true,
   });
 };
 
 export const getMyFollowers = () => {
-  return new Api().get<FollowerItem[]>('follows/me/followers', {
+  return new Api().get<FollowerItem[]>("follows/me/followers", {
     withAuth: true,
   });
 };

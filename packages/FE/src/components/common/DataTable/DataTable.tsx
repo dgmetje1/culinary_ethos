@@ -1,8 +1,21 @@
 import { memo, useState } from "react";
 import { Info } from "lucide-react";
-import { flexRender, getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from "@tanstack/react-table";
+import {
+  flexRender,
+  getCoreRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+} from "@tanstack/react-table";
 
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 import { DataTableProps } from "./types";
 
@@ -23,12 +36,14 @@ const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValu
   return (
     <Table className="bg-white rounded-xl">
       <TableHeader>
-        {table.getHeaderGroups().map(headerGroup => (
+        {table.getHeaderGroups().map((headerGroup) => (
           <TableRow key={headerGroup.id}>
-            {headerGroup.headers.map(header => {
+            {headerGroup.headers.map((header) => {
               return (
                 <TableHead key={header.id} style={{ maxWidth: header.column.columnDef.size }}>
-                  {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                  {header.isPlaceholder
+                    ? null
+                    : flexRender(header.column.columnDef.header, header.getContext())}
                 </TableHead>
               );
             })}
@@ -37,9 +52,9 @@ const DataTable = <TData, TValue>({ columns, data }: DataTableProps<TData, TValu
       </TableHeader>
       <TableBody>
         {table.getRowModel().rows?.length ? (
-          table.getRowModel().rows.map(row => (
+          table.getRowModel().rows.map((row) => (
             <TableRow data-state={row.getIsSelected() && "selected"} key={row.id}>
-              {row.getVisibleCells().map(cell => (
+              {row.getVisibleCells().map((cell) => (
                 <TableCell key={cell.id} style={{ maxWidth: cell.column.columnDef.size }}>
                   {flexRender(cell.column.columnDef.cell, cell.getContext())}
                 </TableCell>

@@ -1,9 +1,8 @@
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Plus, GripVertical } from 'lucide-react';
+import { useTranslation } from "react-i18next";
+import { Plus, GripVertical } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface Ingredient {
   id: string;
@@ -19,13 +18,11 @@ const IngredientsSection = ({ ingredients, onChange }: IngredientsSectionProps) 
   const { t } = useTranslation();
 
   const handleAddIngredient = () => {
-    onChange([...ingredients, { id: Date.now().toString(), value: '' }]);
+    onChange([...ingredients, { id: Date.now().toString(), value: "" }]);
   };
 
   const handleUpdateIngredient = (id: string, value: string) => {
-    onChange(
-      ingredients.map((ing) => (ing.id === id ? { ...ing, value } : ing))
-    );
+    onChange(ingredients.map((ing) => (ing.id === id ? { ...ing, value } : ing)));
   };
 
   const handleRemoveIngredient = (id: string) => {
@@ -35,22 +32,22 @@ const IngredientsSection = ({ ingredients, onChange }: IngredientsSectionProps) 
   return (
     <div
       className={cn(
-        'bg-white/60 dark:bg-stone-900/60',
-        'backdrop-blur-xl',
-        'border border-stone-200/30 dark:border-stone-800/30',
-        'p-8 rounded-lg'
+        "bg-white/60 dark:bg-stone-900/60",
+        "backdrop-blur-xl",
+        "border border-stone-200/30 dark:border-stone-800/30",
+        "p-8 rounded-lg",
       )}
     >
       <div className="flex justify-between items-center mb-6">
         <h3
           className={cn(
-            'text-xl font-serif',
-            'text-stone-900 dark:text-stone-100',
-            'flex items-center gap-2'
+            "text-xl font-serif",
+            "text-stone-900 dark:text-stone-100",
+            "flex items-center gap-2",
           )}
         >
           <span className="text-orange-700 dark:text-orange-500">🥗</span>
-          {t('pages.editor.sections.ingredients.title')}
+          {t("pages.editor.sections.ingredients.title")}
         </h3>
         <Button
           variant="ghost"
@@ -71,13 +68,13 @@ const IngredientsSection = ({ ingredients, onChange }: IngredientsSectionProps) 
             <GripVertical className="w-4 h-4 text-stone-400 cursor-grab" />
             <input
               className={cn(
-                'bg-transparent w-full',
-                'text-base',
-                'outline-none border-none p-0 focus:ring-0',
-                'placeholder:text-stone-300 dark:placeholder:text-stone-600',
-                'text-stone-900 dark:text-stone-100'
+                "bg-transparent w-full",
+                "text-base",
+                "outline-none border-none p-0 focus:ring-0",
+                "placeholder:text-stone-300 dark:placeholder:text-stone-600",
+                "text-stone-900 dark:text-stone-100",
               )}
-              placeholder={t('pages.editor.sections.ingredients.placeholder')}
+              placeholder={t("pages.editor.sections.ingredients.placeholder")}
               type="text"
               value={ingredient.value}
               onChange={(e) => handleUpdateIngredient(ingredient.id, e.target.value)}

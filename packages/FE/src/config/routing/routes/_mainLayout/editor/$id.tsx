@@ -1,12 +1,12 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
-import { lazy } from 'react';
+import { createFileRoute, redirect } from "@tanstack/react-router";
+import { lazy } from "react";
 
-import Loader from '@/components/common/Loader';
-import { getRecipeOptions } from '@/queries/recipes/options';
+import Loader from "@/components/common/Loader";
+import { getRecipeOptions } from "@/queries/recipes/options";
 
-const RecipeEditorPage = lazy(() => import('@/pages/RecipeEditor'));
+const RecipeEditorPage = lazy(() => import("@/pages/RecipeEditor"));
 
-export const Route = createFileRoute('/_mainLayout/editor/$id')({
+export const Route = createFileRoute("/_mainLayout/editor/$id")({
   beforeLoad: ({ context, location }) => {
     if (!context.authContext.isAuthenticated && !context.authContext.isAuthenticatedLoading) {
       throw redirect({

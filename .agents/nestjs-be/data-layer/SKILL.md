@@ -8,25 +8,33 @@ description: Use when working on database entities, TypeORM repositories, migrat
 ## ORM: TypeORM
 
 ### Entity Design
+
 ```ts
-import { Entity, PrimaryColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn } from 'typeorm'
+import {
+    Entity,
+    PrimaryColumn,
+    Column,
+    ManyToOne,
+    CreateDateColumn,
+    UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('table_name')
 export class MyEntity {
-  @PrimaryColumn('varchar', { length: 26 })
-  id: string
+    @PrimaryColumn('varchar', { length: 26 })
+    id: string;
 
-  @Column({ type: 'varchar', length: 255 })
-  name: string
+    @Column({ type: 'varchar', length: 255 })
+    name: string;
 
-  @CreateDateColumn()
-  createdAt: Date
+    @CreateDateColumn()
+    createdAt: Date;
 
-  @UpdateDateColumn()
-  updatedAt: Date
+    @UpdateDateColumn()
+    updatedAt: Date;
 
-  @ManyToOne(() => RelatedEntity, (r) => r.myEntities)
-  related: RelatedEntity
+    @ManyToOne(() => RelatedEntity, (r) => r.myEntities)
+    related: RelatedEntity;
 }
 ```
 
@@ -37,10 +45,10 @@ export class MyEntity {
 
 ### Relations
 
-| Decorator | Purpose |
-|---|---|
-| `@ManyToOne` / `@OneToMany` | Parent-child relationships |
-| `@OneToOne` / `@JoinColumn` | One-to-one (owning side has `@JoinColumn`) |
+| Decorator                    | Purpose                                     |
+| ---------------------------- | ------------------------------------------- |
+| `@ManyToOne` / `@OneToMany`  | Parent-child relationships                  |
+| `@OneToOne` / `@JoinColumn`  | One-to-one (owning side has `@JoinColumn`)  |
 | `@ManyToMany` / `@JoinTable` | Many-to-many (owning side has `@JoinTable`) |
 
 - `eager: true` carefully — can cause N+1 or circular loads
@@ -55,20 +63,21 @@ export class MyEntity {
 ```ts
 @Injectable()
 export class MyRepository {
-  constructor(
-    @InjectRepository(MyEntity)
-    private readonly repo: Repository<MyEntity>,
-  ) {}
+    constructor(
+        @InjectRepository(MyEntity)
+        private readonly repo: Repository<MyEntity>,
+    ) {}
 
-  async findById(id: string): Promise<MyEntity | null> {
-    return this.repo.findOne({ where: { id } })
-  }
+    async findById(id: string): Promise<MyEntity | null> {
+        return this.repo.findOne({ where: { id } });
+    }
 }
 ```
 
 ## Queries
 
 ### Find Options
+
 - `find`, `findOne`, `findAndCount` for basic queries
 - `where`, `order`, `take`, `skip` for pagination
 - `relations` for eager loading
@@ -76,15 +85,17 @@ export class MyRepository {
 - `cache` for query result caching (requires Redis)
 
 ### Query Builder
+
 ```ts
-this.repo.createQueryBuilder('entity')
-  .leftJoinAndSelect('entity.relation', 'r')
-  .where('entity.status = :status', { status: 'active' })
-  .andWhere('r.name ILIKE :name', { name: '%search%' })
-  .orderBy('entity.createdAt', 'DESC')
-  .skip(0)
-  .take(20)
-  .getManyAndCount()
+this.repo
+    .createQueryBuilder('entity')
+    .leftJoinAndSelect('entity.relation', 'r')
+    .where('entity.status = :status', { status: 'active' })
+    .andWhere('r.name ILIKE :name', { name: '%search%' })
+    .orderBy('entity.createdAt', 'DESC')
+    .skip(0)
+    .take(20)
+    .getManyAndCount();
 ```
 
 - Use for complex queries or dynamic conditions
@@ -93,14 +104,15 @@ this.repo.createQueryBuilder('entity')
 - Use parameter binding (never string interpolation)
 
 ### Indexes
+
 ```ts
 @Entity()
 @Index(['name', 'status'])
 @Unique(['email'])
 export class MyEntity {
-  @Index()
-  @Column()
-  email: string
+    @Index()
+    @Column()
+    email: string;
 }
 ```
 
@@ -144,19 +156,19 @@ npx typeorm migration:revert
 
 ```ts
 // typeorm.config.ts
-import { DataSource } from 'typeorm'
+import { DataSource } from 'typeorm';
 
 export default new DataSource({
-  type: 'postgres',
-  host: process.env.POSTGRES_HOST,
-  port: Number(process.env.POSTGRES_PORT),
-  username: process.env.POSTGRES_USER,
-  password: process.env.POSTGRES_PASSWORD,
-  database: process.env.POSTGRES_DB,
-  entities: ['src/**/*.entity.ts'],
-  migrations: ['src/migrations/*.ts'],
-  synchronize: process.env.NODE_ENV !== 'production',
-})
+    type: 'postgres',
+    host: process.env.POSTGRES_HOST,
+    port: Number(process.env.POSTGRES_PORT),
+    username: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASSWORD,
+    database: process.env.POSTGRES_DB,
+    entities: ['src/**/*.entity.ts'],
+    migrations: ['src/migrations/*.ts'],
+    synchronize: process.env.NODE_ENV !== 'production',
+});
 ```
 
 - Separate `DataSource` for CLI migrations vs NestJS `TypeOrmModule.forRoot()`

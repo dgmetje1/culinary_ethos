@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus } from "@nestjs/common";
 
 export class InvalidParameterError extends HttpException {
   constructor(
@@ -9,7 +9,7 @@ export class InvalidParameterError extends HttpException {
     super(
       {
         statusCode: HttpStatus.BAD_REQUEST,
-        error: 'Bad Request',
+        error: "Bad Request",
         message,
         entityType,
         params,

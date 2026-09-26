@@ -6,5 +6,4 @@ export const getMealPlanByWeek = (weekStart: string) =>
     params: { weekStart },
   });
 
-export const getMealPlan = (id: string) =>
-  new Api().get<MealPlan>(`meal-plans/${id}`);
+export const getMealPlan = (id: string) => new Api().get<MealPlan>(`meal-plans/${id}`);

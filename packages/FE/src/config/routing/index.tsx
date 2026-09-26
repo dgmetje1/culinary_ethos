@@ -1,7 +1,7 @@
-import { QueryClient } from '@tanstack/react-query';
-import { createRouter } from '@tanstack/react-router';
+import { QueryClient } from "@tanstack/react-query";
+import { createRouter } from "@tanstack/react-router";
 
-import { routeTree } from './routeTree.gen';
+import { routeTree } from "./routeTree.gen";
 
 let singletonRouter: ReturnType<typeof createRouter> | null = null;
 
@@ -13,9 +13,9 @@ const getRouter = (queryClient: QueryClient): typeof singletonRouter => {
     context: {
       queryClient,
       authContext: undefined!,
-      getTitle: () => 'Culinary Ethos',
+      getTitle: () => "Culinary Ethos",
     },
-    defaultPreload: 'intent',
+    defaultPreload: "intent",
     // Since we're using React Query, we don't want loader calls to ever be stale
     // This will ensure that the loader is always called when the route is preloaded or visited
     defaultPreloadStaleTime: 0,
@@ -27,10 +27,10 @@ const getRouter = (queryClient: QueryClient): typeof singletonRouter => {
 export default getRouter;
 export type AppRouter = ReturnType<typeof getRouter>;
 
-export { Route as HomePageRoute } from './routes/_mainLayout/index.lazy';
-export { Route as EditorCreateRoute } from './routes/_mainLayout/editor/index';
-export { Route as EditorRoute } from './routes/_mainLayout/editor/$id';
-export { Route as PlansRoute } from './routes/_mainLayout/plans';
-export { Route as ProfileRoute } from './routes/_mainLayout/profile';
-export { Route as RecipeDetailRoute } from './routes/_mainLayout/recipe/$id';
-export { Route as HomeManagementPageRoute } from './routes/management/index.lazy';
+export { Route as HomePageRoute } from "./routes/_mainLayout/index.lazy";
+export { Route as EditorCreateRoute } from "./routes/_mainLayout/editor/index";
+export { Route as EditorRoute } from "./routes/_mainLayout/editor/$id";
+export { Route as PlansRoute } from "./routes/_mainLayout/plans";
+export { Route as ProfileRoute } from "./routes/_mainLayout/profile";
+export { Route as RecipeDetailRoute } from "./routes/_mainLayout/recipe/$id";
+export { Route as HomeManagementPageRoute } from "./routes/management/index.lazy";

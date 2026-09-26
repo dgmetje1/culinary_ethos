@@ -1,9 +1,6 @@
-import { Loader2 } from 'lucide-react';
+import { Loader2 } from "lucide-react";
 
-import { useApiQuery } from '@/middleware/api';
-import { getUserSummaryKeys } from '@/queries/users/keys';
-import { getUserSummary } from '@/queries/users/queries';
-import { useSuspenseGetUserSummary } from '@/queries/users';
+import { useSuspenseGetUserSummary } from "@/queries/users";
 
 interface AuthorNameProps {
   authorId: string;

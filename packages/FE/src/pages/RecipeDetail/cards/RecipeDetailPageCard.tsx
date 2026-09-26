@@ -1,6 +1,9 @@
 import { type PropsWithChildren, type HTMLAttributes } from "react";
 
-const RecipeDetailPageCard = ({ children, ...rest }: PropsWithChildren<HTMLAttributes<HTMLElement>>) => (
+const RecipeDetailPageCard = ({
+  children,
+  ...rest
+}: PropsWithChildren<HTMLAttributes<HTMLElement>>) => (
   <section
     style={{
       display: "flex",

@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
-import { ulid } from 'ulidx';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository, In } from "typeorm";
+import { ulid } from "ulidx";
 import {
   Recipe,
   RecipeAttributes,
@@ -9,8 +9,8 @@ import {
   RecipeStep,
   RecipeIngredient,
   RecipeKitchenware,
-} from '../../domain/models';
-import { IRecipeRepository } from '../../application/repositories/recipe.repository';
+} from "../../domain/models";
+import { IRecipeRepository } from "../../application/repositories/recipe.repository";
 
 @Injectable()
 export class RecipeRepository implements IRecipeRepository {
@@ -22,19 +22,16 @@ export class RecipeRepository implements IRecipeRepository {
   async findByAuthor(authorId: string): Promise<RecipeAttributes[]> {
     const results = await this.repository.find({
       where: { author: authorId },
-      order: { publicationDate: 'DESC' },
+      order: { publicationDate: "DESC" },
     });
     return results.map((r) => this.toAttributes(r));
   }
 
   async findAll(_categoryId?: number): Promise<RecipeAttributes[]> {
     const results = await this.repository.find({
-      where: [
-        { status: 'published' },
-        { status: 'approved' },
-      ],
+      where: [{ status: "published" }, { status: "approved" }],
       take: 20,
-      order: { publicationDate: 'DESC' },
+      order: { publicationDate: "DESC" },
     });
     return results.map((r) => this.toAttributes(r));
   }
@@ -44,7 +41,7 @@ export class RecipeRepository implements IRecipeRepository {
     if (status) where.status = status;
     const results = await this.repository.find({
       where,
-      order: { publicationDate: 'DESC' },
+      order: { publicationDate: "DESC" },
     });
     return results.map((r) => this.toAttributes(r));
   }
@@ -64,11 +61,8 @@ export class RecipeRepository implements IRecipeRepository {
 
   async findDaily(): Promise<RecipeAttributes | null> {
     const results = await this.repository.find({
-      where: [
-        { status: 'published' },
-        { status: 'approved' },
-      ],
-      order: { publicationDate: 'DESC' },
+      where: [{ status: "published" }, { status: "approved" }],
+      order: { publicationDate: "DESC" },
       take: 1,
     });
     return results.length > 0 ? this.toAttributes(results[0]) : null;
@@ -84,16 +78,13 @@ export class RecipeRepository implements IRecipeRepository {
       id: ulid(),
       uniqueId: ulid(),
       ...input,
-      status: 'published',
+      status: "published",
     });
     const saved = await this.repository.save(recipe);
     return this.toAttributes(saved as Recipe);
   }
 
-  async update(
-    id: string,
-    input: Partial<CreateRecipeInput>,
-  ): Promise<boolean> {
+  async update(id: string, input: Partial<CreateRecipeInput>): Promise<boolean> {
     const existing = await this.repository.findOne({ where: { id } });
     if (!existing) return false;
 
@@ -102,10 +93,7 @@ export class RecipeRepository implements IRecipeRepository {
     return !!saved;
   }
 
-  async addIngredients(
-    id: string,
-    ingredients: RecipeIngredient[],
-  ): Promise<boolean> {
+  async addIngredients(id: string, ingredients: RecipeIngredient[]): Promise<boolean> {
     const existing = await this.findById(id);
     if (!existing) return false;
     const updated = [...existing.ingredients, ...ingredients];
@@ -113,10 +101,7 @@ export class RecipeRepository implements IRecipeRepository {
     return (result.affected ?? 0) > 0;
   }
 
-  async addKitchenware(
-    id: string,
-    kitchenware: RecipeKitchenware[],
-  ): Promise<boolean> {
+  async addKitchenware(id: string, kitchenware: RecipeKitchenware[]): Promise<boolean> {
     const existing = await this.findById(id);
     if (!existing) return false;
     const updated = [...existing.kitchenware, ...kitchenware];

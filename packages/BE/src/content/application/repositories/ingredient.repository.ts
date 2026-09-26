@@ -1,6 +1,6 @@
-import { IngredientAttributes, IngredientContent } from '../../domain/models';
+import { IngredientAttributes, IngredientContent } from "../../domain/models";
 
-export const INGREDIENT_REPOSITORY = 'INGREDIENT_REPOSITORY';
+export const INGREDIENT_REPOSITORY = "INGREDIENT_REPOSITORY";
 
 export interface IIngredientRepository {
   findAll(): Promise<IngredientAttributes[]>;

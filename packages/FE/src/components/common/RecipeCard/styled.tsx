@@ -19,13 +19,11 @@ const imageWrapperStyle: Record<string, unknown> = {
   borderRadius: "var(--radius)",
 };
 
-export const StyledRecipeImageWrapper: FC<HTMLAttributes<HTMLDivElement>> = (
-  props,
-) => <div style={imageWrapperStyle} {...props} />;
+export const StyledRecipeImageWrapper: FC<HTMLAttributes<HTMLDivElement>> = (props) => (
+  <div style={imageWrapperStyle} {...props} />
+);
 
-export const StyledRecipeCardOverlay: FC<HTMLAttributes<HTMLDivElement>> = (
-  props,
-) => {
+export const StyledRecipeCardOverlay: FC<HTMLAttributes<HTMLDivElement>> = (props) => {
   const overlayBoxStyle = {
     ...props.style,
     backgroundColor: "rgba(250, 249, 247, 0.8)",

@@ -2,9 +2,15 @@ import { useState } from "react";
 import { ArrowRight, Calculator, Check, Eye, MoreVertical, Search, X } from "lucide-react";
 import { useNavigate } from "@tanstack/react-router";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import RecipePreviewDialog from "@/components/common/RecipePreviewDialog";
 import AuthorName from "@/components/common/AuthorName/AuthorName";
 import { useGetDashboardStats } from "@/queries/backoffice/queryHooks";
@@ -13,10 +19,42 @@ import { useApproveRecipe, useBanRecipe } from "@/queries/recipes/mutations";
 import type { AdminRecipe } from "@/queries/recipes/queries";
 
 const INGREDIENTS = [
-  { id: "#ING-001", name: "Aceite de Oliva Extra Virgen", category: "Aceites", stock: "450 L", status: "Óptimo", statusColor: "text-green-600", dotColor: "bg-green-600" },
-  { id: "#ING-002", name: "Harina de Trigo Tipo 00", category: "Granos", stock: "1,200 Kg", status: "Óptimo", statusColor: "text-green-600", dotColor: "bg-green-600" },
-  { id: "#ING-003", name: "Trufa Negra del Perigord", category: "Lujo", stock: "3.5 Kg",     status: "Crítico", statusColor: "text-orange-500", dotColor: "bg-orange-500" },
-  { id: "#ING-004", name: "Azafrán en Hebras", category: "Especias", stock: "0.8 Kg", status: "Óptimo", statusColor: "text-green-600", dotColor: "bg-green-600" },
+  {
+    id: "#ING-001",
+    name: "Aceite de Oliva Extra Virgen",
+    category: "Aceites",
+    stock: "450 L",
+    status: "Óptimo",
+    statusColor: "text-green-600",
+    dotColor: "bg-green-600",
+  },
+  {
+    id: "#ING-002",
+    name: "Harina de Trigo Tipo 00",
+    category: "Granos",
+    stock: "1,200 Kg",
+    status: "Óptimo",
+    statusColor: "text-green-600",
+    dotColor: "bg-green-600",
+  },
+  {
+    id: "#ING-003",
+    name: "Trufa Negra del Perigord",
+    category: "Lujo",
+    stock: "3.5 Kg",
+    status: "Crítico",
+    statusColor: "text-orange-500",
+    dotColor: "bg-orange-500",
+  },
+  {
+    id: "#ING-004",
+    name: "Azafrán en Hebras",
+    category: "Especias",
+    stock: "0.8 Kg",
+    status: "Óptimo",
+    statusColor: "text-green-600",
+    dotColor: "bg-green-600",
+  },
 ];
 
 const DashboardSection = () => {
@@ -44,7 +82,7 @@ const DashboardSection = () => {
               PENDIENTES
             </p>
             <p className="font-serif text-[24px] leading-[1.3] font-medium text-primary">
-              {statsLoading ? "..." : stats?.pendingRecipes ?? 0}
+              {statsLoading ? "..." : (stats?.pendingRecipes ?? 0)}
             </p>
           </div>
           <div className="glass-card px-6 py-4 border border-border/30 rounded-2xl">
@@ -52,7 +90,7 @@ const DashboardSection = () => {
               NUEVOS USUARIOS
             </p>
             <p className="font-serif text-[24px] leading-[1.3] font-medium text-primary">
-              {statsLoading ? "..." : stats?.newUsers ?? 0}
+              {statsLoading ? "..." : (stats?.newUsers ?? 0)}
             </p>
           </div>
           <div className="glass-card px-6 py-4 border border-secondary/30 rounded-2xl relative overflow-hidden group cursor-pointer hover:border-secondary/60 transition-all">
@@ -76,7 +114,11 @@ const DashboardSection = () => {
           <h3 className="font-serif text-[24px] leading-[1.3] font-medium italic">
             Recetas pendientes de validación
           </h3>
-          <Button variant="link" className="text-secondary text-[12px] tracking-[0.1em] font-semibold uppercase" onClick={() => navigate({ to: "/management/recipes" } as any)}>
+          <Button
+            variant="link"
+            className="text-secondary text-[12px] tracking-[0.1em] font-semibold uppercase"
+            onClick={() => navigate({ to: "/management/recipes" } as any)}
+          >
             VER TODAS
             <ArrowRight className="ml-1 w-4 h-4" />
           </Button>
@@ -92,7 +134,10 @@ const DashboardSection = () => {
               >
                 <div className="relative h-48 overflow-hidden">
                   <img
-                    src={recipe.thumbnailUrl ?? "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop"}
+                    src={
+                      recipe.thumbnailUrl ??
+                      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop"
+                    }
                     alt={recipe.title}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   />
@@ -105,7 +150,9 @@ const DashboardSection = () => {
                     {recipe.title}
                   </h4>
                   <div className="flex justify-between items-center mt-6">
-                    <span className="text-sm text-stone-500"><AuthorName authorId={recipe.author} /></span>
+                    <span className="text-sm text-stone-500">
+                      <AuthorName authorId={recipe.author} />
+                    </span>
                     <div className="flex gap-2">
                       <Button
                         variant="ghost"
@@ -161,21 +208,37 @@ const DashboardSection = () => {
           <Table>
             <TableHeader>
               <TableRow className="bg-stone-100/40">
-                <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">ID</TableHead>
-                <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">INGREDIENTE</TableHead>
-                <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">CATEGORÍA</TableHead>
-                <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">STOCK</TableHead>
-                <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">ESTADO</TableHead>
-                <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">ACCIONES</TableHead>
+                <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">
+                  ID
+                </TableHead>
+                <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">
+                  INGREDIENTE
+                </TableHead>
+                <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">
+                  CATEGORÍA
+                </TableHead>
+                <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">
+                  STOCK
+                </TableHead>
+                <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">
+                  ESTADO
+                </TableHead>
+                <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">
+                  ACCIONES
+                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {INGREDIENTS.map((ing) => (
                 <TableRow key={ing.id} className="hover:bg-white/40">
-                  <TableCell className="px-6 py-4 font-mono text-sm text-stone-400">{ing.id}</TableCell>
+                  <TableCell className="px-6 py-4 font-mono text-sm text-stone-400">
+                    {ing.id}
+                  </TableCell>
                   <TableCell className="px-6 py-4 font-medium">{ing.name}</TableCell>
                   <TableCell className="px-6 py-4">
-                    <span className="bg-stone-100/50 px-3 py-1 text-xs rounded-full">{ing.category}</span>
+                    <span className="bg-stone-100/50 px-3 py-1 text-xs rounded-full">
+                      {ing.category}
+                    </span>
                   </TableCell>
                   <TableCell className="px-6 py-4 font-sans text-sm">{ing.stock}</TableCell>
                   <TableCell className="px-6 py-4">

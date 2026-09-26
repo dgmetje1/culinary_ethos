@@ -1,2 +1,2 @@
 ///<reference types="vitest" />
-import 'reflect-metadata';
+import "reflect-metadata";

@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In } from 'typeorm';
-import { ulid } from 'ulidx';
-import { Unit, UnitAttributes, UnitContent } from '../../domain/models';
-import { IUnitRepository } from '../../application/repositories/unit.repository';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository, In } from "typeorm";
+import { ulid } from "ulidx";
+import { Unit, UnitAttributes, UnitContent } from "../../domain/models";
+import { IUnitRepository } from "../../application/repositories/unit.repository";
 
 @Injectable()
 export class UnitRepository implements IUnitRepository {
@@ -34,7 +34,11 @@ export class UnitRepository implements IUnitRepository {
     return { id: saved.id, isVisible: saved.isVisible, content: saved.content };
   }
 
-  async update(id: string, isVisible: boolean, content: UnitContent[]): Promise<UnitAttributes | null> {
+  async update(
+    id: string,
+    isVisible: boolean,
+    content: UnitContent[],
+  ): Promise<UnitAttributes | null> {
     const existing = await this.findById(id);
     if (!existing) return null;
     await this.repository.update(id, { isVisible, content });

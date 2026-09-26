@@ -22,18 +22,18 @@ description: Use when working on a React frontend built with Vite. This is the o
 
 ## Ecosystem Overview
 
-| Concern | Tool |
-|---|---|
-| Routing | TanStack Router (file-based) |
-| Data fetching | TanStack React Query |
-| Forms | TanStack React Form + Zod |
-| UI components | MUI + shadcn/ui (Radix) |
-| Styling | Tailwind CSS + CVA + clsx |
-| Auth | Auth0 React SDK |
-| i18n | i18next |
-| Tables | TanStack React Table |
-| Testing | Vitest + Testing Library |
-| Build | Vite + TypeScript |
+| Concern       | Tool                         |
+| ------------- | ---------------------------- |
+| Routing       | TanStack Router (file-based) |
+| Data fetching | TanStack React Query         |
+| Forms         | TanStack React Form + Zod    |
+| UI components | MUI + shadcn/ui (Radix)      |
+| Styling       | Tailwind CSS + CVA + clsx    |
+| Auth          | Auth0 React SDK              |
+| i18n          | i18next                      |
+| Tables        | TanStack React Table         |
+| Testing       | Vitest + Testing Library     |
+| Build         | Vite + TypeScript            |
 
 ## Conventions
 

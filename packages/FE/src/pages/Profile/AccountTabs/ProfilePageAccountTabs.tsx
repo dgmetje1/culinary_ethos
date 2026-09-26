@@ -1,14 +1,19 @@
-import { useMemo } from 'react';
-import { Link } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import { Bookmark } from 'lucide-react';
+import { useMemo } from "react";
+import { Link } from "@tanstack/react-router";
+import { useTranslation } from "react-i18next";
+import { Bookmark } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
-import { composeCdnUrl, cn } from '@/lib/utils';
-import config from '@/config';
-import { useGetUserRecipes } from '@/queries/recipes';
-import { useGetSavedRecipeIds, useGetSavedRecipesData, useSaveRecipe, useUnsaveRecipe } from '@/queries/saved-recipes';
-import Tabs, { Tab, TabContent, TabsHeader } from '@/components/common/Tabs';
+import { Button } from "@/components/ui/button";
+import { composeCdnUrl, cn } from "@/lib/utils";
+import config from "@/config";
+import { useGetUserRecipes } from "@/queries/recipes";
+import {
+  useGetSavedRecipeIds,
+  useGetSavedRecipesData,
+  useSaveRecipe,
+  useUnsaveRecipe,
+} from "@/queries/saved-recipes";
+import Tabs, { Tab, TabContent, TabsHeader } from "@/components/common/Tabs";
 
 const RecipeCard = ({
   recipe,
@@ -17,20 +22,23 @@ const RecipeCard = ({
   onToggleSave,
   isPending,
 }: {
-  recipe: { id: string; title: string; thumbnailUrl: string | null; time: number; categories?: { name: string }[] };
+  recipe: {
+    id: string;
+    title: string;
+    thumbnailUrl: string | null;
+    time: number;
+    categories?: { name: string }[];
+  };
   isLarge: boolean;
   isSaved: boolean;
   onToggleSave: (id: string) => void;
   isPending: boolean;
 }) => (
-  <div className={`${isLarge ? 'md:col-span-8' : 'md:col-span-4'} group`}>
-    <Link
-      params={{ id: recipe.id.toString() }}
-      to="/recipe/$id"
-    >
+  <div className={`${isLarge ? "md:col-span-8" : "md:col-span-4"} group`}>
+    <Link params={{ id: recipe.id.toString() }} to="/recipe/$id">
       <div
         className={`relative mb-4 overflow-hidden rounded-xl bg-surface-container shadow-sm ${
-          isLarge ? 'aspect-[16/9]' : 'aspect-[4/5]'
+          isLarge ? "aspect-[16/9]" : "aspect-[4/5]"
         }`}
       >
         {recipe.thumbnailUrl && (
@@ -44,10 +52,8 @@ const RecipeCard = ({
           variant="ghost"
           size="icon"
           className={cn(
-            'absolute top-4 right-4 rounded-full p-2 h-auto w-auto min-h-0 min-w-0',
-            isSaved
-              ? 'bg-orange-500/80 text-white'
-              : 'bg-white/40 backdrop-blur-md text-primary',
+            "absolute top-4 right-4 rounded-full p-2 h-auto w-auto min-h-0 min-w-0",
+            isSaved ? "bg-orange-500/80 text-white" : "bg-white/40 backdrop-blur-md text-primary",
           )}
           onClick={(e) => {
             e.preventDefault();
@@ -56,25 +62,18 @@ const RecipeCard = ({
           }}
           disabled={isPending}
         >
-          <Bookmark
-            className="w-4 h-4 transition-all"
-            fill={isSaved ? 'currentColor' : 'none'}
-          />
+          <Bookmark className="w-4 h-4 transition-all" fill={isSaved ? "currentColor" : "none"} />
         </Button>
       </div>
     </Link>
-    <Link
-      params={{ id: recipe.id.toString() }}
-      to="/recipe/$id"
-    >
+    <Link params={{ id: recipe.id.toString() }} to="/recipe/$id">
       <div className="flex justify-between items-start px-2">
         <div>
           <h3 className="text-[24px] leading-[1.3] font-medium font-serif text-primary mb-1">
             {recipe.title}
           </h3>
           <p className="text-[12px] leading-[1.0] tracking-[0.1em] font-semibold text-on-primary-container uppercase">
-            {recipe.categories?.[0]?.name} &bull;{' '}
-            {Math.floor(recipe.time / 60)} min
+            {recipe.categories?.[0]?.name} &bull; {Math.floor(recipe.time / 60)} min
           </p>
         </div>
       </div>
@@ -90,10 +89,7 @@ const ProfilePageAccountTabs = () => {
   const { mutate: saveRecipe, isPending: isSaving } = useSaveRecipe();
   const { mutate: unsaveRecipe, isPending: isUnsaving } = useUnsaveRecipe();
 
-  const savedSet = useMemo(
-    () => new Set(savedIds?.map((s) => s.recipeId) ?? []),
-    [savedIds],
-  );
+  const savedSet = useMemo(() => new Set(savedIds?.map((s) => s.recipeId) ?? []), [savedIds]);
 
   const handleToggleSave = (recipeId: string) => {
     if (savedSet.has(recipeId)) {

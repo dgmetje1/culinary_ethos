@@ -16,25 +16,26 @@ description: Use when designing API endpoints, DTOs, validation rules, Swagger/O
 ## DTOs
 
 ### Request DTOs
+
 ```ts
-import { IsString, IsOptional, IsInt, Min, Max } from 'class-validator'
-import { ApiProperty } from '@nestjs/swagger'
+import { IsString, IsOptional, IsInt, Min, Max } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateRecipeDto {
-  @ApiProperty({ example: 'Spaghetti Carbonara' })
-  @IsString()
-  name: string
+    @ApiProperty({ example: 'Spaghetti Carbonara' })
+    @IsString()
+    name: string;
 
-  @ApiProperty({ required: false })
-  @IsOptional()
-  @IsString()
-  description?: string
+    @ApiProperty({ required: false })
+    @IsOptional()
+    @IsString()
+    description?: string;
 
-  @ApiProperty({ minimum: 1, maximum: 999 })
-  @IsInt()
-  @Min(1)
-  @Max(999)
-  servings: number
+    @ApiProperty({ minimum: 1, maximum: 999 })
+    @IsInt()
+    @Min(1)
+    @Max(999)
+    servings: number;
 }
 ```
 
@@ -43,16 +44,17 @@ export class CreateRecipeDto {
 - Separate DTOs for create, update, and response
 
 ### Response DTOs
+
 ```ts
 export class RecipeResponseDto {
-  @ApiProperty()
-  id: string
+    @ApiProperty()
+    id: string;
 
-  @ApiProperty()
-  name: string
+    @ApiProperty()
+    name: string;
 
-  @ApiProperty()
-  createdAt: Date
+    @ApiProperty()
+    createdAt: Date;
 }
 ```
 
@@ -63,15 +65,18 @@ export class RecipeResponseDto {
 ## Validation
 
 ### Global Validation Pipe
+
 ```ts
-app.useGlobalPipes(new ValidationPipe({
-  whitelist: true,           // strip unknown properties
-  forbidNonWhitelisted: true, // throw on unknown properties
-  transform: true,            // auto-transform types
-  transformOptions: {
-    enableImplicitConversion: true,
-  },
-}))
+app.useGlobalPipes(
+    new ValidationPipe({
+        whitelist: true, // strip unknown properties
+        forbidNonWhitelisted: true, // throw on unknown properties
+        transform: true, // auto-transform types
+        transformOptions: {
+            enableImplicitConversion: true,
+        },
+    }),
+);
 ```
 
 - `whitelist: true` prevents mass-assignment vulnerabilities
@@ -79,6 +84,7 @@ app.useGlobalPipes(new ValidationPipe({
 - Custom validation decorators for reusable rules
 
 ### Validation Groups
+
 ```ts
 @IsString({ groups: ['create'] })
 @IsOptional({ groups: ['update'] })
@@ -91,49 +97,50 @@ name: string
 
 ```ts
 export class PaginationQueryDto {
-  @ApiProperty({ default: 1 })
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  page: number = 1
+    @ApiProperty({ default: 1 })
+    @Type(() => Number)
+    @IsInt()
+    @Min(1)
+    page: number = 1;
 
-  @ApiProperty({ default: 20 })
-  @Type(() => Number)
-  @IsInt()
-  @Min(1)
-  @Max(100)
-  limit: number = 20
+    @ApiProperty({ default: 20 })
+    @Type(() => Number)
+    @IsInt()
+    @Min(1)
+    @Max(100)
+    limit: number = 20;
 }
 
 export class PaginatedResponseDto<T> {
-  data: T[]
-  meta: {
-    total: number
-    page: number
-    limit: number
-    totalPages: number
-  }
+    data: T[];
+    meta: {
+        total: number;
+        page: number;
+        limit: number;
+        totalPages: number;
+    };
 }
 ```
 
 ## Error Handling
 
 ### Exception Filters
+
 ```ts
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter {
-  catch(exception: HttpException, host: ArgumentsHost) {
-    const ctx = host.switchToHttp()
-    const response = ctx.getResponse<Response>()
-    const status = exception.getStatus()
+    catch(exception: HttpException, host: ArgumentsHost) {
+        const ctx = host.switchToHttp();
+        const response = ctx.getResponse<Response>();
+        const status = exception.getStatus();
 
-    response.status(status).json({
-      statusCode: status,
-      message: exception.message,
-      timestamp: new Date().toISOString(),
-      path: ctx.getRequest().url,
-    })
-  }
+        response.status(status).json({
+            statusCode: status,
+            message: exception.message,
+            timestamp: new Date().toISOString(),
+            path: ctx.getRequest().url,
+        });
+    }
 }
 ```
 
@@ -143,9 +150,9 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
 ```ts
 export class EntityNotFoundError extends HttpException {
-  constructor(entity: string, id: string) {
-    super(`${entity} with id ${id} not found`, HttpStatus.NOT_FOUND)
-  }
+    constructor(entity: string, id: string) {
+        super(`${entity} with id ${id} not found`, HttpStatus.NOT_FOUND);
+    }
 }
 ```
 
@@ -153,15 +160,15 @@ export class EntityNotFoundError extends HttpException {
 
 ```ts
 const config = new DocumentBuilder()
-  .setTitle('API')
-  .setDescription('API description')
-  .setVersion('1.0')
-  .addBearerAuth()
-  .addTag('recipes')
-  .build()
+    .setTitle('API')
+    .setDescription('API description')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .addTag('recipes')
+    .build();
 
-const document = SwaggerModule.createDocument(app, config)
-SwaggerModule.setup('api', app, document)
+const document = SwaggerModule.createDocument(app, config);
+SwaggerModule.setup('api', app, document);
 ```
 
 - Use `@ApiTags`, `@ApiOperation`, `@ApiResponse` decorators
@@ -180,9 +187,9 @@ SwaggerModule.setup('api', app, document)
 
 ```ts
 app.enableVersioning({
-  type: VersioningType.URI,
-  defaultVersion: '1',
-})
+    type: VersioningType.URI,
+    defaultVersion: '1',
+});
 ```
 
 - URI versioning: `/v1/recipes`

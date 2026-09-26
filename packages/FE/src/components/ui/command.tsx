@@ -68,7 +68,9 @@ CommandList.displayName = CommandPrimitive.List.displayName;
 const CommandEmpty = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Empty>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Empty>
->((props, ref) => <CommandPrimitive.Empty className="py-6 text-center text-sm" ref={ref} {...props} />);
+>((props, ref) => (
+  <CommandPrimitive.Empty className="py-6 text-center text-sm" ref={ref} {...props} />
+));
 
 CommandEmpty.displayName = CommandPrimitive.Empty.displayName;
 
@@ -92,7 +94,11 @@ const CommandSeparator = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive.Separator>,
   React.ComponentPropsWithoutRef<typeof CommandPrimitive.Separator>
 >(({ className, ...props }, ref) => (
-  <CommandPrimitive.Separator className={cn("-mx-1 h-px bg-border", className)} ref={ref} {...props} />
+  <CommandPrimitive.Separator
+    className={cn("-mx-1 h-px bg-border", className)}
+    ref={ref}
+    {...props}
+  />
 ));
 CommandSeparator.displayName = CommandPrimitive.Separator.displayName;
 
@@ -113,7 +119,12 @@ const CommandItem = React.forwardRef<
 CommandItem.displayName = CommandPrimitive.Item.displayName;
 
 const CommandShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanElement>) => {
-  return <span className={cn("ml-auto text-xs tracking-widest text-muted-foreground", className)} {...props} />;
+  return (
+    <span
+      className={cn("ml-auto text-xs tracking-widest text-muted-foreground", className)}
+      {...props}
+    />
+  );
 };
 CommandShortcut.displayName = "CommandShortcut";
 

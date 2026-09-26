@@ -1,37 +1,29 @@
-import { useTranslation } from 'react-i18next';
-
-import { cn, composeCdnUrl } from '@/lib/utils';
-import { sanitizeHtml } from '@/lib/sanitizeHtml';
-import { RecipeStep } from '@/types/recipe';
-import config from '@/config';
+import { cn, composeCdnUrl } from "@/lib/utils";
+import { sanitizeHtml } from "@/lib/sanitizeHtml";
+import { RecipeStep } from "@/types/recipe";
+import config from "@/config";
 
 interface RecipeDetailPageStepsSectionProps {
   steps: RecipeStep[];
 }
 
-const RecipeDetailPageStepsSection = ({
-  steps,
-}: RecipeDetailPageStepsSectionProps) => {
+const RecipeDetailPageStepsSection = ({ steps }: RecipeDetailPageStepsSectionProps) => {
   if (!steps || !steps.length) return null;
 
-  const { t } = useTranslation();
   const formatStepNumber = (index: number) => {
-    return (index + 1).toString().padStart(2, '0');
+    return (index + 1).toString().padStart(2, "0");
   };
 
   return (
     <div className="space-y-16">
       {steps.map((step, index) => (
-        <div
-          key={`step-${step.id}`}
-          className="flex flex-col md:flex-row gap-8 md:gap-12"
-        >
+        <div key={`step-${step.id}`} className="flex flex-col md:flex-row gap-8 md:gap-12">
           <div className="flex-shrink-0">
             <span
               className={cn(
-                'text-4xl font-serif italic',
-                'text-orange-700 dark:text-orange-500',
-                'opacity-40 block',
+                "text-4xl font-serif italic",
+                "text-orange-700 dark:text-orange-500",
+                "opacity-40 block",
               )}
             >
               {formatStepNumber(index)}

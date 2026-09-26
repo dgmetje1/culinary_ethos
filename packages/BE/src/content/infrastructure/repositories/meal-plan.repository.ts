@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { ulid } from 'ulidx';
-import { MealPlan, MealPlanAttributes, MealPlanEntry, CreateMealPlanInput } from '../../domain/models';
-import { IMealPlanRepository } from '../../application/repositories/meal-plan.repository';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { ulid } from "ulidx";
+import {
+  MealPlan,
+  MealPlanAttributes,
+  MealPlanEntry,
+  CreateMealPlanInput,
+} from "../../domain/models";
+import { IMealPlanRepository } from "../../application/repositories/meal-plan.repository";
 
 @Injectable()
 export class MealPlanRepository implements IMealPlanRepository {

@@ -24,13 +24,7 @@ export const useCreateMealPlan = () => {
 
 export const useUpdateMealPlan = () => {
   const queryClient = useQueryClient();
-  const updateMealPlan = async ({
-    id,
-    data,
-  }: {
-    id: string;
-    data: UpdateMealPlanDTO;
-  }) => {
+  const updateMealPlan = async ({ id, data }: { id: string; data: UpdateMealPlanDTO }) => {
     const api = new Api();
     const response: MealPlan = await api.put(`meal-plans/${id}`, data);
     return response;

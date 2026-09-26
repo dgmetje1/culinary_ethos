@@ -1,6 +1,6 @@
-import { NotificationAttributes } from '../../domain/models/notification.entity';
+import { NotificationAttributes } from "../../domain/models/notification.entity";
 
-export const NOTIFICATION_REPOSITORY = 'NOTIFICATION_REPOSITORY';
+export const NOTIFICATION_REPOSITORY = "NOTIFICATION_REPOSITORY";
 
 export interface INotificationRepository {
   findByUser(userId: string, limit?: number, offset?: number): Promise<NotificationAttributes[]>;

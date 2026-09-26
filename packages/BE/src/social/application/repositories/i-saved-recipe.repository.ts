@@ -1,6 +1,6 @@
-import { SavedRecipeAttributes } from '../../domain/models/saved-recipe.entity';
+import { SavedRecipeAttributes } from "../../domain/models/saved-recipe.entity";
 
-export const SAVED_RECIPE_REPOSITORY = 'SAVED_RECIPE_REPOSITORY';
+export const SAVED_RECIPE_REPOSITORY = "SAVED_RECIPE_REPOSITORY";
 
 export interface ISavedRecipeRepository {
   findByUser(userId: string): Promise<SavedRecipeAttributes[]>;

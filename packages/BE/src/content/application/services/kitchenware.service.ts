@@ -1,7 +1,15 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { EntityNotFoundError, InvalidParameterError } from '../../../common/exceptions';
-import { CreateKitchenwareDto, UpdateKitchenwareDto, MergeKitchenwareDto, KitchenwareResponseDto } from '../dto';
-import { KITCHENWARE_REPOSITORY, IKitchenwareRepository } from '../repositories/kitchenware.repository';
+import { Injectable, Inject } from "@nestjs/common";
+import { EntityNotFoundError, InvalidParameterError } from "../../../common/exceptions";
+import {
+  CreateKitchenwareDto,
+  UpdateKitchenwareDto,
+  MergeKitchenwareDto,
+  KitchenwareResponseDto,
+} from "../dto";
+import {
+  KITCHENWARE_REPOSITORY,
+  IKitchenwareRepository,
+} from "../repositories/kitchenware.repository";
 
 @Injectable()
 export class KitchenwareService {
@@ -9,7 +17,9 @@ export class KitchenwareService {
     @Inject(KITCHENWARE_REPOSITORY) private readonly kitchenwareRepository: IKitchenwareRepository,
   ) {}
 
-  private mapToResponse(content: { language: string; name: string; singularName: string }[]): Record<string, { name: string; singularName: string }> {
+  private mapToResponse(
+    content: { language: string; name: string; singularName: string }[],
+  ): Record<string, { name: string; singularName: string }> {
     const result: Record<string, { name: string; singularName: string }> = {};
     content.forEach((c) => {
       result[c.language] = { name: c.name, singularName: c.singularName };
@@ -27,7 +37,7 @@ export class KitchenwareService {
 
   async create(dto: CreateKitchenwareDto): Promise<{ id: string }> {
     if (!dto.content || dto.content.length === 0) {
-      throw new InvalidParameterError('Content is required', 'Kitchenware');
+      throw new InvalidParameterError("Content is required", "Kitchenware");
     }
     const result = await this.kitchenwareRepository.create(dto.content);
     return { id: result.id };
@@ -36,7 +46,7 @@ export class KitchenwareService {
   async update(dto: UpdateKitchenwareDto): Promise<void> {
     const existing = await this.kitchenwareRepository.findById(dto.id);
     if (!existing) {
-      throw new EntityNotFoundError('Kitchenware not found', 'Kitchenware', [{ id: dto.id }]);
+      throw new EntityNotFoundError("Kitchenware not found", "Kitchenware", [{ id: dto.id }]);
     }
     await this.kitchenwareRepository.update(dto.id, dto.content);
   }
@@ -44,7 +54,7 @@ export class KitchenwareService {
   async delete(id: string): Promise<void> {
     const existing = await this.kitchenwareRepository.findById(id);
     if (!existing) {
-      throw new EntityNotFoundError('Kitchenware not found', 'Kitchenware', [{ id }]);
+      throw new EntityNotFoundError("Kitchenware not found", "Kitchenware", [{ id }]);
     }
     await this.kitchenwareRepository.delete(id);
   }
@@ -52,7 +62,9 @@ export class KitchenwareService {
   async merge(dto: MergeKitchenwareDto): Promise<void> {
     const target = await this.kitchenwareRepository.findById(dto.targetId);
     if (!target) {
-      throw new EntityNotFoundError('Target kitchenware not found', 'Kitchenware', [{ id: dto.targetId }]);
+      throw new EntityNotFoundError("Target kitchenware not found", "Kitchenware", [
+        { id: dto.targetId },
+      ]);
     }
     await this.kitchenwareRepository.merge(dto.targetId, dto.kitchenwareIds);
   }

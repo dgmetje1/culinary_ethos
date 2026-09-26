@@ -8,19 +8,24 @@ import {
   Param,
   HttpCode,
   HttpStatus,
-} from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
-import { IngredientsService } from '../../application/services';
-import { CreateIngredientDto, UpdateIngredientDto, MergeIngredientDto, IngredientResponseDto } from '../../application/dto';
+} from "@nestjs/common";
+import { ApiOperation, ApiTags, ApiResponse, ApiBearerAuth } from "@nestjs/swagger";
+import { IngredientsService } from "../../application/services";
+import {
+  CreateIngredientDto,
+  UpdateIngredientDto,
+  MergeIngredientDto,
+  IngredientResponseDto,
+} from "../../application/dto";
 
 @ApiBearerAuth()
-@ApiTags('Ingredients')
-@Controller('ingredients')
+@ApiTags("Ingredients")
+@Controller("ingredients")
 export class IngredientsController {
   constructor(private readonly ingredientsService: IngredientsService) {}
 
   @Get()
-  @ApiOperation({ summary: 'Get all ingredients' })
+  @ApiOperation({ summary: "Get all ingredients" })
   @ApiResponse({ status: 200, type: [IngredientResponseDto] })
   async getAll(): Promise<IngredientResponseDto[]> {
     return this.ingredientsService.getAll();
@@ -28,7 +33,7 @@ export class IngredientsController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  @ApiOperation({ summary: 'Create an ingredient' })
+  @ApiOperation({ summary: "Create an ingredient" })
   @ApiResponse({ status: 201 })
   async create(@Body() dto: CreateIngredientDto): Promise<{ id: string }> {
     return this.ingredientsService.create(dto);
@@ -36,23 +41,23 @@ export class IngredientsController {
 
   @Put()
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Update an ingredient' })
+  @ApiOperation({ summary: "Update an ingredient" })
   @ApiResponse({ status: 204 })
   async update(@Body() dto: UpdateIngredientDto): Promise<void> {
     await this.ingredientsService.update(dto);
   }
 
-  @Delete(':id')
+  @Delete(":id")
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Delete an ingredient' })
+  @ApiOperation({ summary: "Delete an ingredient" })
   @ApiResponse({ status: 204 })
-  async delete(@Param('id') id: string): Promise<void> {
+  async delete(@Param("id") id: string): Promise<void> {
     await this.ingredientsService.delete(id);
   }
 
-  @Post('merge')
+  @Post("merge")
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Merge ingredients' })
+  @ApiOperation({ summary: "Merge ingredients" })
   @ApiResponse({ status: 204 })
   async merge(@Body() dto: MergeIngredientDto): Promise<void> {
     await this.ingredientsService.merge(dto);

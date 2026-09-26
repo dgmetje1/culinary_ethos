@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode } from "react";
 
 interface SearchContextValues {
   search: string;
@@ -10,7 +10,7 @@ interface SearchContextValues {
 const SearchContext = createContext<SearchContextValues | undefined>(undefined);
 
 export const SearchProvider = ({ children }: { children: ReactNode }) => {
-  const [search, setSearch] = useState('');
+  const [search, setSearch] = useState("");
   const [showSearch, setShowSearch] = useState(true);
 
   return (
@@ -23,7 +23,7 @@ export const SearchProvider = ({ children }: { children: ReactNode }) => {
 export const useSearch = () => {
   const context = useContext(SearchContext);
   if (!context) {
-    throw new Error('useSearch must be used within a SearchProvider');
+    throw new Error("useSearch must be used within a SearchProvider");
   }
   return context;
 };

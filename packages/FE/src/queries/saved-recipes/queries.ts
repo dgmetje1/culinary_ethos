@@ -1,4 +1,4 @@
-import { Api } from '@/lib/api';
+import { Api } from "@/lib/api";
 
 export type SavedRecipeItem = {
   recipeId: string;
@@ -25,13 +25,13 @@ export type SavedCount = {
 };
 
 export const getSavedRecipesData = () => {
-  return new Api().get<SavedRecipeListItem[]>('saved-recipes/recipes', {
+  return new Api().get<SavedRecipeListItem[]>("saved-recipes/recipes", {
     withAuth: true,
   });
 };
 
 export const getSavedRecipeIds = () => {
-  return new Api().get<SavedRecipeItem[]>('saved-recipes', {
+  return new Api().get<SavedRecipeItem[]>("saved-recipes", {
     withAuth: true,
   });
 };

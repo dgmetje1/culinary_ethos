@@ -25,7 +25,11 @@ import { useSuspendUser, useActivateUser, useChangeUserRole } from "@/queries/us
 
 const ROLE_OPTIONS = [
   { value: "chef", label: "Chef", description: "Crea y edita sus propias recetas" },
-  { value: "collaborator", label: "Colaborador", description: "Puede gestionar recetas y contenido" },
+  {
+    value: "collaborator",
+    label: "Colaborador",
+    description: "Puede gestionar recetas y contenido",
+  },
   { value: "admin", label: "Administrador", description: "Acceso completo a todas las funciones" },
 ];
 
@@ -110,10 +114,18 @@ const UsersSection = () => {
           />
         </div>
         <div className="flex gap-2">
-          <Badge variant="outline" className="cursor-pointer hover:bg-stone-100">Todos</Badge>
-          <Badge variant="outline" className="cursor-pointer hover:bg-stone-100">Activos</Badge>
-          <Badge variant="outline" className="cursor-pointer hover:bg-stone-100">Suspendidos</Badge>
-          <Badge variant="outline" className="cursor-pointer hover:bg-stone-100">Chefs</Badge>
+          <Badge variant="outline" className="cursor-pointer hover:bg-stone-100">
+            Todos
+          </Badge>
+          <Badge variant="outline" className="cursor-pointer hover:bg-stone-100">
+            Activos
+          </Badge>
+          <Badge variant="outline" className="cursor-pointer hover:bg-stone-100">
+            Suspendidos
+          </Badge>
+          <Badge variant="outline" className="cursor-pointer hover:bg-stone-100">
+            Chefs
+          </Badge>
         </div>
       </div>
 
@@ -121,12 +133,24 @@ const UsersSection = () => {
         <Table>
           <TableHeader>
             <TableRow className="bg-stone-100/40">
-              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">ID</TableHead>
-              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">USUARIO</TableHead>
-              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">EMAIL</TableHead>
-              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">ROL</TableHead>
-              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">ESTADO</TableHead>
-              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">ACCIONES</TableHead>
+              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">
+                ID
+              </TableHead>
+              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">
+                USUARIO
+              </TableHead>
+              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">
+                EMAIL
+              </TableHead>
+              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">
+                ROL
+              </TableHead>
+              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">
+                ESTADO
+              </TableHead>
+              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">
+                ACCIONES
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -156,19 +180,27 @@ const UsersSection = () => {
                   <TableCell className="px-6 py-4 font-medium">
                     {user.name} {user.lastName}
                     {isSelf(user.id) && (
-                      <span className="ml-2 text-[10px] uppercase tracking-wider text-stone-400">(tú)</span>
+                      <span className="ml-2 text-[10px] uppercase tracking-wider text-stone-400">
+                        (tú)
+                      </span>
                     )}
                   </TableCell>
                   <TableCell className="px-6 py-4 text-sm text-stone-500">{user.email}</TableCell>
                   <TableCell className="px-6 py-4">
-                    <span className={`${ROLE_BADGES[user.role] ?? "bg-stone-100 text-stone-700"} px-3 py-1 text-xs rounded-full flex items-center w-fit gap-1`}>
+                    <span
+                      className={`${ROLE_BADGES[user.role] ?? "bg-stone-100 text-stone-700"} px-3 py-1 text-xs rounded-full flex items-center w-fit gap-1`}
+                    >
                       <Shield className="w-3 h-3" />
                       {ROLE_LABELS[user.role] ?? user.role}
                     </span>
                   </TableCell>
                   <TableCell className="px-6 py-4">
-                    <span className={`flex items-center text-xs ${STATUS_COLORS[user.status] ?? ""}`}>
-                      <span className={`w-2 h-2 rounded-full ${STATUS_DOTS[user.status] ?? "bg-stone-400"} mr-2`} />
+                    <span
+                      className={`flex items-center text-xs ${STATUS_COLORS[user.status] ?? ""}`}
+                    >
+                      <span
+                        className={`w-2 h-2 rounded-full ${STATUS_DOTS[user.status] ?? "bg-stone-400"} mr-2`}
+                      />
                       {STATUS_LABELS[user.status] ?? user.status}
                     </span>
                   </TableCell>
@@ -196,10 +228,16 @@ const UsersSection = () => {
                             }}
                           >
                             {ROLE_OPTIONS.map((role) => (
-                              <DropdownMenuRadioItem key={role.value} value={role.value} className="py-2">
+                              <DropdownMenuRadioItem
+                                key={role.value}
+                                value={role.value}
+                                className="py-2"
+                              >
                                 <div className="flex flex-col gap-0.5">
                                   <span className="text-xs font-medium">{role.label}</span>
-                                  <span className="text-[10px] text-stone-400">{role.description}</span>
+                                  <span className="text-[10px] text-stone-400">
+                                    {role.description}
+                                  </span>
                                 </div>
                               </DropdownMenuRadioItem>
                             ))}
@@ -210,9 +248,22 @@ const UsersSection = () => {
                         variant="ghost"
                         size="icon"
                         className={`h-8 w-8 ${user.status === "suspended" ? "text-green-600 hover:text-green-700 hover:bg-green-50" : "text-red-600 hover:text-red-700 hover:bg-red-50"}`}
-                        title={isSelf(user.id) ? "No puedes suspender tu propia cuenta" : user.role === "admin" ? "No puedes suspender un administrador" : (user.status === "suspended" ? "Activar" : "Suspender")}
+                        title={
+                          isSelf(user.id)
+                            ? "No puedes suspender tu propia cuenta"
+                            : user.role === "admin"
+                              ? "No puedes suspender un administrador"
+                              : user.status === "suspended"
+                                ? "Activar"
+                                : "Suspender"
+                        }
                         onClick={() => toggleStatus(user)}
-                        disabled={suspendUser.isPending || activateUser.isPending || isSelf(user.id) || user.role === "admin"}
+                        disabled={
+                          suspendUser.isPending ||
+                          activateUser.isPending ||
+                          isSelf(user.id) ||
+                          user.role === "admin"
+                        }
                       >
                         <Ban className="w-4 h-4" />
                       </Button>

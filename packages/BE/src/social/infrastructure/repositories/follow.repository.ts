@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { ulid } from 'ulidx';
-import { Follow, FollowAttributes } from '../../domain/models/follow.entity';
-import { IFollowRepository } from '../../application/repositories/i-follow.repository';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { ulid } from "ulidx";
+import { Follow, FollowAttributes } from "../../domain/models/follow.entity";
+import { IFollowRepository } from "../../application/repositories/i-follow.repository";
 
 @Injectable()
 export class FollowRepository implements IFollowRepository {
@@ -15,7 +15,7 @@ export class FollowRepository implements IFollowRepository {
   async findByFollower(followerId: string): Promise<FollowAttributes[]> {
     const results = await this.repository.find({
       where: { followerId },
-      order: { createdAt: 'DESC' },
+      order: { createdAt: "DESC" },
     });
     return results.map((r) => this.toAttributes(r));
   }
@@ -23,7 +23,7 @@ export class FollowRepository implements IFollowRepository {
   async findByFollowing(followingId: string): Promise<FollowAttributes[]> {
     const results = await this.repository.find({
       where: { followingId },
-      order: { createdAt: 'DESC' },
+      order: { createdAt: "DESC" },
     });
     return results.map((r) => this.toAttributes(r));
   }

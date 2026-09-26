@@ -3,15 +3,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { MoreVertical, Plus, Search } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -63,7 +56,7 @@ const IngredientFormDialog = ({
   const editIngredient = useEditIngredient();
   const [formData, setFormData] = useState<IngredientFormData>(
     initialData
-      ? (languages.reduce(
+      ? languages.reduce(
           (acc, lang) => ({
             ...acc,
             [lang]: {
@@ -72,21 +65,21 @@ const IngredientFormDialog = ({
             },
           }),
           {} as IngredientFormData,
-        ))
+        )
       : emptyFormData(),
   );
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const content = Object.fromEntries(
-      Object.entries(formData).filter(([, v]) => v.name),
-    );
+    const content = Object.fromEntries(Object.entries(formData).filter(([, v]) => v.name));
     if (initialData) {
       await editIngredient.mutateAsync({ id: initialData.id, content });
     } else {
       await createIngredient.mutateAsync({ content });
     }
-    queryClient.invalidateQueries({ queryKey: ["ingredients", "getIngredients"] });
+    queryClient.invalidateQueries({
+      queryKey: ["ingredients", "getIngredients"],
+    });
     onOpenChange(false);
   };
 
@@ -101,9 +94,7 @@ const IngredientFormDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl">
         <DialogHeader>
-          <DialogTitle>
-            {initialData ? "Editar Ingrediente" : "Nuevo Ingrediente"}
-          </DialogTitle>
+          <DialogTitle>{initialData ? "Editar Ingrediente" : "Nuevo Ingrediente"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           {languages.map((lang) => (
@@ -112,9 +103,7 @@ const IngredientFormDialog = ({
                 {t(`languages.${lang}`)}
               </p>
               <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">
-                  Nombre
-                </label>
+                <label className="block text-sm font-medium text-stone-700 mb-1">Nombre</label>
                 <input
                   className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-900"
                   value={formData[lang]?.name ?? ""}
@@ -122,9 +111,7 @@ const IngredientFormDialog = ({
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-stone-700 mb-1">
-                  Singular
-                </label>
+                <label className="block text-sm font-medium text-stone-700 mb-1">Singular</label>
                 <input
                   className="w-full border border-stone-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-stone-900"
                   value={formData[lang]?.singularName ?? ""}
@@ -134,11 +121,7 @@ const IngredientFormDialog = ({
             </div>
           ))}
           <div className="flex justify-end gap-3 pt-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-            >
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
               Cancelar
             </Button>
             <Button
@@ -146,9 +129,7 @@ const IngredientFormDialog = ({
               className="bg-stone-900 text-white hover:bg-stone-700"
               disabled={createIngredient.isPending || editIngredient.isPending}
             >
-              {createIngredient.isPending || editIngredient.isPending
-                ? "Guardando..."
-                : "Guardar"}
+              {createIngredient.isPending || editIngredient.isPending ? "Guardando..." : "Guardar"}
             </Button>
           </div>
         </form>
@@ -197,10 +178,7 @@ const IngredientsSection = () => {
             Administra el catálogo completo de ingredientes.
           </p>
         </div>
-        <Button
-          className="bg-stone-900 text-white hover:bg-stone-700"
-          onClick={handleCreate}
-        >
+        <Button className="bg-stone-900 text-white hover:bg-stone-700" onClick={handleCreate}>
           <Plus className="w-4 h-4 mr-2" />
           Nuevo Ingrediente
         </Button>
@@ -254,9 +232,7 @@ const IngredientsSection = () => {
               </TableRow>
             ) : (
               filtered.map((ing) => {
-                const translatedCount = languages.filter(
-                  (l) => ing.content[l]?.name,
-                ).length;
+                const translatedCount = languages.filter((l) => ing.content[l]?.name).length;
                 const isFullyTranslated = translatedCount === languages.length;
 
                 return (
@@ -273,9 +249,7 @@ const IngredientsSection = () => {
                     <TableCell className="px-6 py-4">
                       <span
                         className={`flex items-center text-xs ${
-                          isFullyTranslated
-                            ? "text-green-600"
-                            : "text-amber-600"
+                          isFullyTranslated ? "text-green-600" : "text-amber-600"
                         }`}
                       >
                         <span
@@ -283,19 +257,13 @@ const IngredientsSection = () => {
                             isFullyTranslated ? "bg-green-600" : "bg-amber-600"
                           }`}
                         />
-                        {isFullyTranslated
-                          ? "Completo"
-                          : `${translatedCount}/${languages.length}`}
+                        {isFullyTranslated ? "Completo" : `${translatedCount}/${languages.length}`}
                       </span>
                     </TableCell>
                     <TableCell className="px-6 py-4">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8"
-                          >
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
                             <MoreVertical className="w-4 h-4 text-stone-400" />
                           </Button>
                         </DropdownMenuTrigger>

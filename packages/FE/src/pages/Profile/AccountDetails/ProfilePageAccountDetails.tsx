@@ -120,7 +120,7 @@ const ProfilePageAccountDetails = () => {
             </h1>
             {(user.position || user.location) && (
               <p className="text-[12px] leading-[1.0] tracking-[0.2em] font-semibold text-secondary uppercase mt-1">
-                {[user.position, user.location].filter(Boolean).join(' \u2022 ')}
+                {[user.position, user.location].filter(Boolean).join(" \u2022 ")}
               </p>
             )}
           </div>

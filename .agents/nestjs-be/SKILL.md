@@ -18,18 +18,18 @@ description: Use when working on a NestJS backend. This orchestrator covers the 
 
 ## Ecosystem Overview
 
-| Concern | Tool |
-|---|---|
-| Framework | NestJS 11 |
-| ORM | TypeORM + PostgreSQL |
-| Auth | Passport (JWT, Auth0) |
+| Concern    | Tool                                |
+| ---------- | ----------------------------------- |
+| Framework  | NestJS 11                           |
+| ORM        | TypeORM + PostgreSQL                |
+| Auth       | Passport (JWT, Auth0)               |
 | Validation | class-validator + class-transformer |
-| API docs | Swagger / OpenAPI |
-| Storage | Azure Blob Storage |
-| Cache | ioredis (Redis) |
-| Events | @nestjs/event-emitter |
-| Testing | Vitest + Supertest |
-| IDs | ulidx |
+| API docs   | Swagger / OpenAPI                   |
+| Storage    | Azure Blob Storage                  |
+| Cache      | ioredis (Redis)                     |
+| Events     | @nestjs/event-emitter               |
+| Testing    | Vitest + Supertest                  |
+| IDs        | ulidx                               |
 
 ## DI Rules
 

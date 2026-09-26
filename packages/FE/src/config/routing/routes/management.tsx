@@ -4,9 +4,7 @@ import { lazy } from "react";
 import Loader from "@/components/common/Loader";
 import i18n from "@/i18n";
 
-const ManagementLayout = lazy(
-  () => import("@/components/layouts/Management/ManagementLayout"),
-);
+const ManagementLayout = lazy(() => import("@/components/layouts/Management/ManagementLayout"));
 
 export const Route = createFileRoute("/management")({
   component: ManagementLayout,

@@ -34,7 +34,7 @@ export type RecipeIngredient = Pick<Ingredient, "id"> &
   Ingredient["content"][Language] & {
     quantity: number;
     optional: boolean;
-    unit: Pick<Unit, "id" | "isVisible"> & Unit["content"][Language] | null;
+    unit: (Pick<Unit, "id" | "isVisible"> & Unit["content"][Language]) | null;
   };
 
 export type RecipeKitchenware = {
@@ -52,7 +52,10 @@ export type RecipeStep = {
   imageUrl?: string;
 };
 
-export type RecipeListItem = Pick<Recipe, "id" | "title" | "thumbnailUrl" | "time" | "author" | "categories" | "portions">;
+export type RecipeListItem = Pick<
+  Recipe,
+  "id" | "title" | "thumbnailUrl" | "time" | "author" | "categories" | "portions"
+>;
 
 export type RecipeList = Array<RecipeListItem>;
 

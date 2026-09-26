@@ -1,6 +1,6 @@
-import { CategoryAttributes, CategoryContent } from '../../domain/models';
+import { CategoryAttributes, CategoryContent } from "../../domain/models";
 
-export const CATEGORY_REPOSITORY = 'CATEGORY_REPOSITORY';
+export const CATEGORY_REPOSITORY = "CATEGORY_REPOSITORY";
 
 export interface ICategoryRepository {
   findAll(): Promise<CategoryAttributes[]>;

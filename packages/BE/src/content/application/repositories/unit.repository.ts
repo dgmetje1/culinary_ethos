@@ -1,6 +1,6 @@
-import { UnitAttributes, UnitContent } from '../../domain/models';
+import { UnitAttributes, UnitContent } from "../../domain/models";
 
-export const UNIT_REPOSITORY = 'UNIT_REPOSITORY';
+export const UNIT_REPOSITORY = "UNIT_REPOSITORY";
 
 export interface IUnitRepository {
   findAll(): Promise<UnitAttributes[]>;

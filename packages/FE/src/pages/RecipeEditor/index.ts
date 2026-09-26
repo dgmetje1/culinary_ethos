@@ -1,2 +1,2 @@
-export { default } from './RecipeEditorPage';
-export { default as RecipeEditorCreatePage } from './RecipeEditorCreatePage';
+export { default } from "./RecipeEditorPage";
+export { default as RecipeEditorCreatePage } from "./RecipeEditorCreatePage";

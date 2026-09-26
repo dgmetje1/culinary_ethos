@@ -1,4 +1,4 @@
-import { Entity, PrimaryColumn, Column } from 'typeorm';
+import { Entity, PrimaryColumn, Column } from "typeorm";
 
 export interface SavedRecipeAttributes {
   id: string;
@@ -7,17 +7,17 @@ export interface SavedRecipeAttributes {
   createdAt: Date;
 }
 
-@Entity({ name: 'saved_recipes' })
+@Entity({ name: "saved_recipes" })
 export class SavedRecipe {
-  @PrimaryColumn({ type: 'varchar' })
+  @PrimaryColumn({ type: "varchar" })
   id: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: "varchar" })
   userId: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: "varchar" })
   recipeId: string;
 
-  @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+  @Column({ type: "timestamp", default: () => "CURRENT_TIMESTAMP" })
   createdAt: Date;
 }

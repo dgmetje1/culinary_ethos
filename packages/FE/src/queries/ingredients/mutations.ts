@@ -2,7 +2,12 @@ import { useQueryClient } from "@tanstack/react-query";
 
 import { Api } from "@/lib/api";
 import { useApiMutation } from "@/middleware/api";
-import { Ingredient, IngredientCreateDTO, IngredientEditDTO, IngredientMergeDTO } from "@/types/ingredients";
+import {
+  Ingredient,
+  IngredientCreateDTO,
+  IngredientEditDTO,
+  IngredientMergeDTO,
+} from "@/types/ingredients";
 
 import { getIngredientsKeys } from "./keys";
 

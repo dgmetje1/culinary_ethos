@@ -1,7 +1,7 @@
-import { useApiQuery } from '@/middleware/api';
+import { useApiQuery } from "@/middleware/api";
 
-import { getNotificationsKeys, getUnreadCountKeys } from './keys';
-import { getNotifications, getUnreadCount } from './queries';
+import { getNotificationsKeys, getUnreadCountKeys } from "./keys";
+import { getNotifications, getUnreadCount } from "./queries";
 
 export const useGetNotifications = () => {
   const { key, queryKey } = getNotificationsKeys();

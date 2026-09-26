@@ -24,19 +24,19 @@ description: Use when writing or debugging frontend tests. Covers Vitest, React 
 ## Component Tests
 
 ```tsx
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { describe, it, expect, vi } from 'vitest'
+import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('MyComponent', () => {
-  it('renders and responds to click', async () => {
-    const onClick = vi.fn()
-    render(<MyComponent onClick={onClick}>Click me</MyComponent>)
+    it('renders and responds to click', async () => {
+        const onClick = vi.fn();
+        render(<MyComponent onClick={onClick}>Click me</MyComponent>);
 
-    await userEvent.click(screen.getByRole('button', { name: /click me/i }))
-    expect(onClick).toHaveBeenCalledTimes(1)
-  })
-})
+        await userEvent.click(screen.getByRole('button', { name: /click me/i }));
+        expect(onClick).toHaveBeenCalledTimes(1);
+    });
+});
 ```
 
 ### What to test
@@ -60,13 +60,13 @@ describe('MyComponent', () => {
 - Use `waitFor` / `act` for async updates
 
 ```tsx
-import { renderHook, act } from '@testing-library/react'
+import { renderHook, act } from '@testing-library/react';
 
 it('increments counter', () => {
-  const { result } = renderHook(() => useCounter(0))
-  act(() => result.current.increment())
-  expect(result.current.count).toBe(1)
-})
+    const { result } = renderHook(() => useCounter(0));
+    act(() => result.current.increment());
+    expect(result.current.count).toBe(1);
+});
 ```
 
 ## Mocking Strategies
@@ -80,15 +80,15 @@ it('increments counter', () => {
 
 ```tsx
 function renderWithProviders(ui: React.ReactElement, options = {}) {
-  const { wrapper: CustomWrapper, ...renderOptions } = options
-  function Wrapper({ children }: { children: React.ReactNode }) {
-    return (
-      <QueryClientProvider client={queryClient}>
-        <Auth0Provider>{children}</Auth0Provider>
-      </QueryClientProvider>
-    )
-  }
-  return render(ui, { wrapper: CustomWrapper ?? Wrapper, ...renderOptions })
+    const { wrapper: CustomWrapper, ...renderOptions } = options;
+    function Wrapper({ children }: { children: React.ReactNode }) {
+        return (
+            <QueryClientProvider client={queryClient}>
+                <Auth0Provider>{children}</Auth0Provider>
+            </QueryClientProvider>
+        );
+    }
+    return render(ui, { wrapper: CustomWrapper ?? Wrapper, ...renderOptions });
 }
 ```
 

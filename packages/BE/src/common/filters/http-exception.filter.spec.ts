@@ -1,10 +1,10 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { AllExceptionsFilter } from './http-exception.filter';
-import { HttpException, HttpStatus, BadRequestException, NotFoundException } from '@nestjs/common';
-import { EntityNotFoundError } from '../exceptions/entity-not-found.error';
-import { InvalidParameterError } from '../exceptions/invalid-parameter.error';
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { AllExceptionsFilter } from "./http-exception.filter";
+import { HttpException, HttpStatus, BadRequestException } from "@nestjs/common";
+import { EntityNotFoundError } from "../exceptions/entity-not-found.error";
+import { InvalidParameterError } from "../exceptions/invalid-parameter.error";
 
-describe('AllExceptionsFilter', () => {
+describe("AllExceptionsFilter", () => {
   let filter: AllExceptionsFilter;
   let mockJson: any;
   let mockStatus: any;
@@ -25,61 +25,63 @@ describe('AllExceptionsFilter', () => {
     filter = new AllExceptionsFilter();
   });
 
-  describe('catch', () => {
-    it('should handle HttpException with string message', () => {
-      const exception = new HttpException('Custom error', HttpStatus.BAD_REQUEST);
+  describe("catch", () => {
+    it("should handle HttpException with string message", () => {
+      const exception = new HttpException("Custom error", HttpStatus.BAD_REQUEST);
       filter.catch(exception, mockHost);
 
       expect(mockStatus).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
       expect(mockJson).toHaveBeenCalledWith(
         expect.objectContaining({
           statusCode: HttpStatus.BAD_REQUEST,
-          message: 'Custom error',
+          message: "Custom error",
         }),
       );
     });
 
-    it('should handle EntityNotFoundError', () => {
-      const exception = new EntityNotFoundError('Recipe not found', 'Recipe', [{ id: '123' }]);
+    it("should handle EntityNotFoundError", () => {
+      const exception = new EntityNotFoundError("Recipe not found", "Recipe", [{ id: "123" }]);
       filter.catch(exception, mockHost);
 
       expect(mockStatus).toHaveBeenCalledWith(HttpStatus.NOT_FOUND);
       expect(mockJson).toHaveBeenCalledWith(
         expect.objectContaining({
           statusCode: HttpStatus.NOT_FOUND,
-          message: 'Recipe not found',
+          message: "Recipe not found",
         }),
       );
     });
 
-    it('should handle InvalidParameterError', () => {
-      const exception = new InvalidParameterError('Invalid parameter', 'Recipe', [{ field: 'name' }]);
+    it("should handle InvalidParameterError", () => {
+      const exception = new InvalidParameterError("Invalid parameter", "Recipe", [
+        { field: "name" },
+      ]);
       filter.catch(exception, mockHost);
 
       expect(mockStatus).toHaveBeenCalledWith(HttpStatus.BAD_REQUEST);
       expect(mockJson).toHaveBeenCalledWith(
         expect.objectContaining({
           statusCode: HttpStatus.BAD_REQUEST,
-          message: 'Invalid parameter',
+          message: "Invalid parameter",
         }),
       );
     });
 
-    it('should handle generic Error as 500', () => {
-      const exception = new Error('Unexpected error');
+    it("should handle generic Error as 500", () => {
+      const exception = new Error("Unexpected error");
       filter.catch(exception, mockHost);
 
       expect(mockStatus).toHaveBeenCalledWith(HttpStatus.INTERNAL_SERVER_ERROR);
       expect(mockJson).toHaveBeenCalledWith(
         expect.objectContaining({
           statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-          message: 'Internal server error',
+          message: "Internal server error",
         }),
       );
     });
 
-    it('should include timestamp in response', () => {
-      const exception = new HttpException('test', HttpStatus.OK);
+    it("should include timestamp in response", () => {
+      const exception = new HttpException("test", HttpStatus.OK);
       filter.catch(exception, mockHost);
 
       expect(mockJson).toHaveBeenCalledWith(
@@ -89,7 +91,7 @@ describe('AllExceptionsFilter', () => {
       );
     });
 
-    it('should handle unknown exception type', () => {
+    it("should handle unknown exception type", () => {
       const exception = { unexpected: true };
       filter.catch(exception, mockHost);
 
@@ -101,15 +103,15 @@ describe('AllExceptionsFilter', () => {
       );
     });
 
-    it('should flatten validation errors from BadRequestException', () => {
+    it("should flatten validation errors from BadRequestException", () => {
       const validationMessages = [
         {
-          property: 'email',
-          constraints: { isEmail: 'email must be a valid email' },
+          property: "email",
+          constraints: { isEmail: "email must be a valid email" },
         },
         {
-          property: 'name',
-          constraints: { isNotEmpty: 'name should not be empty' },
+          property: "name",
+          constraints: { isNotEmpty: "name should not be empty" },
         },
       ];
       const exception = new BadRequestException(validationMessages);
@@ -117,23 +119,23 @@ describe('AllExceptionsFilter', () => {
 
       expect(mockJson).toHaveBeenCalledWith(
         expect.objectContaining({
-          message: 'Validation failed',
+          message: "Validation failed",
           errors: {
-            email: ['email must be a valid email'],
-            name: ['name should not be empty'],
+            email: ["email must be a valid email"],
+            name: ["name should not be empty"],
           },
         }),
       );
     });
 
-    it('should handle nested validation errors (children)', () => {
+    it("should handle nested validation errors (children)", () => {
       const validationMessages = [
         {
-          property: 'items',
+          property: "items",
           children: [
             {
-              property: 'name',
-              constraints: { isNotEmpty: 'name should not be empty' },
+              property: "name",
+              constraints: { isNotEmpty: "name should not be empty" },
             },
           ],
         },
@@ -144,7 +146,7 @@ describe('AllExceptionsFilter', () => {
       expect(mockJson).toHaveBeenCalledWith(
         expect.objectContaining({
           errors: {
-            name: ['name should not be empty'],
+            name: ["name should not be empty"],
           },
         }),
       );

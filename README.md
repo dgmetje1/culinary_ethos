@@ -18,6 +18,7 @@ culinary-ethos/
 ## Tech Stack
 
 ### Backend (`packages/BE`)
+
 - **Framework:** NestJS 11 with DDD architecture
 - **Language:** TypeScript 6
 - **ORM:** TypeORM with PostgreSQL
@@ -28,6 +29,7 @@ culinary-ethos/
 - **Docs:** Swagger/OpenAPI
 
 ### Frontend (`packages/FE`)
+
 - **Framework:** React 19
 - **Bundler:** Vite 8
 - **Routing:** TanStack Router
@@ -82,19 +84,19 @@ pnpm run dev:fe
 
 ## Available Commands
 
-| Command | Description |
-|---------|-------------|
-| `pnpm run dev:all` | Start BE + FE in parallel |
-| `pnpm run dev:be` | Start NestJS backend (watch mode) |
-| `pnpm run dev:fe` | Start Vite frontend |
-| `pnpm run build:be` | Build backend |
-| `pnpm run build:fe` | Build frontend |
-| `pnpm run test` | Run backend unit tests |
-| `pnpm run test:be` | Run backend unit tests |
-| `pnpm run test:fe` | Run frontend tests |
-| `pnpm run lint` | Lint both packages |
-| `pnpm run lint:be` | Lint backend |
-| `pnpm run lint:fe` | Lint frontend |
+| Command             | Description                       |
+| ------------------- | --------------------------------- |
+| `pnpm run dev:all`  | Start BE + FE in parallel         |
+| `pnpm run dev:be`   | Start NestJS backend (watch mode) |
+| `pnpm run dev:fe`   | Start Vite frontend               |
+| `pnpm run build:be` | Build backend                     |
+| `pnpm run build:fe` | Build frontend                    |
+| `pnpm run test`     | Run backend unit tests            |
+| `pnpm run test:be`  | Run backend unit tests            |
+| `pnpm run test:fe`  | Run frontend tests                |
+| `pnpm run lint`     | Lint both packages                |
+| `pnpm run lint:be`  | Lint backend                      |
+| `pnpm run lint:fe`  | Lint frontend                     |
 
 ## Backend Architecture
 

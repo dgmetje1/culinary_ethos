@@ -1,4 +1,4 @@
-import { Entity, Column, PrimaryColumn, Unique } from 'typeorm';
+import { Entity, Column, PrimaryColumn, Unique } from "typeorm";
 
 export interface UserAttributes {
   id: string;
@@ -16,45 +16,45 @@ export interface UserAttributes {
   status: string;
 }
 
-@Entity({ name: 'users' })
-@Unique(['account_id'])
+@Entity({ name: "users" })
+@Unique(["account_id"])
 export class User {
-  @PrimaryColumn({ type: 'varchar' })
+  @PrimaryColumn({ type: "varchar" })
   id!: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: "varchar" })
   account_id!: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: "varchar" })
   nick_name!: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: "varchar" })
   name!: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: "varchar" })
   last_name!: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: "varchar" })
   email!: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: "varchar" })
   language!: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: "varchar", nullable: true })
   profile_picture!: string | null;
 
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: "text", nullable: true })
   description!: string | null;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: "varchar", nullable: true })
   position!: string | null;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: "varchar", nullable: true })
   location!: string | null;
 
-  @Column({ type: 'varchar', default: 'chef' })
+  @Column({ type: "varchar", default: "chef" })
   role!: string;
 
-  @Column({ type: 'varchar', default: 'active' })
+  @Column({ type: "varchar", default: "active" })
   status!: string;
 }

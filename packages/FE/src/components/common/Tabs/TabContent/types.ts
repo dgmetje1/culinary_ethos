@@ -1,4 +1,4 @@
-import { CSSProperties, HTMLAttributes, ReactNode } from "react";
+import { CSSProperties, HTMLAttributes } from "react";
 
 export type TabContentProps = HTMLAttributes<HTMLDivElement> & {
   contentIndex: number;

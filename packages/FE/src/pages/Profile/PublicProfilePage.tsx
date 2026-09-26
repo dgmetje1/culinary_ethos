@@ -7,7 +7,13 @@ import { useApiQuery } from "@/middleware/api";
 import { getUserSummaryKeys } from "@/queries/users/keys";
 import { getUserSummary } from "@/queries/users/queries";
 import { useGetUserPublicRecipes } from "@/queries/recipes";
-import { useGetIsFollowing, useGetFollowersCount, useGetFollowingCount, useFollowUser, useUnfollowUser } from "@/queries/follows";
+import {
+  useGetIsFollowing,
+  useGetFollowersCount,
+  useGetFollowingCount,
+  useFollowUser,
+  useUnfollowUser,
+} from "@/queries/follows";
 import { useAuthContext } from "@/context/Auth";
 import { Button } from "@/components/ui/button";
 
@@ -22,14 +28,12 @@ const PublicProfilePage = () => {
   const { data: followStatus } = useGetIsFollowing(userId);
   const { data: followersCount } = useGetFollowersCount(userId);
   const { data: followingCount } = useGetFollowingCount(userId);
-  const followMutation = useFollowUser(account?.id ?? '');
-  const unfollowMutation = useUnfollowUser(account?.id ?? '');
+  const followMutation = useFollowUser(account?.id ?? "");
+  const unfollowMutation = useUnfollowUser(account?.id ?? "");
 
   const isOwnProfile = account?.id === userId;
   const displayName = user?.nickName || user?.name || userId;
-  const avatarUrl = user?.profilePicture
-    ? composeCdnUrl(config.cdnUrl, user.profilePicture)
-    : null;
+  const avatarUrl = user?.profilePicture ? composeCdnUrl(config.cdnUrl, user.profilePicture) : null;
 
   const handleFollowToggle = () => {
     if (followStatus?.following) {
@@ -48,11 +52,7 @@ const PublicProfilePage = () => {
               {userLoading ? (
                 <Loader2 className="w-full h-full text-stone-400 animate-spin" />
               ) : avatarUrl ? (
-                <img
-                  src={avatarUrl}
-                  alt={displayName}
-                  className="w-full h-full object-cover"
-                />
+                <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" />
               ) : (
                 <ChefHat className="w-full h-full p-4 text-stone-500" />
               )}
@@ -66,7 +66,7 @@ const PublicProfilePage = () => {
                 </h1>
                 {(user?.position || user?.location) && (
                   <p className="text-[12px] leading-[1.0] tracking-[0.2em] font-semibold text-secondary uppercase mt-1">
-                    {[user?.position, user?.location].filter(Boolean).join(' \u2022 ')}
+                    {[user?.position, user?.location].filter(Boolean).join(" \u2022 ")}
                   </p>
                 )}
               </div>
@@ -151,8 +151,7 @@ const PublicProfilePage = () => {
                         {recipe.title}
                       </h3>
                       <p className="text-[12px] leading-[1.0] tracking-[0.1em] font-semibold text-on-primary-container uppercase">
-                        {recipe.categories?.[0]?.name} &bull;{" "}
-                        {Math.floor(recipe.time / 60)} min
+                        {recipe.categories?.[0]?.name} &bull; {Math.floor(recipe.time / 60)} min
                       </p>
                     </div>
                   </div>

@@ -1,9 +1,18 @@
-import { Injectable, Inject, ConflictException, NotFoundException } from '@nestjs/common';
-import { SAVED_RECIPE_REPOSITORY, ISavedRecipeRepository } from '../repositories/i-saved-recipe.repository';
-import { RECIPE_REPOSITORY, IRecipeRepository } from '../../../content/application/repositories/recipe.repository';
-import { CATEGORY_REPOSITORY, ICategoryRepository } from '../../../content/application/repositories/category.repository';
-import { RecipeListItemResponseDto } from '../../../content/application/dto';
-import { RecipeAttributes, CategoryAttributes } from '../../../content/domain/models';
+import { Injectable, Inject, ConflictException, NotFoundException } from "@nestjs/common";
+import {
+  SAVED_RECIPE_REPOSITORY,
+  ISavedRecipeRepository,
+} from "../repositories/i-saved-recipe.repository";
+import {
+  RECIPE_REPOSITORY,
+  IRecipeRepository,
+} from "../../../content/application/repositories/recipe.repository";
+import {
+  CATEGORY_REPOSITORY,
+  ICategoryRepository,
+} from "../../../content/application/repositories/category.repository";
+import { RecipeListItemResponseDto } from "../../../content/application/dto";
+import { RecipeAttributes, CategoryAttributes } from "../../../content/domain/models";
 
 @Injectable()
 export class SavedRecipesService {
@@ -19,7 +28,7 @@ export class SavedRecipesService {
   async save(userId: string, recipeId: string): Promise<{ id: string }> {
     const existing = await this.savedRecipeRepository.findOne(userId, recipeId);
     if (existing) {
-      throw new ConflictException('Recipe already saved');
+      throw new ConflictException("Recipe already saved");
     }
     const saved = await this.savedRecipeRepository.create(userId, recipeId);
     return { id: saved.id };
@@ -28,7 +37,7 @@ export class SavedRecipesService {
   async unsave(userId: string, recipeId: string): Promise<void> {
     const existing = await this.savedRecipeRepository.findOne(userId, recipeId);
     if (!existing) {
-      throw new NotFoundException('Saved recipe not found');
+      throw new NotFoundException("Saved recipe not found");
     }
     await this.savedRecipeRepository.delete(existing.id);
   }
@@ -48,7 +57,10 @@ export class SavedRecipesService {
     return { count };
   }
 
-  async getSavedRecipes(userId: string, language: string = 'en'): Promise<RecipeListItemResponseDto[]> {
+  async getSavedRecipes(
+    userId: string,
+    language: string = "en",
+  ): Promise<RecipeListItemResponseDto[]> {
     const saved = await this.savedRecipeRepository.findByUser(userId);
     if (!saved.length) return [];
 
@@ -81,15 +93,11 @@ export class SavedRecipesService {
       categories: (recipe.categoryIds ?? []).reduce<{ id: string; name: string }[]>(
         (acc, catId) => {
           const cat = allCategories.find(
-            (c) =>
-              c.id === catId &&
-              c.content.some((content) => content.language === language),
+            (c) => c.id === catId && c.content.some((content) => content.language === language),
           );
           if (cat) {
-            const content =
-              cat.content.find((c) => c.language === language) ||
-              cat.content[0];
-            acc.push({ id: cat.id, name: content?.name || '' });
+            const content = cat.content.find((c) => c.language === language) || cat.content[0];
+            acc.push({ id: cat.id, name: content?.name || "" });
           }
           return acc;
         },
@@ -108,6 +116,6 @@ export class SavedRecipesService {
     language: string,
   ): string {
     const pub = publications.find((p) => p.language === language) || publications[0];
-    return pub?.title || '';
+    return pub?.title || "";
   }
 }

@@ -1,22 +1,22 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { PassportStrategy } from '@nestjs/passport';
-import { Strategy } from 'passport-auth0';
-import type { Profile } from 'passport-auth0';
-import type { ExtraVerificationParams } from 'passport-auth0';
-import { AuthService, Auth0Profile } from '../auth.service';
+import { Injectable } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { PassportStrategy } from "@nestjs/passport";
+import { Strategy } from "passport-auth0";
+import type { Profile } from "passport-auth0";
+import type { ExtraVerificationParams } from "passport-auth0";
+import { AuthService, Auth0Profile } from "../auth.service";
 
 @Injectable()
-export class Auth0Strategy extends PassportStrategy(Strategy, 'auth0') {
+export class Auth0Strategy extends PassportStrategy(Strategy, "auth0") {
   constructor(
     configService: ConfigService,
     private readonly authService: AuthService,
   ) {
     super({
-      domain: configService.getOrThrow('AUTH0_DOMAIN'),
-      clientID: configService.getOrThrow('AUTH0_CLIENT_ID'),
-      clientSecret: configService.getOrThrow('AUTH0_CLIENT_SECRET'),
-      callbackURL: configService.getOrThrow('AUTH0_CALLBACK_URL'),
+      domain: configService.getOrThrow("AUTH0_DOMAIN"),
+      clientID: configService.getOrThrow("AUTH0_CLIENT_ID"),
+      clientSecret: configService.getOrThrow("AUTH0_CLIENT_SECRET"),
+      callbackURL: configService.getOrThrow("AUTH0_CALLBACK_URL"),
     });
   }
 

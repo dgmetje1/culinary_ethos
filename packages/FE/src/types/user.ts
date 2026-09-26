@@ -18,4 +18,7 @@ export type User = {
 
 export type UserAccountDTO = User;
 export type UserDTO = User;
-export type UserSummaryDTO = Pick<User, "id" | "name" | "lastName" | "profilePicture" | "nickName" | "position" | "location">;
+export type UserSummaryDTO = Pick<
+  User,
+  "id" | "name" | "lastName" | "profilePicture" | "nickName" | "position" | "location"
+>;

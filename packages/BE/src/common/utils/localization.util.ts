@@ -4,10 +4,10 @@ export class LocalizationHelper {
     key: keyof T,
     language: string,
   ): string {
-    if (!content) return '';
+    if (!content) return "";
     const localized = content.find((c) => c.language === language);
     const fallback = content[0];
-    return (localized?.[key] as string) || (fallback?.[key] as string) || '';
+    return (localized?.[key] as string) || (fallback?.[key] as string) || "";
   }
 
   static getPublicationTitle(
@@ -15,7 +15,7 @@ export class LocalizationHelper {
     language: string,
   ): string {
     const pub = publications.find((p) => p.language === language);
-    return pub?.title || publications[0]?.title || '';
+    return pub?.title || publications[0]?.title || "";
   }
 
   static getPublicationDescription(
@@ -23,7 +23,7 @@ export class LocalizationHelper {
     language: string,
   ): string {
     const pub = publications.find((p) => p.language === language);
-    return pub?.description || publications[0]?.description || '';
+    return pub?.description || publications[0]?.description || "";
   }
 
   static mapContentToRecord<T extends { language: string }>(

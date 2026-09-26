@@ -1,1 +1,1 @@
-export { default } from './RecipeDetailPageKitchenwareCard';
+export { default } from "./RecipeDetailPageKitchenwareCard";

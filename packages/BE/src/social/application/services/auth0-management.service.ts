@@ -1,6 +1,6 @@
-import { Injectable, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { FilesService } from '../../../files/files.service';
+import { Injectable, Logger } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { FilesService } from "../../../files/files.service";
 
 interface ManagementTokenResponse {
   access_token: string;
@@ -19,15 +19,15 @@ export class Auth0ManagementService {
   ) {}
 
   private getDomain(): string {
-    return this.configService.getOrThrow('AUTH0_MANAGEMENT_DOMAIN');
+    return this.configService.getOrThrow("AUTH0_MANAGEMENT_DOMAIN");
   }
 
   private getClientId(): string | undefined {
-    return this.configService.get<string>('AUTH0_MANAGEMENT_CLIENT_ID');
+    return this.configService.get<string>("AUTH0_MANAGEMENT_CLIENT_ID");
   }
 
   private getClientSecret(): string | undefined {
-    return this.configService.get<string>('AUTH0_MANAGEMENT_CLIENT_SECRET');
+    return this.configService.get<string>("AUTH0_MANAGEMENT_CLIENT_SECRET");
   }
 
   private isConfigured(): boolean {
@@ -36,7 +36,7 @@ export class Auth0ManagementService {
 
   private async getAccessToken(): Promise<string | null> {
     if (!this.isConfigured()) {
-      this.logger.warn('Auth0 Management API not configured — skipping');
+      this.logger.warn("Auth0 Management API not configured — skipping");
       return null;
     }
 
@@ -46,7 +46,7 @@ export class Auth0ManagementService {
 
     const domain = this.getDomain();
     const body = new URLSearchParams({
-      grant_type: 'client_credentials',
+      grant_type: "client_credentials",
       client_id: this.getClientId()!,
       client_secret: this.getClientSecret()!,
       audience: `https://${domain}/api/v2/`,
@@ -54,15 +54,13 @@ export class Auth0ManagementService {
 
     try {
       const response = await fetch(`https://${domain}/oauth/token`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body,
       });
 
       if (!response.ok) {
-        this.logger.error(
-          `Failed to get Management API token: ${response.status}`,
-        );
+        this.logger.error(`Failed to get Management API token: ${response.status}`);
         return null;
       }
 
@@ -73,19 +71,19 @@ export class Auth0ManagementService {
       };
       return data.access_token;
     } catch (error) {
-      this.logger.error('Failed to get Management API token', error);
+      this.logger.error("Failed to get Management API token", error);
       return null;
     }
   }
 
   private async resolvePictureAsDataUrl(picture: string): Promise<string> {
     if (/^https?:\/\//i.test(picture)) return picture;
-    if (picture.startsWith('data:')) return picture;
+    if (picture.startsWith("data:")) return picture;
 
     const file = await this.filesService.downloadFile(picture);
     if (!file) return picture;
 
-    const base64 = file.buffer.toString('base64');
+    const base64 = file.buffer.toString("base64");
     return `data:${file.contentType};base64,${base64}`;
   }
 
@@ -104,16 +102,16 @@ export class Auth0ManagementService {
 
     if (Object.keys(body).length === 0) return;
 
-    console.log('Updating Auth0 user with data:', body);
+    console.log("Updating Auth0 user with data:", body);
 
     try {
       const response = await fetch(
         `https://${domain}/api/v2/users/${encodeURIComponent(accountId)}`,
         {
-          method: 'PATCH',
+          method: "PATCH",
           headers: {
             Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(body),
         },

@@ -1,23 +1,23 @@
 {
-  "compilerOptions": {
-    "target": "ES2022",
-    "module": "ESNext",
-    "moduleResolution": "bundler",
-    "strict": true,
-    "strictPropertyInitialization": false,
-    "strictNullChecks": true,
-    "noImplicitAny": true,
-    "noFallthroughCasesInSwitch": true,
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "strict": true,
+        "strictPropertyInitialization": false,
+        "strictNullChecks": true,
+        "noImplicitAny": true,
+        "noFallthroughCasesInSwitch": true,
 
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true,
-    "resolveJsonModule": true,
-    "isolatedModules": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "resolveJsonModule": true,
+        "isolatedModules": true,
 
-    "declaration": true,
-    "removeComments": true,
-    "sourceMap": true,
-    "incremental": true
-  },
-  "exclude": ["node_modules", "dist"]
+        "declaration": true,
+        "removeComments": true,
+        "sourceMap": true,
+        "incremental": true
+    },
+    "exclude": ["node_modules", "dist"]
 }

@@ -1,29 +1,29 @@
-import { Entity, Column, PrimaryColumn, CreateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryColumn, CreateDateColumn } from "typeorm";
 
-@Entity('notifications')
+@Entity("notifications")
 export class Notification {
-  @PrimaryColumn({ type: 'varchar' })
+  @PrimaryColumn({ type: "varchar" })
   id: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: "varchar" })
   userId: string;
 
-  @Column({ type: 'varchar' })
+  @Column({ type: "varchar" })
   type: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: "varchar", nullable: true })
   actorId: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: "varchar", nullable: true })
   actorName: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: "varchar", nullable: true })
   recipeId: string;
 
-  @Column({ type: 'varchar', nullable: true })
+  @Column({ type: "varchar", nullable: true })
   recipeTitle: string;
 
-  @Column({ type: 'boolean', default: false })
+  @Column({ type: "boolean", default: false })
   read: boolean;
 
   @CreateDateColumn()

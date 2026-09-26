@@ -1,13 +1,13 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { ulid } from 'ulidx';
-import { User, UserAttributes } from '../../domain/models';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { ulid } from "ulidx";
+import { User, UserAttributes } from "../../domain/models";
 import {
   IUserRepository,
   CreateUserInput,
   UpdateUserInput,
-} from '../../application/repositories/i-user.repository';
+} from "../../application/repositories/i-user.repository";
 
 @Injectable()
 export class UserRepository implements IUserRepository {
@@ -31,30 +31,30 @@ export class UserRepository implements IUserRepository {
   async findByIdWithSummaryFields(id: string): Promise<UserAttributes | null> {
     const result = await this.userRepository.findOne({
       where: { id },
-      select: ['id', 'nick_name', 'name', 'last_name', 'profile_picture', 'position', 'location'],
+      select: ["id", "nick_name", "name", "last_name", "profile_picture", "position", "location"],
     });
     return result
       ? {
           id: result.id,
-          account_id: '',
+          account_id: "",
           nick_name: result.nick_name,
           name: result.name,
           last_name: result.last_name,
-          email: '',
-          language: '',
+          email: "",
+          language: "",
           profile_picture: result.profile_picture,
           description: result.description,
           position: result.position,
           location: result.location,
-          role: '',
-          status: '',
+          role: "",
+          status: "",
         }
       : null;
   }
 
   async findAll(): Promise<UserAttributes[]> {
     const results = await this.userRepository.find({
-      order: { name: 'ASC' },
+      order: { name: "ASC" },
     });
     return results.map((r) => this.toAttributes(r));
   }

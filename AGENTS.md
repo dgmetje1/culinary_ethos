@@ -13,21 +13,22 @@ pnpm workspace with 2 packages under `packages/`: `@culinary-ethos/be` (NestJS) 
 
 ## Commands
 
-| Action       | Command                                                                      |
-| ------------ | ---------------------------------------------------------------------------- |
-| Install      | `pnpm install`                                                               |
-| Dev (both)   | `pnpm run dev:all`                                                           |
-| Dev BE only  | `pnpm run dev:be` (port 3000, HTTPS)                                         |
-| Dev FE only  | `pnpm run dev:fe` (port 5173)                                                |
-| Build BE     | `pnpm run build:be`                                                          |
-| Build FE     | `pnpm run build:fe` (`tsc && vite build`)                                    |
-| Run BE tests | `pnpm run test` or `pnpm run test:be` (vitest, matches `**/*.spec.ts`)       |
-| Single test  | `pnpm exec vitest run <path>` (run from `packages/BE`)                       |
-| Run FE tests | `pnpm run test:fe` (no tests exist yet)                                      |
-| Typecheck BE | `pnpm run typecheck` (from `packages/BE`)                                    |
-| Typecheck FE | `pnpm run typecheck` (from `packages/FE`)                                    |
-| Lint         | `pnpm run lint` (both; BE lint is **broken** — ESLint v10 needs flat config) |
-| Format       | `pnpm run format` (BE only, prettier)                                        |
+| Action       | Command                                                                 |
+| ------------ | ----------------------------------------------------------------------- |
+| Install      | `pnpm install`                                                          |
+| Dev (both)   | `pnpm run dev:all`                                                      |
+| Dev BE only  | `pnpm run dev:be` (port 3000, HTTPS)                                    |
+| Dev FE only  | `pnpm run dev:fe` (port 5173)                                           |
+| Build BE     | `pnpm run build:be`                                                     |
+| Build FE     | `pnpm run build:fe` (`tsc && vite build`)                               |
+| Run BE tests | `pnpm run test` or `pnpm run test:be` (vitest, matches `**/*.spec.ts`)  |
+| Single test  | `pnpm exec vitest run <path>` (run from `packages/BE`)                  |
+| Run FE tests | `pnpm run test:fe` (no tests exist yet)                                 |
+| Typecheck BE | `pnpm run typecheck` (from `packages/BE`)                               |
+| Typecheck FE | `pnpm run typecheck` (from `packages/FE`)                               |
+| Lint         | `pnpm run lint` (oxlint, runs over the whole repo)                      |
+| Lint (fix)   | `pnpm run lint:fix` (oxlint with autofixes)                             |
+| Format       | `pnpm run format` (oxfmt; use `format:check` to verify without writing) |
 
 ## Setup
 
@@ -51,6 +52,7 @@ pnpm workspace with 2 packages under `packages/`: `@culinary-ethos/be` (NestJS) 
 ### HTTPS Certificates
 
 Generate with mkcert or openssl:
+
 ```bash
 mkdir -p packages/BE/.cert
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
@@ -63,13 +65,13 @@ openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
 
 ```yaml
 services:
-  postgres:
-    image: postgres:16
-    ports: ["5432:5432"]
-    environment:
-      POSTGRES_USER: <user>
-      POSTGRES_PASSWORD: <password>
-      POSTGRES_DB: culinary_ethos
+    postgres:
+        image: postgres:16
+        ports: ['5432:5432']
+        environment:
+            POSTGRES_USER: <user>
+            POSTGRES_PASSWORD: <password>
+            POSTGRES_DB: culinary_ethos
 ```
 
 ## BE architecture

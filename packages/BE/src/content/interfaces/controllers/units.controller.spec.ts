@@ -1,12 +1,16 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { UnitsController } from './units.controller';
+import { describe, it, expect, beforeEach, vi } from "vitest";
+import { UnitsController } from "./units.controller";
 
-describe('UnitsController', () => {
+describe("UnitsController", () => {
   let controller: UnitsController;
   let mockService: any;
 
   const mockUnits = [
-    { id: 'unit123', isVisible: true, content: { en: { name: 'Grams', shortName: 'g', singularName: 'Gram' } } },
+    {
+      id: "unit123",
+      isVisible: true,
+      content: { en: { name: "Grams", shortName: "g", singularName: "Gram" } },
+    },
   ];
 
   beforeEach(() => {
@@ -19,8 +23,8 @@ describe('UnitsController', () => {
     controller = new UnitsController(mockService);
   });
 
-  describe('getAll', () => {
-    it('should return all units', async () => {
+  describe("getAll", () => {
+    it("should return all units", async () => {
       mockService.getAll.mockResolvedValue(mockUnits);
 
       const result = await controller.getAll();
@@ -29,9 +33,12 @@ describe('UnitsController', () => {
     });
   });
 
-  describe('create', () => {
-    it('should create a unit', async () => {
-      const dto = { isVisible: true, content: [{ language: 'en', name: 'Grams', shortName: 'g', singularName: 'Gram' }] };
+  describe("create", () => {
+    it("should create a unit", async () => {
+      const dto = {
+        isVisible: true,
+        content: [{ language: "en", name: "Grams", shortName: "g", singularName: "Gram" }],
+      };
 
       await controller.create(dto);
 
@@ -39,9 +46,13 @@ describe('UnitsController', () => {
     });
   });
 
-  describe('update', () => {
-    it('should update a unit', async () => {
-      const dto = { id: 'unit123', isVisible: false, content: [{ language: 'en', name: 'Grams', shortName: 'g', singularName: 'Gram' }] };
+  describe("update", () => {
+    it("should update a unit", async () => {
+      const dto = {
+        id: "unit123",
+        isVisible: false,
+        content: [{ language: "en", name: "Grams", shortName: "g", singularName: "Gram" }],
+      };
 
       await controller.update(dto);
 
@@ -49,11 +60,11 @@ describe('UnitsController', () => {
     });
   });
 
-  describe('delete', () => {
-    it('should delete a unit', async () => {
-      await controller.delete('unit123');
+  describe("delete", () => {
+    it("should delete a unit", async () => {
+      await controller.delete("unit123");
 
-      expect(mockService.delete).toHaveBeenCalledWith('unit123');
+      expect(mockService.delete).toHaveBeenCalledWith("unit123");
     });
   });
 });

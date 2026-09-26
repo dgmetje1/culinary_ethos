@@ -2,11 +2,16 @@ import { memo } from "react";
 
 import { ListItem, ListProps } from "./types";
 
-const List = <T extends ListItem>({ items, renderItem, title, shouldSeeMoreBeShown }: ListProps<T>) => (
+const List = <T extends ListItem>({
+  items,
+  renderItem,
+  title,
+  shouldSeeMoreBeShown,
+}: ListProps<T>) => (
   <>
     {title}
     <ul style={{ display: "flex", flexDirection: "column" }}>
-      {items.map(item => (
+      {items.map((item) => (
         <li key={item.id}>
           <span>{renderItem(item)}</span>
         </li>

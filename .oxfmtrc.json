@@ -1,0 +1,13 @@
+{
+    "$schema": "./node_modules/oxfmt/configuration_schema.json",
+    "singleQuote": true,
+    "trailingComma": "all",
+    "tabWidth": 4,
+    "ignorePatterns": [
+        "**/node_modules/**",
+        "**/dist/**",
+        "**/coverage/**",
+        "**/.tmp/**",
+        "**/pnpm-lock.yaml"
+    ]
+}

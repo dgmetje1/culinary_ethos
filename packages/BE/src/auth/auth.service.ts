@@ -1,13 +1,8 @@
-import {
-  Injectable,
-  Inject,
-  Logger,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { USER_REPOSITORY } from '../social/application/repositories/i-user.repository';
-import type { IUserRepository } from '../social/application/repositories/i-user.repository';
-import type { UserAttributes } from '../social/domain/models';
+import { Injectable, Inject, Logger, UnauthorizedException } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { USER_REPOSITORY } from "../social/application/repositories/i-user.repository";
+import type { IUserRepository } from "../social/application/repositories/i-user.repository";
+import type { UserAttributes } from "../social/domain/models";
 
 export interface Auth0Profile {
   id: string;
@@ -48,10 +43,10 @@ export class AuthService {
     let user = await this.userRepository.findByAccountId(accountId);
 
     if (!user) {
-      const email = profile.emails?.[0]?.value ?? '';
-      const givenName = profile.name?.givenName ?? '';
-      const familyName = profile.name?.familyName ?? '';
-      const displayName = profile.displayName ?? email.split('@')[0];
+      const email = profile.emails?.[0]?.value ?? "";
+      const givenName = profile.name?.givenName ?? "";
+      const familyName = profile.name?.familyName ?? "";
+      const displayName = profile.displayName ?? email.split("@")[0];
       const picture = profile.photos?.[0]?.value ?? null;
 
       user = await this.userRepository.create({
@@ -60,7 +55,7 @@ export class AuthService {
         name: givenName || displayName,
         last_name: familyName,
         email,
-        language: 'en',
+        language: "en",
         profile_picture: picture ?? undefined,
       });
 
@@ -71,12 +66,12 @@ export class AuthService {
   }
 
   private async fetchUserinfo(accessToken: string): Promise<UserinfoResponse> {
-    const domain = this.configService.getOrThrow('AUTH0_DOMAIN');
+    const domain = this.configService.getOrThrow("AUTH0_DOMAIN");
     const response = await fetch(`https://${domain}/userinfo`, {
       headers: { Authorization: `Bearer ${accessToken}` },
     });
     if (!response.ok) {
-      throw new UnauthorizedException('Failed to fetch user info from Auth0');
+      throw new UnauthorizedException("Failed to fetch user info from Auth0");
     }
     return response.json();
   }
@@ -95,10 +90,7 @@ export class AuthService {
     };
   }
 
-  async validateJwt(
-    payload: JwtPayload,
-    accessToken?: string,
-  ): Promise<UserAttributes | null> {
+  async validateJwt(payload: JwtPayload, accessToken?: string): Promise<UserAttributes | null> {
     const existing = await this.userRepository.findByAccountId(payload.sub);
     if (existing) return existing;
 

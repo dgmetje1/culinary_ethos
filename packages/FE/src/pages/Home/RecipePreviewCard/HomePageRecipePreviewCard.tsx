@@ -34,7 +34,14 @@ const HomePageRecipePreviewCard = () => {
     if (isLoading || !recipe) return null;
 
     return (
-      <div style={{ display: "grid", columnGap: "1rem", gridTemplateColumns: "repeat(12, 1fr)", rowGap: "0.5rem" }}>
+      <div
+        style={{
+          display: "grid",
+          columnGap: "1rem",
+          gridTemplateColumns: "repeat(12, 1fr)",
+          rowGap: "0.5rem",
+        }}
+      >
         <div style={{ gridColumn: "span 12" }}>
           <h4 style={{ color: "#444", fontWeight: 600, fontSize: "1.25rem" }}>
             {t("pages.home.recipe_preview.title")}
@@ -49,14 +56,25 @@ const HomePageRecipePreviewCard = () => {
             />
           </Link>
         </div>
-        <div style={{ gridColumn: "span 8", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+        <div
+          style={{ gridColumn: "span 8", display: "flex", flexDirection: "column", gap: "0.5rem" }}
+        >
           <Link params={{ id: recipe.id.toString() }} to="/recipe/$id">
             <h5 style={{ fontWeight: 600, fontSize: "1.15rem" }}>{recipe.title}</h5>
           </Link>
-          <div style={{ display: "grid", columnGap: "0.5rem", gridTemplateColumns: "repeat(12, 1fr)" }}>
-            <div style={{ gridColumn: "span 6", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+          <div
+            style={{ display: "grid", columnGap: "0.5rem", gridTemplateColumns: "repeat(12, 1fr)" }}
+          >
+            <div
+              style={{
+                gridColumn: "span 6",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.5rem",
+              }}
+            >
               <div style={{ display: "flex", gap: "0.25rem" }}>
-                {recipe.categories?.map(category => (
+                {recipe.categories?.map((category) => (
                   <span
                     key={category.id}
                     className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-stone-200 text-stone-800"
@@ -66,7 +84,7 @@ const HomePageRecipePreviewCard = () => {
                 ))}
               </div>
               <div style={{ display: "flex", flexDirection: "column", rowGap: "0.5rem" }}>
-                {CARD_FIELDS.map(field => (
+                {CARD_FIELDS.map((field) => (
                   <p key={field.key}>
                     <strong>{t(`recipe.fields.${field.key}`)}: </strong>
                     {field.getValue(recipe)}
@@ -78,8 +96,8 @@ const HomePageRecipePreviewCard = () => {
               {!!recipe.ingredients.length && (
                 <List
                   items={recipe.ingredients.slice(0, 5)}
-                  renderItem={ingredient =>
-                    `${ingredient.quantity} ${ingredient.unit?.shortName || ''} de ${ingredient.name.toLocaleLowerCase()}`
+                  renderItem={(ingredient) =>
+                    `${ingredient.quantity} ${ingredient.unit?.shortName || ""} de ${ingredient.name.toLocaleLowerCase()}`
                   }
                   shouldSeeMoreBeShown={recipe.ingredients.length > 5}
                   title={
@@ -97,7 +115,9 @@ const HomePageRecipePreviewCard = () => {
   }, [isLoading, recipe, t]);
 
   return (
-    <section style={{ padding: "1.25rem", backgroundColor: "#f0efef", borderRadius: "var(--radius)" }}>
+    <section
+      style={{ padding: "1.25rem", backgroundColor: "#f0efef", borderRadius: "var(--radius)" }}
+    >
       {recipeContent}
     </section>
   );

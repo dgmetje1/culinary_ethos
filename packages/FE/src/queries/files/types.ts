@@ -1,4 +1,4 @@
-export type FileCategory = 'recipes' | 'profile';
+export type FileCategory = "recipes" | "profile";
 
 export interface UploadFileResponse {
   id: string;

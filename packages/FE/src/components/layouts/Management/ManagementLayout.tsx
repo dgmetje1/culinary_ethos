@@ -1,5 +1,14 @@
 import { Link, Outlet, useLocation } from "@tanstack/react-router";
-import { LayoutDashboard, UtensilsCrossed, Package, Ruler, Tags, ChefHat, Users, ArrowLeft } from "lucide-react";
+import {
+  LayoutDashboard,
+  UtensilsCrossed,
+  Package,
+  Ruler,
+  Tags,
+  ChefHat,
+  Users,
+  ArrowLeft,
+} from "lucide-react";
 
 const NAV_ITEMS = [
   { to: "/management", label: "Dashboard", icon: LayoutDashboard, exact: true },
@@ -23,9 +32,7 @@ const ManagementLayout = () => {
     <div className="flex min-h-screen bg-[#faf9f7] text-[#1a1c1b]">
       <aside className="hidden md:flex h-screen w-64 border-r border-stone-200/50 glass-sidebar flex-col sticky top-0 z-50">
         <div className="py-8 px-6">
-          <h1 className="font-serif text-xl text-stone-900 italic">
-            Management
-          </h1>
+          <h1 className="font-serif text-xl text-stone-900 italic">Management</h1>
           <p className="font-sans text-xs uppercase tracking-widest text-stone-400 mt-1">
             Management Panel
           </p>
@@ -69,9 +76,7 @@ const ManagementLayout = () => {
               </div>
             </div>
             <div>
-              <p className="font-sans text-xs font-bold text-stone-900">
-                Admin User
-              </p>
+              <p className="font-sans text-xs font-bold text-stone-900">Admin User</p>
               <p className="font-sans text-[10px] text-stone-500 uppercase tracking-tighter">
                 Administrator
               </p>

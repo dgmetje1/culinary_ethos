@@ -15,7 +15,12 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import RecipePreviewDialog from "@/components/common/RecipePreviewDialog";
 import AuthorName from "@/components/common/AuthorName/AuthorName";
 import { useGetAdminRecipes } from "@/queries/recipes/queryHooks";
-import { useApproveRecipe, useFlagRecipe, useBanRecipe, useDeleteRecipe } from "@/queries/recipes/mutations";
+import {
+  useApproveRecipe,
+  useFlagRecipe,
+  useBanRecipe,
+  useDeleteRecipe,
+} from "@/queries/recipes/mutations";
 import type { AdminRecipe } from "@/queries/recipes/queries";
 
 const STATUS_LABELS: Record<string, string> = {
@@ -39,7 +44,7 @@ const STATUS_DOTS: Record<string, string> = {
   banned: "bg-red-600",
 };
 
-  const FLAGGABLE_STATUSES = ["published", "approved"];
+const FLAGGABLE_STATUSES = ["published", "approved"];
 
 const RecipesSection = () => {
   const [statusFilter, setStatusFilter] = useState<string | undefined>("flagged");
@@ -97,12 +102,24 @@ const RecipesSection = () => {
         <Table>
           <TableHeader>
             <TableRow className="bg-stone-100/40">
-              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">ID</TableHead>
-              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">TÍTULO</TableHead>
-              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">AUTOR</TableHead>
-              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">ESTADO</TableHead>
-              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">FECHA</TableHead>
-              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">ACCIONES</TableHead>
+              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">
+                ID
+              </TableHead>
+              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">
+                TÍTULO
+              </TableHead>
+              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">
+                AUTOR
+              </TableHead>
+              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">
+                ESTADO
+              </TableHead>
+              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">
+                FECHA
+              </TableHead>
+              <TableHead className="px-6 py-4 text-[12px] tracking-[0.1em] font-semibold uppercase text-stone-600">
+                ACCIONES
+              </TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -130,19 +147,33 @@ const RecipesSection = () => {
                     </TooltipProvider>
                   </TableCell>
                   <TableCell className="px-6 py-4 font-medium">{recipe.title}</TableCell>
-                  <TableCell className="px-6 py-4 text-sm text-stone-500"><AuthorName authorId={recipe.author} /></TableCell>
+                  <TableCell className="px-6 py-4 text-sm text-stone-500">
+                    <AuthorName authorId={recipe.author} />
+                  </TableCell>
                   <TableCell className="px-6 py-4">
-                    <span className={`flex items-center text-xs ${STATUS_COLORS[recipe.status ?? "published"]}`}>
-                      <span className={`w-2 h-2 rounded-full ${STATUS_DOTS[recipe.status ?? "published"]} mr-2`} />
+                    <span
+                      className={`flex items-center text-xs ${STATUS_COLORS[recipe.status ?? "published"]}`}
+                    >
+                      <span
+                        className={`w-2 h-2 rounded-full ${STATUS_DOTS[recipe.status ?? "published"]} mr-2`}
+                      />
                       {STATUS_LABELS[recipe.status ?? "published"]}
                     </span>
                   </TableCell>
                   <TableCell className="px-6 py-4 text-sm text-stone-500">
-                    {recipe.publicationDate ? new Date(recipe.publicationDate).toLocaleDateString() : "-"}
+                    {recipe.publicationDate
+                      ? new Date(recipe.publicationDate).toLocaleDateString()
+                      : "-"}
                   </TableCell>
                   <TableCell className="px-6 py-4">
                     <div className="flex gap-2">
-                      <Button variant="ghost" size="icon" className="h-8 w-8" title="Vista previa" onClick={() => setPreviewRecipe(recipe)}>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        title="Vista previa"
+                        onClick={() => setPreviewRecipe(recipe)}
+                      >
                         <Eye className="w-4 h-4" />
                       </Button>
                       {canFlag(recipe.status) && (

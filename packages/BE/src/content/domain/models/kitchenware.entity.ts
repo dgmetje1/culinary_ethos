@@ -1,11 +1,11 @@
-import { Entity, Column, PrimaryColumn } from 'typeorm';
-import { KitchenwareContent } from './kitchenware.types';
+import { Entity, Column, PrimaryColumn } from "typeorm";
+import { KitchenwareContent } from "./kitchenware.types";
 
-@Entity({ name: 'kitchenware' })
+@Entity({ name: "kitchenware" })
 export class Kitchenware {
-  @PrimaryColumn({ type: 'varchar' })
+  @PrimaryColumn({ type: "varchar" })
   id: string;
 
-  @Column({ type: 'jsonb', default: [] })
+  @Column({ type: "jsonb", default: [] })
   content: KitchenwareContent[];
 }

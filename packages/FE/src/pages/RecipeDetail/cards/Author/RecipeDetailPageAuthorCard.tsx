@@ -15,14 +15,10 @@ interface RecipeDetailPageAuthorCardProps {
 const RecipeDetailPageAuthorCard = ({ authorId }: RecipeDetailPageAuthorCardProps) => {
   const { t } = useTranslation();
   const { key, queryKey } = getUserSummaryKeys(authorId);
-  const { data: user, isLoading } = useApiQuery(key, queryKey, () =>
-    getUserSummary(authorId),
-  );
+  const { data: user, isLoading } = useApiQuery(key, queryKey, () => getUserSummary(authorId));
 
   const displayName = user?.nickName || user?.name || authorId;
-  const avatarUrl = user?.profilePicture
-    ? composeCdnUrl(config.cdnUrl, user.profilePicture)
-    : null;
+  const avatarUrl = user?.profilePicture ? composeCdnUrl(config.cdnUrl, user.profilePicture) : null;
 
   return (
     <Link
@@ -41,11 +37,7 @@ const RecipeDetailPageAuthorCard = ({ authorId }: RecipeDetailPageAuthorCardProp
           {isLoading ? (
             <Loader2 className="w-6 h-6 text-stone-400 animate-spin" />
           ) : avatarUrl ? (
-            <img
-              src={avatarUrl}
-              alt={displayName}
-              className="w-full h-full object-cover"
-            />
+            <img src={avatarUrl} alt={displayName} className="w-full h-full object-cover" />
           ) : (
             <ChefHat className="w-8 h-8 text-stone-500" />
           )}
@@ -59,9 +51,7 @@ const RecipeDetailPageAuthorCard = ({ authorId }: RecipeDetailPageAuthorCardProp
           >
             {t("pages.recipe.author_title").toUpperCase()}
           </p>
-          <p className="text-xl font-serif truncate">
-            {isLoading ? "—" : displayName}
-          </p>
+          <p className="text-xl font-serif truncate">{isLoading ? "—" : displayName}</p>
         </div>
       </div>
     </Link>

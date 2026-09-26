@@ -1,6 +1,12 @@
-import { Injectable, Inject, ConflictException, NotFoundException, BadRequestException } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { FOLLOW_REPOSITORY, IFollowRepository } from '../repositories/i-follow.repository';
+import {
+  Injectable,
+  Inject,
+  ConflictException,
+  NotFoundException,
+  BadRequestException,
+} from "@nestjs/common";
+import { EventEmitter2 } from "@nestjs/event-emitter";
+import { FOLLOW_REPOSITORY, IFollowRepository } from "../repositories/i-follow.repository";
 
 @Injectable()
 export class FollowsService {
@@ -10,17 +16,21 @@ export class FollowsService {
     private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  async follow(followerId: string, followingId: string, followerName?: string): Promise<{ id: string }> {
+  async follow(
+    followerId: string,
+    followingId: string,
+    followerName?: string,
+  ): Promise<{ id: string }> {
     if (followerId === followingId) {
-      throw new BadRequestException('Cannot follow yourself');
+      throw new BadRequestException("Cannot follow yourself");
     }
     const existing = await this.followRepository.findOne(followerId, followingId);
     if (existing) {
-      throw new ConflictException('Already following this user');
+      throw new ConflictException("Already following this user");
     }
     const follow = await this.followRepository.create(followerId, followingId);
 
-    this.eventEmitter.emit('follow.created', {
+    this.eventEmitter.emit("follow.created", {
       followerId,
       followingId,
       followId: follow.id,
@@ -33,7 +43,7 @@ export class FollowsService {
   async unfollow(followerId: string, followingId: string): Promise<void> {
     const existing = await this.followRepository.findOne(followerId, followingId);
     if (!existing) {
-      throw new NotFoundException('Follow not found');
+      throw new NotFoundException("Follow not found");
     }
     await this.followRepository.delete(existing.id);
   }

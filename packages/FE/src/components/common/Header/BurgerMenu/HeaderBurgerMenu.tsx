@@ -28,12 +28,23 @@ const HeaderBurgerMenu = () => {
 
   return (
     <>
-      <button aria-label="menu" onClick={toggleMenu(true)} className="p-2 rounded-md hover:bg-stone-100">
+      <button
+        aria-label="menu"
+        onClick={toggleMenu(true)}
+        className="p-2 rounded-md hover:bg-stone-100"
+      >
         <MenuIcon className="w-6 h-6" />
       </button>
       <Menu defaultTab={0} open={open} toggleMenu={toggleMenu}>
-        <div style={{ display: "flex", justifyContent: "space-evenly", margin: "0.5rem 1rem", marginTop: "0.75rem" }}>
-          {languages.map(language => (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-evenly",
+            margin: "0.5rem 1rem",
+            marginTop: "0.75rem",
+          }}
+        >
+          {languages.map((language) => (
             <Button
               key={language}
               onClick={() => onChangeLanguage(language)}

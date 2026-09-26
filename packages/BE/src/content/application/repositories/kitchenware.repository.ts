@@ -1,6 +1,6 @@
-import { KitchenwareAttributes, KitchenwareContent } from '../../domain/models';
+import { KitchenwareAttributes, KitchenwareContent } from "../../domain/models";
 
-export const KITCHENWARE_REPOSITORY = 'KITCHENWARE_REPOSITORY';
+export const KITCHENWARE_REPOSITORY = "KITCHENWARE_REPOSITORY";
 
 export interface IKitchenwareRepository {
   findAll(): Promise<KitchenwareAttributes[]>;

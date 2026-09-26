@@ -1,6 +1,6 @@
-import { FollowAttributes } from '../../domain/models/follow.entity';
+import { FollowAttributes } from "../../domain/models/follow.entity";
 
-export const FOLLOW_REPOSITORY = 'FOLLOW_REPOSITORY';
+export const FOLLOW_REPOSITORY = "FOLLOW_REPOSITORY";
 
 export interface IFollowRepository {
   findByFollower(followerId: string): Promise<FollowAttributes[]>;

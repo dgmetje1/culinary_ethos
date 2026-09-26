@@ -1,11 +1,11 @@
-import { useQueryClient, useMutation, type QueryKey } from '@tanstack/react-query';
+import { useQueryClient, useMutation, type QueryKey } from "@tanstack/react-query";
 
-import type { FollowStatus, FollowCount } from './queries';
+import type { FollowStatus, FollowCount } from "./queries";
 
-import { getIsFollowingKeys, getFollowersCountKeys, getFollowingCountKeys } from './keys';
-import { followUser, unfollowUser } from './queries';
+import { getIsFollowingKeys, getFollowersCountKeys, getFollowingCountKeys } from "./keys";
+import { followUser, unfollowUser } from "./queries";
 
-interface FollowContext {
+interface _FollowContext {
   statusKey: QueryKey;
   followersKey: QueryKey;
   followingKey: QueryKey;
@@ -42,7 +42,14 @@ export const useFollowUser = (currentUserId: string) => {
         count: (old?.count ?? 0) + 1,
       }));
 
-      return { statusKey, followersKey, followingKey, previousStatus, previousFollowers, previousFollowing };
+      return {
+        statusKey,
+        followersKey,
+        followingKey,
+        previousStatus,
+        previousFollowers,
+        previousFollowing,
+      };
     },
     onError: (_err, _userId, context) => {
       if (context) {
@@ -90,7 +97,14 @@ export const useUnfollowUser = (currentUserId: string) => {
         count: Math.max(0, (old?.count ?? 1) - 1),
       }));
 
-      return { statusKey, followersKey, followingKey, previousStatus, previousFollowers, previousFollowing };
+      return {
+        statusKey,
+        followersKey,
+        followingKey,
+        previousStatus,
+        previousFollowers,
+        previousFollowing,
+      };
     },
     onError: (_err, _userId, context) => {
       if (context) {

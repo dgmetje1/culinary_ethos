@@ -1,12 +1,12 @@
-import { Api } from '@/lib/api';
-import type { NotificationItem, UnreadCount } from '@/types/notification';
+import { Api } from "@/lib/api";
+import type { NotificationItem, UnreadCount } from "@/types/notification";
 
 export const getNotifications = () => {
-  return new Api().get<NotificationItem[]>('notifications', { withAuth: true });
+  return new Api().get<NotificationItem[]>("notifications", { withAuth: true });
 };
 
 export const getUnreadCount = () => {
-  return new Api().get<UnreadCount>('notifications/unread/count', { withAuth: true });
+  return new Api().get<UnreadCount>("notifications/unread/count", { withAuth: true });
 };
 
 export const markNotificationRead = (id: string) => {
@@ -14,5 +14,5 @@ export const markNotificationRead = (id: string) => {
 };
 
 export const markAllNotificationsRead = () => {
-  return new Api().put<void>('notifications/read/all', {}, { withAuth: true });
+  return new Api().put<void>("notifications/read/all", {}, { withAuth: true });
 };

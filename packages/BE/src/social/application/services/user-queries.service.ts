@@ -1,15 +1,19 @@
-import { Injectable, Inject, BadRequestException } from '@nestjs/common';
-import { EventEmitter2 } from '@nestjs/event-emitter';
-import { EntityNotFoundError, InvalidParameterError } from '../../../common/exceptions';
+import { Injectable, Inject } from "@nestjs/common";
+import { EventEmitter2 } from "@nestjs/event-emitter";
+import { EntityNotFoundError, InvalidParameterError } from "../../../common/exceptions";
 import {
   UserAccountResponseDto,
   UserAdminResponseDto,
   UserSummaryResponseDto,
   CreateUserRequestDto,
   UpdateUserRequestDto,
-} from '../dto';
-import { USER_REPOSITORY, IUserRepository, UpdateUserInput } from '../repositories/i-user.repository';
-import { UserUpdatedEvent } from '../events/user-updated.event';
+} from "../dto";
+import {
+  USER_REPOSITORY,
+  IUserRepository,
+  UpdateUserInput,
+} from "../repositories/i-user.repository";
+import { UserUpdatedEvent } from "../events/user-updated.event";
 
 @Injectable()
 export class UserQueriesService {
@@ -81,7 +85,7 @@ export class UserQueriesService {
   async getDataById(id: string): Promise<UserAccountResponseDto> {
     const result = await this.userRepository.findById(id);
     if (!result) {
-      throw new EntityNotFoundError('User not found', 'User', [{ id }]);
+      throw new EntityNotFoundError("User not found", "User", [{ id }]);
     }
     return this.mapToAccountResponse(result);
   }
@@ -89,7 +93,7 @@ export class UserQueriesService {
   async getDataByAccountId(accountId: string): Promise<UserAccountResponseDto> {
     const result = await this.userRepository.findByAccountId(accountId);
     if (!result) {
-      throw new EntityNotFoundError('User not found', 'User', [{ accountId }]);
+      throw new EntityNotFoundError("User not found", "User", [{ accountId }]);
     }
     return this.mapToAccountResponse(result);
   }
@@ -97,7 +101,7 @@ export class UserQueriesService {
   async getDataSummaryById(id: string): Promise<UserSummaryResponseDto> {
     const result = await this.userRepository.findByIdWithSummaryFields(id);
     if (!result) {
-      throw new EntityNotFoundError('User not found', 'User', [{ id }]);
+      throw new EntityNotFoundError("User not found", "User", [{ id }]);
     }
 
     return {
@@ -120,39 +124,30 @@ export class UserQueriesService {
     return /https?:\/\/[^\s]+/.test(text);
   }
 
-  async updateUser(
-    id: string,
-    data: UpdateUserRequestDto,
-  ): Promise<UserAccountResponseDto> {
+  async updateUser(id: string, data: UpdateUserRequestDto): Promise<UserAccountResponseDto> {
     const existing = await this.userRepository.findById(id);
     if (!existing) {
-      throw new EntityNotFoundError('User not found', 'User', [{ id }]);
+      throw new EntityNotFoundError("User not found", "User", [{ id }]);
     }
 
     if (data.description !== undefined && this.containsUrl(data.description)) {
-      throw new InvalidParameterError('Description must not contain links', 'User');
+      throw new InvalidParameterError("Description must not contain links", "User");
     }
 
     const result = await this.userRepository.update(id, data);
     if (!result) {
-      throw new EntityNotFoundError('User not found', 'User', [{ id }]);
+      throw new EntityNotFoundError("User not found", "User", [{ id }]);
     }
 
     const changes: { nickname?: string; picture?: string } = {};
     if (data.nick_name !== undefined && data.nick_name !== existing.nick_name) {
       changes.nickname = data.nick_name;
     }
-    if (
-      data.profile_picture !== undefined &&
-      data.profile_picture !== existing.profile_picture
-    ) {
+    if (data.profile_picture !== undefined && data.profile_picture !== existing.profile_picture) {
       changes.picture = data.profile_picture;
     }
     if (Object.keys(changes).length > 0) {
-      this.eventEmitter.emit(
-        'user.updated',
-        new UserUpdatedEvent(existing.account_id, changes),
-      );
+      this.eventEmitter.emit("user.updated", new UserUpdatedEvent(existing.account_id, changes));
     }
 
     return this.mapToAccountResponse(result);
@@ -161,7 +156,7 @@ export class UserQueriesService {
   async deleteUser(id: string): Promise<boolean> {
     const exists = await this.userRepository.findById(id);
     if (!exists) {
-      throw new EntityNotFoundError('User not found', 'User', [{ id }]);
+      throw new EntityNotFoundError("User not found", "User", [{ id }]);
     }
     return this.userRepository.delete(id);
   }
@@ -174,27 +169,33 @@ export class UserQueriesService {
   async suspendUser(id: string): Promise<UserAdminResponseDto> {
     const existing = await this.userRepository.findById(id);
     if (!existing) {
-      throw new EntityNotFoundError('User not found', 'User', [{ id }]);
+      throw new EntityNotFoundError("User not found", "User", [{ id }]);
     }
-    const result = await this.userRepository.update(id, { status: 'suspended' } as UpdateUserInput);
+    const result = await this.userRepository.update(id, {
+      status: "suspended",
+    } as UpdateUserInput);
     return this.mapToAdminResponse(result!);
   }
 
   async activateUser(id: string): Promise<UserAdminResponseDto> {
     const existing = await this.userRepository.findById(id);
     if (!existing) {
-      throw new EntityNotFoundError('User not found', 'User', [{ id }]);
+      throw new EntityNotFoundError("User not found", "User", [{ id }]);
     }
-    const result = await this.userRepository.update(id, { status: 'active' } as UpdateUserInput);
+    const result = await this.userRepository.update(id, {
+      status: "active",
+    } as UpdateUserInput);
     return this.mapToAdminResponse(result!);
   }
 
   async changeUserRole(id: string, role: string): Promise<UserAdminResponseDto> {
     const existing = await this.userRepository.findById(id);
     if (!existing) {
-      throw new EntityNotFoundError('User not found', 'User', [{ id }]);
+      throw new EntityNotFoundError("User not found", "User", [{ id }]);
     }
-    const result = await this.userRepository.update(id, { role } as UpdateUserInput);
+    const result = await this.userRepository.update(id, {
+      role,
+    } as UpdateUserInput);
     return this.mapToAdminResponse(result!);
   }
 }

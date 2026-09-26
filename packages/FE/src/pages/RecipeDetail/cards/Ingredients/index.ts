@@ -1,1 +1,1 @@
-export { default } from './RecipeDetailPageIngredientsCard';
+export { default } from "./RecipeDetailPageIngredientsCard";

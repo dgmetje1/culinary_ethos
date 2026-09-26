@@ -1,15 +1,15 @@
-import { Injectable, Inject } from '@nestjs/common';
-import {
-  EntityNotFoundError,
-  InvalidParameterError,
-} from '../../../common/exceptions';
+import { Injectable, Inject } from "@nestjs/common";
+import { EntityNotFoundError, InvalidParameterError } from "../../../common/exceptions";
 import {
   CreateIngredientDto,
   UpdateIngredientDto,
   MergeIngredientDto,
   IngredientResponseDto,
-} from '../dto';
-import { INGREDIENT_REPOSITORY, IIngredientRepository } from '../repositories/ingredient.repository';
+} from "../dto";
+import {
+  INGREDIENT_REPOSITORY,
+  IIngredientRepository,
+} from "../repositories/ingredient.repository";
 
 @Injectable()
 export class IngredientsService {
@@ -37,7 +37,7 @@ export class IngredientsService {
 
   async create(dto: CreateIngredientDto): Promise<{ id: string }> {
     if (!dto.content || dto.content.length === 0) {
-      throw new InvalidParameterError('Content is required', 'Ingredient');
+      throw new InvalidParameterError("Content is required", "Ingredient");
     }
     const result = await this.ingredientRepository.create(dto.content);
     return { id: result.id };
@@ -46,9 +46,7 @@ export class IngredientsService {
   async update(dto: UpdateIngredientDto): Promise<void> {
     const existing = await this.ingredientRepository.findById(dto.id);
     if (!existing) {
-      throw new EntityNotFoundError('Ingredient not found', 'Ingredient', [
-        { id: dto.id },
-      ]);
+      throw new EntityNotFoundError("Ingredient not found", "Ingredient", [{ id: dto.id }]);
     }
     await this.ingredientRepository.update(dto.id, dto.content);
   }
@@ -56,9 +54,7 @@ export class IngredientsService {
   async delete(id: string): Promise<void> {
     const existing = await this.ingredientRepository.findById(id);
     if (!existing) {
-      throw new EntityNotFoundError('Ingredient not found', 'Ingredient', [
-        { id },
-      ]);
+      throw new EntityNotFoundError("Ingredient not found", "Ingredient", [{ id }]);
     }
     await this.ingredientRepository.delete(id);
   }
@@ -66,11 +62,9 @@ export class IngredientsService {
   async merge(dto: MergeIngredientDto): Promise<void> {
     const target = await this.ingredientRepository.findById(dto.targetId);
     if (!target) {
-      throw new EntityNotFoundError(
-        'Target ingredient not found',
-        'Ingredient',
-        [{ id: dto.targetId }],
-      );
+      throw new EntityNotFoundError("Target ingredient not found", "Ingredient", [
+        { id: dto.targetId },
+      ]);
     }
     await this.ingredientRepository.merge(dto.targetId, dto.ingredientIds);
   }

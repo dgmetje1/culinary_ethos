@@ -13,12 +13,10 @@ const Category = memo(({ title, id }: CategoryProps) => {
   return (
     <div>
       {!!title && (
-        <h4 style={{ color: "#333", fontWeight: "bold", marginBottom: "0.35em" }}>
-          {title}
-        </h4>
+        <h4 style={{ color: "#333", fontWeight: "bold", marginBottom: "0.35em" }}>{title}</h4>
       )}
       <StyledCategory>
-        {data.map(value => (
+        {data.map((value) => (
           <RecipeCard key={value.id} {...value} />
         ))}
       </StyledCategory>

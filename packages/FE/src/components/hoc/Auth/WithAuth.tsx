@@ -7,7 +7,7 @@ import { Api } from "@/lib/api";
 import { useGetAccount } from "@/queries/users";
 
 const withAuth = (Component: React.FC) => {
-  return memo(props => {
+  return memo((props) => {
     const { isAuthenticated, isLoading, getAccessTokenSilently } = useAuth0();
     const [{ accessToken, isAccessTokenLoading }, setAccessTokenInfo] = useState({
       accessToken: "",
@@ -15,15 +15,17 @@ const withAuth = (Component: React.FC) => {
     });
     const redirectedRef = useRef(false);
 
-    const { data: account, isLoading: isAccountLoading } = useGetAccount(!!accessToken && !isAccessTokenLoading);
+    const { data: account, isLoading: isAccountLoading } = useGetAccount(
+      !!accessToken && !isAccessTokenLoading,
+    );
 
     useEffect(() => {
       if (isAuthenticated && !isLoading) {
-        setAccessTokenInfo(oldValue => ({
+        setAccessTokenInfo((oldValue) => ({
           ...oldValue,
           isAccessTokenLoading: true,
         }));
-        getAccessTokenSilently().then(accessToken => {
+        getAccessTokenSilently().then((accessToken) => {
           Api.setAccessToken(accessToken);
           setAccessTokenInfo({ accessToken, isAccessTokenLoading: false });
         });

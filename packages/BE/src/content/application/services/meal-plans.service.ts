@@ -1,7 +1,7 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { EntityNotFoundError } from '../../../common/exceptions';
-import { CreateMealPlanDto, UpdateMealPlanDto, MealPlanResponseDto } from '../dto';
-import { MEAL_PLAN_REPOSITORY, IMealPlanRepository } from '../repositories/meal-plan.repository';
+import { Injectable, Inject } from "@nestjs/common";
+import { EntityNotFoundError } from "../../../common/exceptions";
+import { CreateMealPlanDto, UpdateMealPlanDto, MealPlanResponseDto } from "../dto";
+import { MEAL_PLAN_REPOSITORY, IMealPlanRepository } from "../repositories/meal-plan.repository";
 
 @Injectable()
 export class MealPlansService {
@@ -17,7 +17,7 @@ export class MealPlansService {
   async getById(id: string): Promise<MealPlanResponseDto> {
     const plan = await this.mealPlanRepository.findById(id);
     if (!plan) {
-      throw new EntityNotFoundError('Meal plan not found', 'MealPlan', [{ id }]);
+      throw new EntityNotFoundError("Meal plan not found", "MealPlan", [{ id }]);
     }
     return this.mapToResponse(plan);
   }
@@ -33,7 +33,7 @@ export class MealPlansService {
   async update(id: string, dto: UpdateMealPlanDto): Promise<MealPlanResponseDto> {
     const updated = await this.mealPlanRepository.update(id, dto.entries);
     if (!updated) {
-      throw new EntityNotFoundError('Meal plan not found', 'MealPlan', [{ id }]);
+      throw new EntityNotFoundError("Meal plan not found", "MealPlan", [{ id }]);
     }
     return this.mapToResponse(updated);
   }
@@ -41,11 +41,24 @@ export class MealPlansService {
   async delete(id: string): Promise<void> {
     const deleted = await this.mealPlanRepository.delete(id);
     if (!deleted) {
-      throw new EntityNotFoundError('Meal plan not found', 'MealPlan', [{ id }]);
+      throw new EntityNotFoundError("Meal plan not found", "MealPlan", [{ id }]);
     }
   }
 
-  private mapToResponse(plan: { id: string; weekStart: string; entries: { id: string; day: number; mealType: string; recipeId: string; recipeTitle: string; recipeImageUrl?: string }[]; createdAt: Date; updatedAt: Date }): MealPlanResponseDto {
+  private mapToResponse(plan: {
+    id: string;
+    weekStart: string;
+    entries: {
+      id: string;
+      day: number;
+      mealType: string;
+      recipeId: string;
+      recipeTitle: string;
+      recipeImageUrl?: string;
+    }[];
+    createdAt: Date;
+    updatedAt: Date;
+  }): MealPlanResponseDto {
     return {
       id: plan.id,
       weekStart: plan.weekStart,

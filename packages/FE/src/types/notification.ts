@@ -1,6 +1,6 @@
 export type NotificationItem = {
   id: string;
-  type: 'follow' | 'new_recipe';
+  type: "follow" | "new_recipe";
   actorId?: string;
   actorName?: string;
   recipeId?: string;

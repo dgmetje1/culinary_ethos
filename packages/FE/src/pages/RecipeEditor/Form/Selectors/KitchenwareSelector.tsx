@@ -1,15 +1,15 @@
-import { useState, useMemo } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Plus, X, Search } from 'lucide-react';
+import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { Plus, X, Search } from "lucide-react";
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { cn } from '@/lib/utils';
-import { useGetKitchenware, useCreateKitchenware } from '@/queries/kitchenware';
-import { toast } from 'sonner';
-import i18n from '@/i18n';
-import { Language } from '@/types/user';
-import { Tool } from '@/types/kitchenware';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import { useGetKitchenware, useCreateKitchenware } from "@/queries/kitchenware";
+import { toast } from "sonner";
+import i18n from "@/i18n";
+import { Language } from "@/types/user";
+import { Tool } from "@/types/kitchenware";
 
 interface RecipeKitchenware {
   kitchenwareId: string;
@@ -27,19 +27,19 @@ const KitchenwareSelector = ({ kitchenware, onChange }: KitchenwareSelectorProps
   const { data: kitchenwareData = [] } = useGetKitchenware();
   const createKitchenware = useCreateKitchenware();
 
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [isAdding, setIsAdding] = useState(false);
-  const [selectedKitchenwareId, setSelectedKitchenwareId] = useState('');
+  const [selectedKitchenwareId, setSelectedKitchenwareId] = useState("");
   const [isCreatingNew, setIsCreatingNew] = useState(false);
-  const [newKitchenwareName, setNewKitchenwareName] = useState('');
-  const [newKitchenwareSingular, setNewKitchenwareSingular] = useState('');
+  const [newKitchenwareName, setNewKitchenwareName] = useState("");
+  const [newKitchenwareSingular, setNewKitchenwareSingular] = useState("");
 
   const currentLang = i18n.language as Language;
 
   const filteredKitchenware = useMemo(() => {
     const list = searchTerm
       ? kitchenwareData.filter((tool: Tool) => {
-          const name = tool.content[currentLang]?.name?.toLowerCase() || '';
+          const name = tool.content[currentLang]?.name?.toLowerCase() || "";
           return name.includes(searchTerm.toLowerCase());
         })
       : kitchenwareData;
@@ -63,8 +63,8 @@ const KitchenwareSelector = ({ kitchenware, onChange }: KitchenwareSelectorProps
       },
     ]);
 
-    setSelectedKitchenwareId('');
-    setSearchTerm('');
+    setSelectedKitchenwareId("");
+    setSearchTerm("");
     setIsAdding(false);
   };
 
@@ -89,9 +89,10 @@ const KitchenwareSelector = ({ kitchenware, onChange }: KitchenwareSelectorProps
         ],
       } as any)) as { id: string } | string;
 
-      toast.success(t('pages.editor.kitchenware.created'));
+      toast.success(t("pages.editor.kitchenware.created"));
 
-      const newKitchenwareId = typeof newKitchenware === 'object' ? newKitchenware.id : newKitchenware;
+      const newKitchenwareId =
+        typeof newKitchenware === "object" ? newKitchenware.id : newKitchenware;
 
       onChange([
         ...kitchenware,
@@ -102,35 +103,35 @@ const KitchenwareSelector = ({ kitchenware, onChange }: KitchenwareSelectorProps
         },
       ]);
 
-      setSearchTerm('');
-      setNewKitchenwareName('');
-      setNewKitchenwareSingular('');
+      setSearchTerm("");
+      setNewKitchenwareName("");
+      setNewKitchenwareSingular("");
       setIsAdding(false);
       setIsCreatingNew(false);
     } catch {
-      toast.error(t('pages.editor.kitchenware.createError'));
+      toast.error(t("pages.editor.kitchenware.createError"));
     }
   };
 
   return (
     <div
       className={cn(
-        'bg-white/60 dark:bg-stone-900/60',
-        'backdrop-blur-xl',
-        'border border-stone-200/30 dark:border-stone-800/30',
-        'p-6 rounded-xl'
+        "bg-white/60 dark:bg-stone-900/60",
+        "backdrop-blur-xl",
+        "border border-stone-200/30 dark:border-stone-800/30",
+        "p-6 rounded-xl",
       )}
     >
       <div className="flex justify-between items-center mb-4">
         <h3
           className={cn(
-            'text-lg font-serif font-medium',
-            'text-stone-900 dark:text-stone-100',
-            'flex items-center gap-2'
+            "text-lg font-serif font-medium",
+            "text-stone-900 dark:text-stone-100",
+            "flex items-center gap-2",
           )}
         >
           <span className="text-orange-600">🍳</span>
-          {t('pages.editor.sections.tools.title')}
+          {t("pages.editor.sections.tools.title")}
         </h3>
         {!isAdding && (
           <Button
@@ -141,7 +142,7 @@ const KitchenwareSelector = ({ kitchenware, onChange }: KitchenwareSelectorProps
             type="button"
           >
             <Plus className="w-4 h-4 mr-1" />
-            <span className="text-xs">{t('pages.editor.add')}</span>
+            <span className="text-xs">{t("pages.editor.add")}</span>
           </Button>
         )}
       </div>
@@ -152,12 +153,12 @@ const KitchenwareSelector = ({ kitchenware, onChange }: KitchenwareSelectorProps
             <span
               key={tool.kitchenwareId}
               className={cn(
-                'inline-flex items-center gap-1.5',
-                'px-3 py-1.5 rounded-full',
-                'text-xs font-medium',
-                'bg-orange-100 dark:bg-orange-900/30',
-                'text-orange-800 dark:text-orange-200',
-                'border border-orange-200/50 dark:border-orange-800/50'
+                "inline-flex items-center gap-1.5",
+                "px-3 py-1.5 rounded-full",
+                "text-xs font-medium",
+                "bg-orange-100 dark:bg-orange-900/30",
+                "text-orange-800 dark:text-orange-200",
+                "border border-orange-200/50 dark:border-orange-800/50",
               )}
             >
               {tool.name}
@@ -173,7 +174,7 @@ const KitchenwareSelector = ({ kitchenware, onChange }: KitchenwareSelectorProps
         </div>
       ) : !isAdding ? (
         <p className="text-sm text-stone-400 italic py-4 text-center">
-          {t('pages.editor.sections.tools.empty')}
+          {t("pages.editor.sections.tools.empty")}
         </p>
       ) : null}
 
@@ -183,7 +184,7 @@ const KitchenwareSelector = ({ kitchenware, onChange }: KitchenwareSelectorProps
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
             <Input
               className="pl-10 bg-white dark:bg-stone-900"
-              placeholder={t('pages.editor.sections.tools.search')}
+              placeholder={t("pages.editor.sections.tools.search")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
@@ -197,7 +198,7 @@ const KitchenwareSelector = ({ kitchenware, onChange }: KitchenwareSelectorProps
                   className="w-full text-left px-3 py-2 hover:bg-stone-100 dark:hover:bg-stone-700 text-sm text-stone-900 dark:text-stone-100"
                   onClick={() => {
                     setSelectedKitchenwareId(tool.id);
-                    setSearchTerm(tool.content[currentLang]?.name || '');
+                    setSearchTerm(tool.content[currentLang]?.name || "");
                   }}
                   type="button"
                 >
@@ -218,7 +219,7 @@ const KitchenwareSelector = ({ kitchenware, onChange }: KitchenwareSelectorProps
                 type="button"
               >
                 <Plus className="w-4 h-4" />
-                {t('pages.editor.kitchenware.createNew', { name: searchTerm })}
+                {t("pages.editor.kitchenware.createNew", { name: searchTerm })}
               </button>
             </div>
           )}
@@ -229,7 +230,7 @@ const KitchenwareSelector = ({ kitchenware, onChange }: KitchenwareSelectorProps
                 <div className="flex-1">
                   <Input
                     className="h-9 bg-white dark:bg-stone-900 text-sm"
-                    placeholder={t('pages.editor.kitchenware.name')}
+                    placeholder={t("pages.editor.kitchenware.name")}
                     value={newKitchenwareName}
                     onChange={(e) => {
                       setNewKitchenwareName(e.target.value);
@@ -240,7 +241,7 @@ const KitchenwareSelector = ({ kitchenware, onChange }: KitchenwareSelectorProps
                 <div className="flex-1">
                   <Input
                     className="h-9 bg-white dark:bg-stone-900 text-sm"
-                    placeholder={t('pages.editor.kitchenware.singularName')}
+                    placeholder={t("pages.editor.kitchenware.singularName")}
                     value={newKitchenwareSingular}
                     onChange={(e) => setNewKitchenwareSingular(e.target.value)}
                   />
@@ -254,7 +255,9 @@ const KitchenwareSelector = ({ kitchenware, onChange }: KitchenwareSelectorProps
                   disabled={createKitchenware.isPending}
                   type="button"
                 >
-                  {createKitchenware.isPending ? t('common.saving') : t('pages.editor.kitchenware.create')}
+                  {createKitchenware.isPending
+                    ? t("common.saving")
+                    : t("pages.editor.kitchenware.create")}
                 </Button>
                 <Button
                   variant="ghost"
@@ -262,13 +265,13 @@ const KitchenwareSelector = ({ kitchenware, onChange }: KitchenwareSelectorProps
                   className="h-9 text-stone-500"
                   onClick={() => {
                     setIsCreatingNew(false);
-                    setSearchTerm('');
-                    setNewKitchenwareName('');
-                    setNewKitchenwareSingular('');
+                    setSearchTerm("");
+                    setNewKitchenwareName("");
+                    setNewKitchenwareSingular("");
                   }}
                   type="button"
                 >
-                  {t('common.cancel')}
+                  {t("common.cancel")}
                 </Button>
               </div>
             </div>
@@ -277,10 +280,10 @@ const KitchenwareSelector = ({ kitchenware, onChange }: KitchenwareSelectorProps
           {selectedKitchenwareId && (
             <div className="flex gap-2">
               <Button size="sm" onClick={handleAddKitchenware} type="button">
-                {t('pages.editor.add')}
+                {t("pages.editor.add")}
               </Button>
               <Button variant="ghost" size="sm" onClick={() => setIsAdding(false)} type="button">
-                {t('pages.editor.cancel')}
+                {t("pages.editor.cancel")}
               </Button>
             </div>
           )}

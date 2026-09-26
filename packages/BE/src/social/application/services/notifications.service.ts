@@ -1,5 +1,8 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { NOTIFICATION_REPOSITORY, INotificationRepository } from '../repositories/i-notification.repository';
+import { Injectable, Inject } from "@nestjs/common";
+import {
+  NOTIFICATION_REPOSITORY,
+  INotificationRepository,
+} from "../repositories/i-notification.repository";
 
 @Injectable()
 export class NotificationsService {

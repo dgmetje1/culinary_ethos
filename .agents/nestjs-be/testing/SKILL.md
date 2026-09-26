@@ -16,23 +16,21 @@ description: Use when writing or debugging backend tests. Covers Vitest, NestJS 
 ## Unit Tests
 
 ### Service Tests
+
 ```ts
-import { Test, TestingModule } from '@nestjs/testing'
+import { Test, TestingModule } from '@nestjs/testing';
 
 describe('MyService', () => {
-  let service: MyService
+    let service: MyService;
 
-  beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        MyService,
-        { provide: Repository, useValue: mockRepository },
-      ],
-    }).compile()
+    beforeEach(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+            providers: [MyService, { provide: Repository, useValue: mockRepository }],
+        }).compile();
 
-    service = module.get<MyService>(MyService)
-  })
-})
+        service = module.get<MyService>(MyService);
+    });
+});
 ```
 
 - Mock all external dependencies in `providers`
@@ -40,6 +38,7 @@ describe('MyService', () => {
 - Test service methods in isolation — no HTTP or DB
 
 ### Controller Tests
+
 - Mock the service layer
 - Test request mapping, validation, and status codes
 - Use `@nestjs/testing` to get the controller instance
@@ -47,21 +46,21 @@ describe('MyService', () => {
 ## Integration Tests
 
 ### Database Integration
+
 - Use a test database or in-memory alternative
 - Wrap tests in transactions and rollback after each test
 - Create test data via repositories, not HTTP
 
 ### NestJS Testing Module
+
 ```ts
 const module = await Test.createTestingModule({
-  imports: [AppModule],
-  providers: [
-    { provide: APP_GUARD, useExisting: JwtAuthGuard },
-  ],
+    imports: [AppModule],
+    providers: [{ provide: APP_GUARD, useExisting: JwtAuthGuard }],
 })
-  .overrideProvider(SomeProvider)
-  .useValue(mockValue)
-  .compile()
+    .overrideProvider(SomeProvider)
+    .useValue(mockValue)
+    .compile();
 ```
 
 - Override specific providers without mocking the entire module
@@ -70,26 +69,24 @@ const module = await Test.createTestingModule({
 ## E2E Tests
 
 ```ts
-import * as request from 'supertest'
+import * as request from 'supertest';
 
 describe('App (e2e)', () => {
-  let app: INestApplication
+    let app: INestApplication;
 
-  beforeAll(async () => {
-    const moduleFixture = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile()
+    beforeAll(async () => {
+        const moduleFixture = await Test.createTestingModule({
+            imports: [AppModule],
+        }).compile();
 
-    app = moduleFixture.createNestApplication()
-    await app.init()
-  })
+        app = moduleFixture.createNestApplication();
+        await app.init();
+    });
 
-  it('GET /resource returns 200', () => {
-    return request(app.getHttpServer())
-      .get('/resource')
-      .expect(200)
-  })
-})
+    it('GET /resource returns 200', () => {
+        return request(app.getHttpServer()).get('/resource').expect(200);
+    });
+});
 ```
 
 - Create full `NestApplication` with real module imports
@@ -115,16 +112,16 @@ describe('App (e2e)', () => {
 
 ```ts
 // vitest.config.ts
-import { defineConfig } from 'vitest/config'
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  test: {
-    globals: true,
-    environment: 'node',
-    setupFiles: ['./src/test-setup.ts'],
-    include: ['**/*.spec.ts'],
-  },
-})
+    test: {
+        globals: true,
+        environment: 'node',
+        setupFiles: ['./src/test-setup.ts'],
+        include: ['**/*.spec.ts'],
+    },
+});
 ```
 
 - `setupFiles` should import `reflect-metadata` for NestJS DI

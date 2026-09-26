@@ -5,8 +5,8 @@ import {
   HttpException,
   HttpStatus,
   Logger,
-} from '@nestjs/common';
-import { Response } from 'express';
+} from "@nestjs/common";
+import { Response } from "express";
 
 interface ValidationError {
   target?: object;
@@ -24,7 +24,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
-    let message: string | object = 'Internal server error';
+    let message: string | object = "Internal server error";
     let errors: Record<string, string[]> | undefined;
 
     if (exception instanceof HttpException) {
@@ -35,18 +35,16 @@ export class AllExceptionsFilter implements ExceptionFilter {
         exception.stack,
       );
 
-      if (typeof exceptionResponse === 'object' && exceptionResponse !== null) {
+      if (typeof exceptionResponse === "object" && exceptionResponse !== null) {
         const responseObj = exceptionResponse as Record<string, unknown>;
 
         if (Array.isArray(responseObj.message)) {
-          message = 'Validation failed';
-          errors = this.flattenValidationErrors(
-            responseObj.message as ValidationError[],
-          );
+          message = "Validation failed";
+          errors = this.flattenValidationErrors(responseObj.message as ValidationError[]);
         } else {
-          message = responseObj.message || 'Internal server error';
+          message = responseObj.message || "Internal server error";
         }
-      } else if (typeof exceptionResponse === 'string') {
+      } else if (typeof exceptionResponse === "string") {
         message = exceptionResponse;
       }
     }
@@ -63,15 +61,13 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
     this.logger.error(
       `${status} - ${JSON.stringify(message)}`,
-      exception instanceof Error ? exception.stack : '',
+      exception instanceof Error ? exception.stack : "",
     );
 
     response.status(status).json(errorResponse);
   }
 
-  private flattenValidationErrors(
-    validationErrors: ValidationError[],
-  ): Record<string, string[]> {
+  private flattenValidationErrors(validationErrors: ValidationError[]): Record<string, string[]> {
     const errors: Record<string, string[]> = {};
 
     for (const error of validationErrors) {

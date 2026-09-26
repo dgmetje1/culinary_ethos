@@ -1,6 +1,6 @@
-import { Injectable, OnModuleDestroy, OnModuleInit, Logger } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import Redis from 'ioredis';
+import { Injectable, OnModuleDestroy, OnModuleInit, Logger } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import Redis from "ioredis";
 
 interface CacheEntry {
   value: string;
@@ -19,9 +19,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   private readonly password: string | undefined;
 
   constructor(configService: ConfigService) {
-    this.host = configService.get<string>('REDIS_HOST', 'localhost');
-    this.port = configService.get<number>('REDIS_PORT', 6379);
-    this.password = configService.get<string>('REDIS_PASSWORD') || undefined;
+    this.host = configService.get<string>("REDIS_HOST", "localhost");
+    this.port = configService.get<number>("REDIS_PORT", 6379);
+    this.password = configService.get<string>("REDIS_PASSWORD") || undefined;
   }
 
   async onModuleInit() {
@@ -40,12 +40,12 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
         enableOfflineQueue: false,
       });
 
-      this.client.on('connect', () => {
+      this.client.on("connect", () => {
         this.connected = true;
         this.clearReconnectTimer();
       });
 
-      this.client.on('error', (err) => {
+      this.client.on("error", (err) => {
         if (this.connected) {
           this.logger.warn(`Redis error: ${err.message}. Falling back to in-memory cache.`);
         }
@@ -53,9 +53,9 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
         this.scheduleReconnect();
       });
 
-      this.client.on('close', () => {
+      this.client.on("close", () => {
         if (this.connected) {
-          this.logger.warn('Redis connection closed. Falling back to in-memory cache.');
+          this.logger.warn("Redis connection closed. Falling back to in-memory cache.");
         }
         this.connected = false;
         this.scheduleReconnect();
@@ -63,7 +63,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
 
       await this.client.connect();
       this.connected = true;
-      this.logger.log('Connected to Redis');
+      this.logger.log("Connected to Redis");
     } catch (err) {
       this.connected = false;
       this.logger.warn(`Redis unavailable: ${(err as Error).message}. Using in-memory fallback.`);
@@ -75,7 +75,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
   private scheduleReconnect() {
     if (this.reconnectTimer) return;
     this.reconnectTimer = setInterval(async () => {
-      this.logger.log('Attempting Redis reconnect...');
+      this.logger.log("Attempting Redis reconnect...");
       await this.connect();
     }, 30000);
   }
@@ -114,15 +114,15 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
     return entry.value;
   }
 
-  async set(key: string, value: string, ttlMs?: number): Promise<'OK'> {
+  async set(key: string, value: string, ttlMs?: number): Promise<"OK"> {
     if (this.connected && this.client) {
       try {
         if (ttlMs) {
-          await this.client.set(key, value, 'PX', ttlMs);
+          await this.client.set(key, value, "PX", ttlMs);
         } else {
           await this.client.set(key, value);
         }
-        return 'OK';
+        return "OK";
       } catch {
         this.connected = false;
       }
@@ -131,7 +131,7 @@ export class RedisService implements OnModuleInit, OnModuleDestroy {
       value,
       expiry: ttlMs ? Date.now() + ttlMs : null,
     });
-    return 'OK';
+    return "OK";
   }
 
   async del(key: string): Promise<number> {

@@ -1,6 +1,6 @@
-import { UserAttributes } from '../../domain/models';
+import { UserAttributes } from "../../domain/models";
 
-export const USER_REPOSITORY = 'USER_REPOSITORY';
+export const USER_REPOSITORY = "USER_REPOSITORY";
 
 export interface CreateUserInput {
   account_id: string;
